@@ -178,10 +178,15 @@
     "aircraft": "Tecnam P2006T",
     "level": "FNPT II",
     "date": "",
-    "change": "Provide an estimate of total time to complete certification, start to finish.",
+    "change": "",
     "docs": [],
     "docLocation": "",
-    "activityLog": [],
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+      }
+    ],
     "docChangeLog": []
   }
 ]
