@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Certification Project Tracker</title>
+<title>Customer Certification Tracker</title>
 <style>
   :root{
     --bg:#000000;
@@ -250,6 +250,18 @@
   }
   .field-grid .fv{color:var(--ink);}
   .field-grid .full{grid-column:1 / -1;}
+  .inline-edit-row{margin-top:2px;}
+  .inline-input{
+    width:100%;
+    font-family:var(--sans);
+    font-size:14px;
+    padding:7px 9px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  .inline-input:focus{border-color:var(--pine);outline:none;}
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -868,7 +880,9 @@ function render(){
                 <span>Next task</span>
                 ${c.change ? `<button class="btn-text" onclick="completeTask('${c.id}')">\u2713 Mark complete</button>` : ''}
               </div>
-              <div class="fv">${escapeHtml(c.change || '\u2014')}</div>
+              <div class="inline-edit-row">
+                <input type="text" class="inline-input" value="${escapeHtmlAttr(c.change)}" placeholder="No next task set" onchange="saveNextTask('${c.id}', this.value)">
+              </div>
             </div>
             <div class="full">
               <div class="fk">Documents</div>
@@ -951,6 +965,28 @@ function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : s;
   return d.innerHTML;
+}
+
+function escapeHtmlAttr(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+async function saveNextTask(id, value){
+  const c = certs.find(x => x.id === id);
+  if(!c) return;
+  const trimmed = value.trim();
+  if(trimmed === (c.change || '')) return;
+  const today = new Date().toISOString().slice(0,10);
+  if(!Array.isArray(c.activityLog)) c.activityLog = [];
+  if(trimmed) c.activityLog.push({date: today, text: 'Next task: ' + trimmed});
+  c.change = trimmed;
+  await persist();
+  render();
 }
 
 function openModal(id, prefillCustomer){
