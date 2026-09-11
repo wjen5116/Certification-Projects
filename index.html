@@ -364,70 +364,25 @@
 
   <div class="toolbar">
     <h2>Certifications</h2>
-    <div style="display:flex;gap:8px;">
-      <button id="settings-btn">Settings</button>
-    </div>
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
 </div>
 
-<div class="modal-bg" id="settings-modal-bg">
-  <div class="modal">
-    <h3>GitHub settings</h3>
-    <p style="font-size:13px;color:var(--ink-soft);margin-top:-8px;">This is a read-only view. Point it at the repo where the data lives. A token is only needed if the repo is private; for a public repo, leave it blank.</p>
-    <div class="field">
-      <label for="s-owner">Repo owner (user or org)</label>
-      <input id="s-owner" placeholder="e.g. octocat">
-    </div>
-    <div class="field">
-      <label for="s-repo">Repository name</label>
-      <input id="s-repo" placeholder="e.g. certification-tracker">
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label for="s-branch">Branch</label>
-        <input id="s-branch" placeholder="main">
-      </div>
-      <div class="field">
-        <label for="s-path">File path</label>
-        <input id="s-path" placeholder="data/certifications.json">
-      </div>
-    </div>
-    <div class="field">
-      <label for="s-token">Personal access token (optional, only for private repos)</label>
-      <input id="s-token" type="password" placeholder="ghp_...">
-    </div>
-    <div class="err" id="settings-err" style="display:none;">Owner and repo are required.</div>
-    <div class="modal-actions">
-      <button id="settings-cancel-btn">Cancel</button>
-      <button class="btn-primary" id="settings-save-btn">Save & connect</button>
-    </div>
-  </div>
-</div>
 
 <script>
 let certs = [];
 let activeCustomer = null;
 let currentSha = null;
-let ghConfig = null;
 
-const SETTINGS_KEY = 'gh_cert_tracker_settings';
-const FILE_PATH_DEFAULT = 'data/certifications.json';
-
-
-function loadSettings(){
-  try{
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch(e){
-    return null;
-  }
-}
-
-function saveSettings(cfg){
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(cfg));
-}
+// Hardcoded, read-only connection to the public data repo.
+const ghConfig = {
+  owner: 'wjen5116',
+  repo: 'Certification-Projects',
+  branch: 'main',
+  path: 'data/certifications.json',
+  token: ''
+};
 
 function showBanner(kind, html){
   const el = document.getElementById('sync-banner');
@@ -476,13 +431,6 @@ async function fetchFromGitHub(){
 }
 
 async function load(){
-  ghConfig = loadSettings();
-  if(!ghConfig || !ghConfig.owner || !ghConfig.repo){
-    document.getElementById('list').innerHTML = '';
-    showBanner('info', 'Not connected yet. Click <b>Settings</b> above to point this page at a GitHub repo.');
-    document.getElementById('stats').innerHTML = '';
-    return;
-  }
   try{
     showBanner('info', 'Loading from GitHub&hellip;');
     const remote = await fetchFromGitHub();
@@ -676,38 +624,6 @@ function escapeHtml(s){
   d.textContent = s == null ? '' : s;
   return d.innerHTML;
 }
-
-document.getElementById('settings-btn').addEventListener('click', () => {
-  const cfg = loadSettings() || {};
-  document.getElementById('s-owner').value = cfg.owner || '';
-  document.getElementById('s-repo').value = cfg.repo || '';
-  document.getElementById('s-branch').value = cfg.branch || 'main';
-  document.getElementById('s-path').value = cfg.path || FILE_PATH_DEFAULT;
-  document.getElementById('s-token').value = cfg.token || '';
-  document.getElementById('settings-err').style.display = 'none';
-  document.getElementById('settings-modal-bg').classList.add('open');
-});
-document.getElementById('settings-cancel-btn').addEventListener('click', () => {
-  document.getElementById('settings-modal-bg').classList.remove('open');
-});
-document.getElementById('settings-modal-bg').addEventListener('click', (e) => {
-  if(e.target.id === 'settings-modal-bg') document.getElementById('settings-modal-bg').classList.remove('open');
-});
-document.getElementById('settings-save-btn').addEventListener('click', async () => {
-  const owner = document.getElementById('s-owner').value.trim();
-  const repo = document.getElementById('s-repo').value.trim();
-  const branch = document.getElementById('s-branch').value.trim() || 'main';
-  const path = document.getElementById('s-path').value.trim() || FILE_PATH_DEFAULT;
-  const token = document.getElementById('s-token').value.trim();
-  if(!owner || !repo){
-    document.getElementById('settings-err').style.display = 'block';
-    return;
-  }
-  saveSettings({owner, repo, branch, path, token});
-  document.getElementById('settings-modal-bg').classList.remove('open');
-  currentSha = null;
-  await load();
-});
 
 load();
 </script>
