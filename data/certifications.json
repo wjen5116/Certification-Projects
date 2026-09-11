@@ -182,13 +182,17 @@
     "aircraft": "Tecnam P2006T",
     "level": "FNPT II",
     "date": "",
-    "change": "",
+    "change": "Waiting for payment",
     "docs": [],
     "docLocation": "",
     "activityLog": [
       {
         "date": "2026-09-11",
         "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+      },
+      {
+        "date": "2026-09-11",
+        "text": "Next task: Waiting for payment"
       }
     ],
     "docChangeLog": []
