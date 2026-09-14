@@ -196,5 +196,22 @@
       }
     ],
     "docChangeLog": []
+  },
+  {
+    "id": "c1789427400339",
+    "name": "Corrupt QTG Recovery",
+    "customer": "PharmaFlight",
+    "authority": "",
+    "country": "",
+    "simLocation": "Hungary",
+    "serial": "",
+    "aircraft": "",
+    "level": "",
+    "date": "2026-09-21",
+    "change": "Look into how to possibly restore their QTG on new SSD.",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
