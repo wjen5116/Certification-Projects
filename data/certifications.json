@@ -10,7 +10,7 @@
     "aircraft": "Piper PA-28-181 Archer",
     "level": "FNPT II",
     "date": "",
-    "change": "MQTG review with UKCAA",
+    "change": "",
     "docs": [
       "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx",
       "Validation_Data_Roadmap__PA28_Archer_.docx"
@@ -28,6 +28,10 @@
       {
         "date": "2026-09-16",
         "text": "Next task: MQTG review with UKCAA"
+      },
+      {
+        "date": "2026-09-16",
+        "text": "Completed: MQTG review with UKCAA"
       }
     ],
     "docChangeLog": []
