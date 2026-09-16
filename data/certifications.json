@@ -10,7 +10,7 @@
     "aircraft": "Piper PA-28-181 Archer",
     "level": "FNPT II",
     "date": "",
-    "change": "Clay and I on-site at Skyborne Sep 14 for the certification.",
+    "change": "",
     "docs": [
       "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx",
       "Validation_Data_Roadmap__PA28_Archer_.docx"
@@ -20,6 +20,10 @@
       {
         "date": "2026-09-11",
         "text": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251."
+      },
+      {
+        "date": "2026-09-16",
+        "text": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification."
       }
     ],
     "docChangeLog": []
