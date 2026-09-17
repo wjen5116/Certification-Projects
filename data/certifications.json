@@ -10,7 +10,7 @@
     "aircraft": "Piper PA-28-181 Archer",
     "level": "FNPT II",
     "date": "2026-09-18",
-    "change": "Subjective testing by UKCAA",
+    "change": "",
     "docs": [
       "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx",
       "Validation_Data_Roadmap__PA28_Archer_.docx"
@@ -36,6 +36,10 @@
       {
         "date": "2026-09-16",
         "text": "Next task: Subjective testing by UKCAA"
+      },
+      {
+        "date": "2026-09-17",
+        "text": "Completed: Subjective testing by UKCAA"
       }
     ],
     "docChangeLog": []
