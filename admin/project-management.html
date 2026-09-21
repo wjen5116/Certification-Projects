@@ -154,6 +154,9 @@
   .pill-rejected{background:var(--rust-bg);color:var(--rust);}
   .pill-onhold{background:#2A2A2A;color:var(--ink-soft);}
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
+  .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
+  .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
+  .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
   .actions-cell{white-space:nowrap;}
   .change-cell{max-width:220px;}
@@ -250,18 +253,6 @@
   }
   .field-grid .fv{color:var(--ink);}
   .field-grid .full{grid-column:1 / -1;}
-  .inline-edit-row{margin-top:2px;}
-  .inline-input{
-    width:100%;
-    font-family:var(--sans);
-    font-size:14px;
-    padding:7px 9px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--bg);
-    color:var(--ink);
-  }
-  .inline-input:focus{border-color:var(--pine);outline:none;}
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -423,10 +414,6 @@
       </div>
     </div>
     <div class="field">
-      <label for="f-change">Next task</label>
-      <textarea id="f-change" placeholder="What needs to happen next on this certification"></textarea>
-    </div>
-    <div class="field">
       <label for="f-docs">Documents (one per line)</label>
       <textarea id="f-docs" placeholder="e.g. MQTG v1.1.docx"></textarea>
     </div>
@@ -447,17 +434,27 @@
     <input type="hidden" id="activity-edit-id">
     <div class="field">
       <label for="a-description">Description</label>
-      <textarea id="a-description" placeholder="What was done"></textarea>
+      <textarea id="a-description" placeholder="What needs to happen"></textarea>
       <div class="err" id="activity-err" style="display:none;">Enter a description.</div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="a-status">Status</label>
+        <select id="a-status">
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Complete">Complete</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="a-due">Date due</label>
+        <input id="a-due" type="date">
+      </div>
     </div>
     <div class="field-row">
       <div class="field">
         <label for="a-created">Date created</label>
         <input id="a-created" type="date">
-      </div>
-      <div class="field">
-        <label for="a-due">Date due</label>
-        <input id="a-due" type="date">
       </div>
     </div>
     <div class="modal-actions">
@@ -765,14 +762,21 @@ async function load(){
           c.activityLog[idx] = {
             id: a.id || ('a' + Date.now() + idx),
             description: a.text || '',
+            status: 'Complete',
             dateCreated: a.date || new Date().toISOString().slice(0,10),
             dateDue: '',
             dateUpdated: a.date || new Date().toISOString().slice(0,10)
           };
           changed = true;
-        }else if(!a.id){
-          a.id = 'a' + Date.now() + idx;
-          changed = true;
+        }else{
+          if(!a.id){
+            a.id = 'a' + Date.now() + idx;
+            changed = true;
+          }
+          if(!a.status){
+            a.status = 'Complete';
+            changed = true;
+          }
         }
       });
       if(!Array.isArray(c.docChangeLog)){
@@ -929,15 +933,6 @@ function render(){
               <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
             </div>
             <div class="full">
-              <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-                <span>Next task</span>
-                ${c.change ? `<button class="btn-text" onclick="completeTask('${c.id}')">\u2713 Mark complete</button>` : ''}
-              </div>
-              <div class="inline-edit-row">
-                <input type="text" class="inline-input" value="${escapeHtmlAttr(c.change)}" placeholder="No next task set" onchange="saveNextTask('${c.id}', this.value)">
-              </div>
-            </div>
-            <div class="full">
               <div class="fk">Documents</div>
               <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${c.docLocation ? `<div class="doc-loc">${escapeHtml(c.docLocation)}</div>` : ''}</div>
             </div>
@@ -988,22 +983,41 @@ function isActivityOverdue(a){
   return new Date(a.dateDue + 'T00:00:00') < today;
 }
 
+function activityStatusClass(status){
+  if(status === 'Complete') return 'sage';
+  if(status === 'In Progress') return 'gold';
+  return 'slate';
+}
+
 function renderActivityLog(c){
   const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
-  const sorted = [...entries].sort((a,b) => (b.dateCreated||'').localeCompare(a.dateCreated||''));
+  const sorted = [...entries].sort((a,b) => {
+    const aDone = a.status === 'Complete' ? 1 : 0;
+    const bDone = b.status === 'Complete' ? 1 : 0;
+    if(aDone !== bDone) return aDone - bDone;
+    const ad = a.dateDue || a.dateCreated || '';
+    const bd = b.dateDue || b.dateCreated || '';
+    return aDone === 0 ? ad.localeCompare(bd) : bd.localeCompare(ad);
+  });
   return `
     <div class="changelog">
       <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Activity Log</span>
+        <span>Activities</span>
         <button class="btn-text" onclick="openActivityModal('${c.id}')">+ Add</button>
       </div>
       ${sorted.length ? sorted.map(a => {
         const over = isActivityOverdue(a);
+        const status = a.status || 'Pending';
+        const cls = activityStatusClass(status);
         return `
         <div class="activity-entry">
           <div class="activity-entry-top">
-            <span class="changelog-text">${escapeHtml(a.description)}</span>
+            <div>
+              <span class="pill pill-${cls}">${escapeHtml(status)}</span>
+              <span class="changelog-text">${escapeHtml(a.description)}</span>
+            </div>
             <div class="cert-actions">
+              ${status !== 'Complete' ? `<button class="btn-text" onclick="markActivityComplete('${c.id}', '${a.id}')">\u2713 Complete</button>` : ''}
               <button class="btn-text" onclick="openActivityModal('${c.id}', '${a.id}')">Edit</button>
               <button class="btn-text danger" onclick="deleteActivity('${c.id}', '${a.id}')">Delete</button>
             </div>
@@ -1014,9 +1028,20 @@ function renderActivityLog(c){
             ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
           </div>
         </div>
-      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
+      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
     </div>
   `;
+}
+
+async function markActivityComplete(certId, activityId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.activityLog)) return;
+  const a = c.activityLog.find(x => x.id === activityId);
+  if(!a) return;
+  a.status = 'Complete';
+  a.dateUpdated = new Date().toISOString().slice(0,10);
+  await persist();
+  render();
 }
 
 function openActivityModal(certId, activityId){
@@ -1030,11 +1055,13 @@ function openActivityModal(certId, activityId){
     const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
     title.textContent = 'Edit activity';
     document.getElementById('a-description').value = a ? a.description : '';
+    document.getElementById('a-status').value = a ? (a.status || 'Pending') : 'Pending';
     document.getElementById('a-created').value = a ? a.dateCreated : today;
     document.getElementById('a-due').value = a ? (a.dateDue || '') : '';
   }else{
     title.textContent = 'Add activity';
     document.getElementById('a-description').value = '';
+    document.getElementById('a-status').value = 'Pending';
     document.getElementById('a-created').value = today;
     document.getElementById('a-due').value = '';
   }
@@ -1059,6 +1086,7 @@ async function saveActivityEntry(){
   if(!isValidDateStr(dateCreated)) dateCreated = today;
   const dateDueRaw = document.getElementById('a-due').value;
   const dateDue = isValidDateStr(dateDueRaw) ? dateDueRaw : '';
+  const status = document.getElementById('a-status').value || 'Pending';
 
   const c = certs.find(x => x.id === certId);
   if(!c) return;
@@ -1069,14 +1097,14 @@ async function saveActivityEntry(){
     if(idx > -1){
       c.activityLog[idx] = {
         ...c.activityLog[idx],
-        description, dateCreated, dateDue,
+        description, status, dateCreated, dateDue,
         dateUpdated: today
       };
     }
   }else{
     c.activityLog.push({
       id: 'a' + Date.now(),
-      description, dateCreated, dateDue,
+      description, status, dateCreated, dateDue,
       dateUpdated: dateCreated
     });
   }
@@ -1093,50 +1121,10 @@ async function deleteActivity(certId, activityId){
   render();
 }
 
-async function completeTask(id){
-  const c = certs.find(x => x.id === id);
-  if(!c || !c.change) return;
-  const today = new Date().toISOString().slice(0,10);
-  if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  c.activityLog.push({
-    id: 'a' + Date.now(),
-    description: 'Completed: ' + c.change,
-    dateCreated: today,
-    dateDue: '',
-    dateUpdated: today
-  });
-  c.change = '';
-  await persist();
-  render();
-  openActivityModal(id, c.activityLog[c.activityLog.length - 1].id);
-}
-
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s;
   return d.innerHTML;
-}
-
-function escapeHtmlAttr(s){
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-async function saveNextTask(id, value){
-  const c = certs.find(x => x.id === id);
-  if(!c) return;
-  const trimmed = value.trim();
-  if(trimmed === (c.change || '')) return;
-  const today = new Date().toISOString().slice(0,10);
-  if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  if(trimmed) c.activityLog.push({date: today, text: 'Next task: ' + trimmed});
-  c.change = trimmed;
-  await persist();
-  render();
 }
 
 function openModal(id, prefillCustomer){
@@ -1156,7 +1144,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
-    document.getElementById('f-change').value = c.change || '';
     document.getElementById('f-docs').value = (c.docs || []).join('\n');
     document.getElementById('f-doclocation').value = c.docLocation || '';
   }else{
@@ -1171,7 +1158,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = '';
     document.getElementById('f-level').value = '';
     document.getElementById('f-date').value = '';
-    document.getElementById('f-change').value = '';
     document.getElementById('f-docs').value = '';
     document.getElementById('f-doclocation').value = '';
   }
@@ -1200,7 +1186,6 @@ async function saveCert(){
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
     date: document.getElementById('f-date').value,
-    change: document.getElementById('f-change').value.trim(),
     docs: document.getElementById('f-docs').value.split('\n').map(s => s.trim()).filter(Boolean),
     docLocation: document.getElementById('f-doclocation').value.trim()
   };
@@ -1210,11 +1195,7 @@ async function saveCert(){
     if(idx > -1){
       const prev = certs[idx];
       const today = new Date().toISOString().slice(0,10);
-      const activityEntries = [];
       const docEntries = [];
-      if(data.change !== prev.change && data.change){
-        activityEntries.push({date: today, text: 'Next task: ' + data.change});
-      }
       const prevDocs = (prev.docs || []).join('\n');
       const newDocs = data.docs.join('\n');
       if(newDocs !== prevDocs && data.docs.length){
@@ -1226,7 +1207,6 @@ async function saveCert(){
       certs[idx] = {...prev, ...data};
       if(!Array.isArray(certs[idx].activityLog)) certs[idx].activityLog = [];
       if(!Array.isArray(certs[idx].docChangeLog)) certs[idx].docChangeLog = [];
-      certs[idx].activityLog.push(...activityEntries);
       certs[idx].docChangeLog.push(...docEntries);
     }
   }else{
