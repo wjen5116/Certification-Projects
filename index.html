@@ -154,6 +154,9 @@
   .pill-rejected{background:var(--rust-bg);color:var(--rust);}
   .pill-onhold{background:#2A2A2A;color:var(--ink-soft);}
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
+  .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
+  .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
+  .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
   .actions-cell{white-space:nowrap;}
   .change-cell{max-width:220px;}
@@ -799,10 +802,6 @@ function render(){
               <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
             </div>
             <div class="full">
-              <div class="fk">Next task</div>
-              <div class="fv">${escapeHtml(c.change || '\u2014')}</div>
-            </div>
-            <div class="full">
               <div class="fk">Documents</div>
               <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${c.docLocation ? `<div class="doc-loc">${escapeHtml(c.docLocation)}</div>` : ''}</div>
             </div>
@@ -824,15 +823,12 @@ function escapeAttr(s){
   return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-function renderLogSection(title, entries, options){
-  options = options || {};
+function renderDocChangeLog(c){
+  const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
   const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
   return `
     <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>${escapeHtml(title)}</span>
-        ${options.addHandler ? `<button class="btn-text" onclick="${options.addHandler}">+ Add</button>` : ''}
-      </div>
+      <div class="fk">Document Change Log</div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry">
           <span class="changelog-date">${fmtDate(entry.date)}</span>
@@ -843,12 +839,52 @@ function renderLogSection(title, entries, options){
   `;
 }
 
-function renderDocChangeLog(c){
-  return renderLogSection('Document Change Log', Array.isArray(c.docChangeLog) ? c.docChangeLog : []);
+function isActivityOverdue(a){
+  if(!a.dateDue) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(a.dateDue + 'T00:00:00') < today;
+}
+
+function activityStatusClass(status){
+  if(status === 'Complete') return 'sage';
+  if(status === 'In Progress') return 'gold';
+  return 'slate';
 }
 
 function renderActivityLog(c){
-  return renderLogSection('Activity Log', Array.isArray(c.activityLog) ? c.activityLog : []);
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  const sorted = [...entries].sort((a,b) => {
+    const aDone = a.status === 'Complete' ? 1 : 0;
+    const bDone = b.status === 'Complete' ? 1 : 0;
+    if(aDone !== bDone) return aDone - bDone;
+    const ad = a.dateDue || a.dateCreated || '';
+    const bd = b.dateDue || b.dateCreated || '';
+    return aDone === 0 ? ad.localeCompare(bd) : bd.localeCompare(ad);
+  });
+  return `
+    <div class="changelog">
+      <div class="fk">Activities</div>
+      ${sorted.length ? sorted.map(a => {
+        const over = isActivityOverdue(a);
+        const status = a.status || 'Pending';
+        const cls = activityStatusClass(status);
+        return `
+        <div class="activity-entry">
+          <div class="activity-entry-top">
+            <div>
+              <span class="pill pill-${cls}">${escapeHtml(status)}</span>
+              <span class="changelog-text">${escapeHtml(a.description || a.text || '')}</span>
+            </div>
+          </div>
+          <div class="activity-meta">
+            Created ${fmtDate(a.dateCreated)}
+            ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
+            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
+          </div>
+        </div>
+      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
+    </div>
+  `;
 }
 
 function escapeHtml(s){
