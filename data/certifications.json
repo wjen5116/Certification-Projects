@@ -18,28 +18,52 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251."
+        "id": "a179000344878100",
+        "description": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-16",
-        "text": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification."
+        "id": "a179000344878101",
+        "description": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification.",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-16",
-        "text": "Next task: MQTG review with UKCAA"
+        "id": "a179000344878102",
+        "description": "Next task: MQTG review with UKCAA",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-16",
-        "text": "Completed: MQTG review with UKCAA"
+        "id": "a179000344878103",
+        "description": "Completed: MQTG review with UKCAA",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-16",
-        "text": "Next task: Subjective testing by UKCAA"
+        "id": "a179000344878104",
+        "description": "Next task: Subjective testing by UKCAA",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-17",
-        "text": "Completed: Subjective testing by UKCAA"
+        "id": "a179000344878105",
+        "description": "Completed: Subjective testing by UKCAA",
+        "status": "Complete",
+        "dateCreated": "2026-09-17",
+        "dateDue": "",
+        "dateUpdated": "2026-09-17"
       }
     ],
     "docChangeLog": []
@@ -63,8 +87,12 @@
     "docLocation": "G:\\Shared drives\\Certification\\FAA\\FTD 5\\Customers\\US Aviation\\MQTG Docs",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD."
+        "id": "a179000344878110",
+        "description": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -87,8 +115,12 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179000344878120",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -111,8 +143,12 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179000344878130",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -135,8 +171,12 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179000344878140",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -159,8 +199,12 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179000344878150",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -181,12 +225,20 @@
     "docLocation": "",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+        "id": "a179000344878160",
+        "description": "Completed: Provide an estimate of total time to complete certification, start to finish.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-11",
-        "text": "Next task: Waiting for payment"
+        "id": "a179000344878161",
+        "description": "Next task: Waiting for payment",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
@@ -207,12 +259,20 @@
     "docLocation": "",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+        "id": "a179000344878170",
+        "description": "Completed: Provide an estimate of total time to complete certification, start to finish.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-11",
-        "text": "Next task: Waiting for payment"
+        "id": "a179000344878171",
+        "description": "Next task: Waiting for payment",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       }
     ],
     "docChangeLog": []
