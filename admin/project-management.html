@@ -516,6 +516,14 @@
 
 <script>
 let certs = [];
+
+function forceShow(el){
+  el.style.display = 'flex';
+  // Force a synchronous layout/paint so the browser doesn't defer
+  // rendering this newly-shown fixed-position element.
+  void el.offsetHeight;
+  requestAnimationFrame(() => { void el.offsetHeight; });
+}
 let activeCustomer = null;
 let currentSha = null;
 let ghConfig = null;
@@ -1180,7 +1188,7 @@ function openActivityModal(certId, activityId){
     document.getElementById('a-due').value = '';
   }
   document.getElementById('activity-modal-bg').classList.add('open');
-  document.getElementById('activity-modal-bg').style.display = 'flex';
+  forceShow(document.getElementById('activity-modal-bg'));
   document.getElementById('a-description').focus();
 }
 
@@ -1278,7 +1286,7 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-doclocation').value = '';
   }
   modal.classList.add('open');
-  modal.style.display = 'flex';
+  forceShow(modal);
   document.getElementById('f-name').focus();
 }
 
@@ -1362,7 +1370,7 @@ document.getElementById('settings-btn').addEventListener('click', () => {
   document.getElementById('s-token').value = cfg.token || '';
   document.getElementById('settings-err').style.display = 'none';
   document.getElementById('settings-modal-bg').classList.add('open');
-  document.getElementById('settings-modal-bg').style.display = 'flex';
+  forceShow(document.getElementById('settings-modal-bg'));
 });
 document.getElementById('settings-cancel-btn').addEventListener('click', () => {
   document.getElementById('settings-modal-bg').classList.remove('open');
