@@ -279,6 +279,22 @@
     flex-shrink:0;
   }
   .changelog-text{color:var(--ink-soft);}
+  .activity-entry{
+    padding:6px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .activity-entry:last-child{border-bottom:none;}
+  .activity-entry-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .activity-meta{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:3px;
+  }
 
   .modal-bg{
     position:fixed;inset:0;
@@ -421,6 +437,32 @@
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
       <button class="btn-primary" id="save-btn">Save</button>
+    </div>
+</div>
+
+<div class="modal-bg" id="activity-modal-bg">
+  <div class="modal">
+    <h3 id="activity-modal-title">Add activity</h3>
+    <input type="hidden" id="activity-cert-id">
+    <input type="hidden" id="activity-edit-id">
+    <div class="field">
+      <label for="a-description">Description</label>
+      <textarea id="a-description" placeholder="What was done"></textarea>
+      <div class="err" id="activity-err" style="display:none;">Enter a description.</div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="a-created">Date created</label>
+        <input id="a-created" type="date">
+      </div>
+      <div class="field">
+        <label for="a-due">Date due</label>
+        <input id="a-due" type="date">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="activity-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="activity-save-btn">Save</button>
     </div>
   </div>
 </div>
@@ -718,6 +760,21 @@ async function load(){
         c.activityLog = [];
         changed = true;
       }
+      c.activityLog.forEach((a, idx) => {
+        if(a.description === undefined){
+          c.activityLog[idx] = {
+            id: a.id || ('a' + Date.now() + idx),
+            description: a.text || '',
+            dateCreated: a.date || new Date().toISOString().slice(0,10),
+            dateDue: '',
+            dateUpdated: a.date || new Date().toISOString().slice(0,10)
+          };
+          changed = true;
+        }else if(!a.id){
+          a.id = 'a' + Date.now() + idx;
+          changed = true;
+        }
+      });
       if(!Array.isArray(c.docChangeLog)){
         c.docChangeLog = [];
         changed = true;
@@ -905,15 +962,16 @@ function escapeAttr(s){
   return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-function renderLogSection(title, entries, options){
-  options = options || {};
+function isValidDateStr(s){
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(new Date(s + 'T00:00:00').getTime());
+}
+
+function renderDocChangeLog(c){
+  const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
   const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
   return `
     <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>${escapeHtml(title)}</span>
-        ${options.addHandler ? `<button class="btn-text" onclick="${options.addHandler}">+ Add</button>` : ''}
-      </div>
+      <div class="fk">Document Change Log</div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry">
           <span class="changelog-date">${fmtDate(entry.date)}</span>
@@ -924,24 +982,113 @@ function renderLogSection(title, entries, options){
   `;
 }
 
-function renderDocChangeLog(c){
-  return renderLogSection('Document Change Log', Array.isArray(c.docChangeLog) ? c.docChangeLog : []);
+function isActivityOverdue(a){
+  if(!a.dateDue) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(a.dateDue + 'T00:00:00') < today;
 }
 
 function renderActivityLog(c){
-  return renderLogSection('Activity Log', Array.isArray(c.activityLog) ? c.activityLog : [], {
-    addHandler: `addActivity('${c.id}')`
-  });
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  const sorted = [...entries].sort((a,b) => (b.dateCreated||'').localeCompare(a.dateCreated||''));
+  return `
+    <div class="changelog">
+      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Activity Log</span>
+        <button class="btn-text" onclick="openActivityModal('${c.id}')">+ Add</button>
+      </div>
+      ${sorted.length ? sorted.map(a => {
+        const over = isActivityOverdue(a);
+        return `
+        <div class="activity-entry">
+          <div class="activity-entry-top">
+            <span class="changelog-text">${escapeHtml(a.description)}</span>
+            <div class="cert-actions">
+              <button class="btn-text" onclick="openActivityModal('${c.id}', '${a.id}')">Edit</button>
+              <button class="btn-text danger" onclick="deleteActivity('${c.id}', '${a.id}')">Delete</button>
+            </div>
+          </div>
+          <div class="activity-meta">
+            Created ${fmtDate(a.dateCreated)}
+            ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
+            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
+          </div>
+        </div>
+      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
+    </div>
+  `;
 }
 
-async function addActivity(id){
-  const text = prompt('Log a completed task or activity:');
-  if(!text || !text.trim()) return;
-  const c = certs.find(x => x.id === id);
+function openActivityModal(certId, activityId){
+  document.getElementById('activity-err').style.display = 'none';
+  document.getElementById('activity-cert-id').value = certId;
+  document.getElementById('activity-edit-id').value = activityId || '';
+  const title = document.getElementById('activity-modal-title');
+  const today = new Date().toISOString().slice(0,10);
+  if(activityId){
+    const c = certs.find(x => x.id === certId);
+    const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
+    title.textContent = 'Edit activity';
+    document.getElementById('a-description').value = a ? a.description : '';
+    document.getElementById('a-created').value = a ? a.dateCreated : today;
+    document.getElementById('a-due').value = a ? (a.dateDue || '') : '';
+  }else{
+    title.textContent = 'Add activity';
+    document.getElementById('a-description').value = '';
+    document.getElementById('a-created').value = today;
+    document.getElementById('a-due').value = '';
+  }
+  document.getElementById('activity-modal-bg').classList.add('open');
+  document.getElementById('a-description').focus();
+}
+
+function closeActivityModal(){
+  document.getElementById('activity-modal-bg').classList.remove('open');
+}
+
+async function saveActivityEntry(){
+  const description = document.getElementById('a-description').value.trim();
+  if(!description){
+    document.getElementById('activity-err').style.display = 'block';
+    return;
+  }
+  const certId = document.getElementById('activity-cert-id').value;
+  const activityId = document.getElementById('activity-edit-id').value;
+  const today = new Date().toISOString().slice(0,10);
+  let dateCreated = document.getElementById('a-created').value;
+  if(!isValidDateStr(dateCreated)) dateCreated = today;
+  const dateDueRaw = document.getElementById('a-due').value;
+  const dateDue = isValidDateStr(dateDueRaw) ? dateDueRaw : '';
+
+  const c = certs.find(x => x.id === certId);
   if(!c) return;
   if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  const today = new Date().toISOString().slice(0,10);
-  c.activityLog.push({date: today, text: text.trim()});
+
+  if(activityId){
+    const idx = c.activityLog.findIndex(x => x.id === activityId);
+    if(idx > -1){
+      c.activityLog[idx] = {
+        ...c.activityLog[idx],
+        description, dateCreated, dateDue,
+        dateUpdated: today
+      };
+    }
+  }else{
+    c.activityLog.push({
+      id: 'a' + Date.now(),
+      description, dateCreated, dateDue,
+      dateUpdated: dateCreated
+    });
+  }
+  await persist();
+  closeActivityModal();
+  render();
+}
+
+async function deleteActivity(certId, activityId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.activityLog)) return;
+  c.activityLog = c.activityLog.filter(a => a.id !== activityId);
   await persist();
   render();
 }
@@ -949,12 +1096,19 @@ async function addActivity(id){
 async function completeTask(id){
   const c = certs.find(x => x.id === id);
   if(!c || !c.change) return;
-  if(!Array.isArray(c.activityLog)) c.activityLog = [];
   const today = new Date().toISOString().slice(0,10);
-  c.activityLog.push({date: today, text: 'Completed: ' + c.change});
+  if(!Array.isArray(c.activityLog)) c.activityLog = [];
+  c.activityLog.push({
+    id: 'a' + Date.now(),
+    description: 'Completed: ' + c.change,
+    dateCreated: today,
+    dateDue: '',
+    dateUpdated: today
+  });
   c.change = '';
   await persist();
   render();
+  openActivityModal(id, c.activityLog[c.activityLog.length - 1].id);
 }
 
 function escapeHtml(s){
@@ -1094,6 +1248,11 @@ document.getElementById('cancel-btn').addEventListener('click', closeModal);
 document.getElementById('save-btn').addEventListener('click', saveCert);
 document.getElementById('modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'modal-bg') closeModal();
+});
+document.getElementById('activity-cancel-btn').addEventListener('click', closeActivityModal);
+document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
+document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'activity-modal-bg') closeActivityModal();
 });
 
 load();
