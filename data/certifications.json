@@ -12,8 +12,8 @@
     "date": "",
     "change": "",
     "docs": [
-      "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx",
-      "Validation_Data_Roadmap__PA28_Archer_.docx"
+      "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_3.docx",
+      "Validation_Data_Roadmap__PA28_Archer_v1.1.docx"
     ],
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
     "activityLog": [
@@ -50,7 +50,12 @@
         "dateUpdated": "2026-09-21"
       }
     ],
-    "docChangeLog": []
+    "docChangeLog": [
+      {
+        "date": "2026-09-21",
+        "text": "Documents updated: R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_3.docx, Validation_Data_Roadmap__PA28_Archer_v1.1.docx"
+      }
+    ]
   },
   {
     "id": "c-usaviation",
