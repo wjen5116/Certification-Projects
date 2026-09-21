@@ -341,6 +341,17 @@
     .tabs{flex-wrap:nowrap;overflow-x:auto;}
     .tab{flex-shrink:0;}
   }
+  .sync-banner{
+    font-size:13px;
+    padding:10px 14px;
+    border-radius:8px;
+    margin-bottom:16px;
+    border:1px solid var(--line);
+  }
+  .sync-banner.info{background:var(--slate-bg);color:var(--slate);border-color:var(--slate);}
+  .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
+  .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
+  .sync-banner a{color:inherit;text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -352,6 +363,8 @@
 
   <div class="stats" id="stats"></div>
 
+  <div id="sync-banner" class="sync-banner" style="display:none;"></div>
+
   <div class="toolbar">
     <h2>Certifications</h2>
   </div>
@@ -359,332 +372,86 @@
   <div id="list"><div class="loading">Loading&hellip;</div></div>
 </div>
 
+
 <script>
 let certs = [];
 let activeCustomer = null;
-const STORAGE_KEY = 'certifications';
+let currentSha = null;
 
-const DEFAULT_CUSTOMERS = ['Skyborn Airline Academy', 'US Aviation Academy', 'Superior Air', 'Aeroguard'];
-const AUTHORITY_MAP = {
-  'skyborn airline academy': 'UKCAA',
-  'skyborne airline academy': 'UKCAA',
-  'us aviation academy': 'FAA',
-  'superior air': 'EASA',
-  'aeroguard': 'EASA'
-};
-const RECORD_UPDATES = {
-  'us aviation academy': {
-    rev: 8,
-    name: 'FAA FTD Level 5 qualification \u2014 Redbird FMX/SD (Cessna C172S)',
-    status: 'Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD.',
-    change: 'Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.',
-    docs: ['US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx', 'Validation_Data_Roadmap__Cessna_C172S_.docx'],
-    docLocation: 'G:\\Shared drives\\Certification\\FAA\\FTD 5\\Customers\\US Aviation\\MQTG Docs',
-    serial: 'R-FMX-100843',
-    aircraft: 'Cessna C172S',
-    simLocation: '4850 Spartan Drive, Denton, TX 76207, USA',
-    country: 'US',
-    level: 'FTD Level 5'
-  },
-  'skyborn airline academy': {
-    rev: 12,
-    name: 'FNPT II qualification \u2014 Redbird MCX-E (PA-28 Archer)',
-    status: 'Uploaded most recent MQTG v1.1 to R-MCX-100251.',
-    change: 'Clay and I on-site at Skyborne Sep 14 for the certification.',
-    docs: ['R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx', 'Validation_Data_Roadmap__PA28_Archer_.docx'],
-    docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc',
-    serial: 'R-MCX-100251',
-    aircraft: 'Piper PA-28-181 Archer',
-    simLocation: '2825 Airport Drive, Vero Beach, FL 32960, USA',
-    country: 'UK',
-    level: 'FNPT II'
-  },
-  'skyborne airline academy': {
-    rev: 12,
-    name: 'FNPT II qualification \u2014 Redbird MCX-E (PA-28 Archer)',
-    status: 'Uploaded most recent MQTG v1.1 to R-MCX-100251.',
-    change: 'Clay and I on-site at Skyborne Sep 14 for the certification.',
-    docs: ['R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx', 'Validation_Data_Roadmap__PA28_Archer_.docx'],
-    docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc',
-    serial: 'R-MCX-100251',
-    aircraft: 'Piper PA-28-181 Archer',
-    simLocation: '2825 Airport Drive, Vero Beach, FL 32960, USA',
-    country: 'UK',
-    level: 'FNPT II'
-  }
+// Hardcoded, read-only connection to the public data repo.
+const ghConfig = {
+  owner: 'wjen5116',
+  repo: 'Certification-Projects',
+  branch: 'main',
+  path: 'data/certifications.json',
+  token: ''
 };
 
-const CUSTOMER_CERT_SETS = {
-  'aeroguard': [
-    {
-      id: 'aeroguard-954-da42',
-      name: 'EASA FNPT II qualification \u2014 Redbird FMX/SD-E (Diamond DA42, multi-engine)',
-      authority: 'EASA',
-      serial: 'R-FMX-100954',
-      aircraft: 'Diamond DA42 (FADEC)',
-      status: 'MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.',
-      change: 'Waiting for Qatar to inspect devices for certification.',
-      docs: ['R-FMX-100954__DA42__EASA_FNPTII_-MEP.docx'],
-      docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc',
-      country: 'Qatar',
-      simLocation: '530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA',
-      level: 'FNPT II',
-      rev: 4
-    },
-    {
-      id: 'aeroguard-954-pa28',
-      name: 'EASA FNPT II qualification \u2014 Redbird FMX/SD-E (Piper PA28-181, single-engine)',
-      authority: 'EASA',
-      serial: 'R-FMX-100954',
-      aircraft: 'Piper PA28-181',
-      status: 'MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.',
-      change: 'Waiting for Qatar to inspect devices for certification.',
-      docs: ['R-FMX-100954__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx'],
-      docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc',
-      country: 'Qatar',
-      simLocation: '530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA',
-      level: 'FNPT II',
-      rev: 4
-    },
-    {
-      id: 'aeroguard-953-da42',
-      name: 'EASA FNPT II qualification \u2014 Redbird FMX/SD-E (Diamond DA42, multi-engine)',
-      authority: 'EASA',
-      serial: 'R-FMX-100953',
-      aircraft: 'Diamond DA42 (FADEC)',
-      status: 'MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.',
-      change: 'Waiting for Qatar to inspect devices for certification.',
-      docs: ['R-FMX-100953__DA42__EASA_FNPTII_-MEP.docx'],
-      docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP',
-      country: 'Qatar',
-      simLocation: '530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA',
-      level: 'FNPT II',
-      rev: 4
-    },
-    {
-      id: 'aeroguard-953-pa28',
-      name: 'EASA FNPT II qualification \u2014 Redbird FMX/SD-E (Piper PA28-181, single-engine)',
-      authority: 'EASA',
-      serial: 'R-FMX-100953',
-      aircraft: 'Piper PA28-181',
-      status: 'MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.',
-      change: 'Waiting for Qatar to inspect devices for certification.',
-      docs: ['R-FMX-100953__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx'],
-      docLocation: 'G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP',
-      country: 'Qatar',
-      simLocation: '530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA',
-      level: 'FNPT II',
-      rev: 4
-    }
-  ],
-  'superior air': [
-    {
-      id: 'superior-c172',
-      name: 'FNPT II qualification \u2014 Cessna C172',
-      authority: 'EASA',
-      serial: 'FMX-0297',
-      aircraft: 'Cessna C172',
-      status: '',
-      change: 'Provide an estimate of total time to complete certification, start to finish.',
-      docs: [],
-      docLocation: '',
-      country: 'Greece',
-      simLocation: 'Greece',
-      level: 'FNPT II',
-      rev: 4
-    },
-    {
-      id: 'superior-p2006',
-      name: 'FNPT II qualification \u2014 Tecnam P2006T',
-      authority: 'EASA',
-      serial: 'FMX-0297',
-      aircraft: 'Tecnam P2006T',
-      status: '',
-      change: 'Provide an estimate of total time to complete certification, start to finish.',
-      docs: [],
-      docLocation: '',
-      country: 'Greece',
-      simLocation: 'Greece',
-      level: 'FNPT II',
-      rev: 4
-    }
-  ]
-};
+function showBanner(kind, html){
+  const el = document.getElementById('sync-banner');
+  el.className = 'sync-banner ' + kind;
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
 
-function applyCertSets(){
-  let changed = false;
-  Object.keys(CUSTOMER_CERT_SETS).forEach(key => {
-    const items = CUSTOMER_CERT_SETS[key];
-    const haveAll = items.every(item => certs.some(c => c.id === item.id));
-    if(!haveAll){
-      const placeholderIdx = certs.findIndex(c =>
-        (c.customer || '').trim().toLowerCase() === key &&
-        / certification$/.test(c.name || '') &&
-        !c.status && !c.change && !c.serial
-      );
-      if(placeholderIdx > -1) certs.splice(placeholderIdx, 1);
-      items.forEach(item => {
-        if(!certs.some(c => c.id === item.id)){
-          const custName = DEFAULT_CUSTOMERS.find(n => n.toLowerCase() === key) || key;
-          certs.push({
-            id: item.id,
-            name: item.name,
-            customer: custName,
-            authority: item.authority,
-            status: item.status,
-            date: '',
-            change: item.change,
-            docs: item.docs,
-            docLocation: item.docLocation,
-            serial: item.serial,
-            aircraft: item.aircraft,
-            country: item.country || '',
-            simLocation: item.simLocation || '',
-            level: item.level || '',
-            activityLog: [],
-            docChangeLog: [],
-            _rev: 0,
-            _setRev: item.rev || 0
-          });
-          changed = true;
-        }
-      });
-    }
-    items.forEach(item => {
-      const existing = certs.find(c => c.id === item.id);
-      if(!existing) return;
-      if((existing._setRev || 0) < (item.rev || 0)){
-        if(item.country !== undefined) existing.country = item.country || '';
-        if(item.simLocation) existing.simLocation = item.simLocation;
-        if(item.level) existing.level = item.level;
-        if(item.docLocation) existing.docLocation = item.docLocation;
-        if(item.authority) existing.authority = item.authority;
-        if(item.serial) existing.serial = item.serial;
-        if(item.change) existing.change = item.change;
-        if(item.status) existing.status = item.status;
-        existing._setRev = item.rev;
-        changed = true;
-      }
-    });
+function hideBanner(){
+  document.getElementById('sync-banner').style.display = 'none';
+}
+
+// UTF-8 safe base64 encode/decode
+function b64DecodeUtf8(b64){
+  return decodeURIComponent(escape(atob(b64)));
+}
+
+function ghHeaders(){
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+  if(ghConfig.token) headers['Authorization'] = 'Bearer ' + ghConfig.token;
+  return headers;
+}
+
+function ghUrl(){
+  return `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${encodeURIComponent(ghConfig.path).replace(/%2F/g,'/')}`;
+}
+
+async function fetchFromGitHub(){
+  const res = await fetch(ghUrl() + `?ref=${encodeURIComponent(ghConfig.branch)}`, {
+    headers: ghHeaders()
   });
-  return changed;
+  if(res.status === 404){
+    return null; // file doesn't exist yet
+  }
+  if(!res.ok){
+    const body = await res.text();
+    throw new Error(`GitHub read failed (${res.status}): ${body.slice(0,200)}`);
+  }
+  const json = await res.json();
+  currentSha = json.sha;
+  const content = b64DecodeUtf8(json.content.replace(/\n/g,''));
+  return JSON.parse(content);
 }
 
 async function load(){
   try{
-    const res = await window.storage.get(STORAGE_KEY, false);
-    certs = res && res.value ? JSON.parse(res.value) : [];
+    showBanner('info', 'Loading from GitHub&hellip;');
+    const remote = await fetchFromGitHub();
+    if(remote === null){
+      certs = [];
+      showBanner('error', 'No data file found at that path yet.');
+    }else{
+      certs = remote;
+      hideBanner();
+    }
   }catch(e){
+    showBanner('error', 'Could not load from GitHub: ' + escapeHtml(e.message));
     certs = [];
-  }
-  if(certs.length === 0){
-    certs = DEFAULT_CUSTOMERS.map((customer, i) => ({
-      id: 'c' + Date.now() + i,
-      name: customer + ' certification',
-      customer,
-      authority: AUTHORITY_MAP[customer.toLowerCase()] || '',
-      status: '',
-      date: '',
-      change: '',
-      docs: [],
-      docLocation: '',
-      serial: '',
-      aircraft: '',
-      country: '',
-      simLocation: '',
-      level: '',
-      activityLog: [],
-      docChangeLog: [],
-      _rev: 0
-    }));
-    certs.forEach(c => {
-      const key = (c.customer || '').trim().toLowerCase();
-      const upd = RECORD_UPDATES[key];
-      if(upd){
-        if(upd.name) c.name = upd.name;
-        if(upd.status) c.status = upd.status;
-        if(upd.change) c.change = upd.change;
-        if(upd.docs) c.docs = upd.docs;
-        if(upd.docLocation) c.docLocation = upd.docLocation;
-        if(upd.serial) c.serial = upd.serial;
-        if(upd.aircraft) c.aircraft = upd.aircraft;
-        if(upd.country !== undefined) c.country = upd.country || '';
-        if(upd.simLocation) c.simLocation = upd.simLocation;
-        if(upd.level) c.level = upd.level;
-        c._rev = upd.rev;
-      }
-    });
-    applyCertSets();
-    await persist();
-  }else{
-    let changed = false;
-    certs.forEach(c => {
-      const key = (c.customer || '').trim().toLowerCase();
-      if(!c.authority && AUTHORITY_MAP[key]){
-        c.authority = AUTHORITY_MAP[key];
-        changed = true;
-      }
-      const upd = RECORD_UPDATES[key];
-      if(upd && (c._rev || 0) < upd.rev){
-        if(upd.name) c.name = upd.name;
-        if(upd.status) c.status = upd.status;
-        if(upd.change) c.change = upd.change;
-        if(upd.docs) c.docs = upd.docs;
-        if(upd.docLocation) c.docLocation = upd.docLocation;
-        if(upd.serial) c.serial = upd.serial;
-        if(upd.aircraft) c.aircraft = upd.aircraft;
-        if(upd.country !== undefined) c.country = upd.country || '';
-        if(upd.simLocation) c.simLocation = upd.simLocation;
-        if(upd.level) c.level = upd.level;
-        c._rev = upd.rev;
-        changed = true;
-      }
-      if(STATUS_LABELS[c.status]){
-        c.status = STATUS_LABELS[c.status];
-        changed = true;
-      }
-      if(Array.isArray(c.changeLog) && !c.activityLog){
-        c.activityLog = c.changeLog;
-        delete c.changeLog;
-        changed = true;
-      }
-      if(!Array.isArray(c.activityLog)){
-        c.activityLog = [];
-        changed = true;
-      }
-      if(!Array.isArray(c.docChangeLog)){
-        c.docChangeLog = [];
-        changed = true;
-      }
-      if(c.activityLog.length === 0 && c.status){
-        const today = new Date().toISOString().slice(0,10);
-        c.activityLog.push({date: today, text: 'To-do: ' + c.status});
-        changed = true;
-      }
-    });
-    if(applyCertSets()) changed = true;
-    if(changed) await persist();
   }
   render();
 }
 
-async function persist(){
-  try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(certs), false);
-  }catch(e){
-    console.error('Storage error', e);
-  }
-}
-
-const STATUS_LABELS = {
-  'not-started':'Not started',
-  'in-progress':'In progress',
-  'submitted':'Submitted',
-  'under-review':'Under review',
-  'approved':'Approved',
-  'rejected':'Rejected',
-  'on-hold':'On hold'
-};
+function statusPillClass(){ return ''; }
 
 function isOverdue(c){
   if(!c.date) return false;
@@ -720,6 +487,7 @@ function render(){
   `;
 
   const list = document.getElementById('list');
+  if(!ghConfig) return;
   if(certs.length === 0){
     list.innerHTML = `<div class="empty"><p>No certifications found.</p></div>`;
     return;
@@ -733,7 +501,7 @@ function render(){
     groups[key].push(c);
   });
 
-  const CUSTOMER_ORDER = ['skyborn airline academy', 'skyborne airline academy', 'us aviation academy', 'aeroguard', 'superior air'];
+  const CUSTOMER_ORDER = ['skyborne airline academy', 'skyborn airline academy', 'us aviation academy', 'aeroguard', 'superior air'];
   order.sort((a,b) => {
     const ai = CUSTOMER_ORDER.indexOf(a.trim().toLowerCase());
     const bi = CUSTOMER_ORDER.indexOf(b.trim().toLowerCase());
@@ -889,7 +657,7 @@ function renderActivityLog(c){
 
 function escapeHtml(s){
   const d = document.createElement('div');
-  d.textContent = s;
+  d.textContent = s == null ? '' : s;
   return d.innerHTML;
 }
 
