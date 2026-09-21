@@ -349,6 +349,14 @@
   .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
   .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
   .sync-banner a{color:inherit;text-decoration:underline;}
+  .version-footer{
+    margin-top:24px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    font-size:11px;
+    color:var(--ink-faint);
+    text-align:center;
+  }
 </style>
 </head>
 <body>
@@ -371,6 +379,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
+  <div class="version-footer">v1.0</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
