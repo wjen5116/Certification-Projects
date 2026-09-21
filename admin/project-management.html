@@ -1180,11 +1180,13 @@ function openActivityModal(certId, activityId){
     document.getElementById('a-due').value = '';
   }
   document.getElementById('activity-modal-bg').classList.add('open');
+  document.getElementById('activity-modal-bg').style.display = 'flex';
   document.getElementById('a-description').focus();
 }
 
 function closeActivityModal(){
   document.getElementById('activity-modal-bg').classList.remove('open');
+  document.getElementById('activity-modal-bg').style.display = 'none';
 }
 
 async function saveActivityEntry(){
@@ -1276,11 +1278,13 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-doclocation').value = '';
   }
   modal.classList.add('open');
+  modal.style.display = 'flex';
   document.getElementById('f-name').focus();
 }
 
 function closeModal(){
   document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal-bg').style.display = 'none';
 }
 
 async function saveCert(){
@@ -1358,12 +1362,15 @@ document.getElementById('settings-btn').addEventListener('click', () => {
   document.getElementById('s-token').value = cfg.token || '';
   document.getElementById('settings-err').style.display = 'none';
   document.getElementById('settings-modal-bg').classList.add('open');
+  document.getElementById('settings-modal-bg').style.display = 'flex';
 });
 document.getElementById('settings-cancel-btn').addEventListener('click', () => {
   document.getElementById('settings-modal-bg').classList.remove('open');
+  document.getElementById('settings-modal-bg').style.display = 'none';
 });
 document.getElementById('settings-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'settings-modal-bg') document.getElementById('settings-modal-bg').classList.remove('open');
+  document.getElementById('settings-modal-bg').style.display = 'none';
 });
 document.getElementById('settings-save-btn').addEventListener('click', async () => {
   const owner = document.getElementById('s-owner').value.trim();
@@ -1377,6 +1384,7 @@ document.getElementById('settings-save-btn').addEventListener('click', async () 
   }
   saveSettings({owner, repo, branch, path, token});
   document.getElementById('settings-modal-bg').classList.remove('open');
+  document.getElementById('settings-modal-bg').style.display = 'none';
   currentSha = null;
   await load();
 });
