@@ -82,6 +82,14 @@
         "dateCreated": "2026-09-11",
         "dateDue": "",
         "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a1790004123163",
+        "description": "Called Retty - Informed him their SME should perform the Subjective Tests ASAP to provide feedback before FAA inspection.",
+        "status": "Complete",
+        "dateCreated": "2026-09-21",
+        "dateDue": "2026-09-21",
+        "dateUpdated": "2026-09-21"
       }
     ],
     "docChangeLog": []
