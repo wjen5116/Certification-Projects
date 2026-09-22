@@ -417,7 +417,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.1.0</div>
+  <div class="version-footer">v2.1.1</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1201,10 +1201,10 @@ function renderActivityLog(c){
             </div>
           </div>
           <div class="activity-meta">
-            Entered ${fmtDate(a.dateCreated)}
+            Entered ${fmtDate(a.dateCreated)}${a.timeCreated ? ', ' + a.timeCreated : ''}
             ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
-            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
-            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}` : ''}
+            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}${a.timeUpdated ? ', ' + a.timeUpdated : ''}` : ''}
+            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}` : ''}
           </div>
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
@@ -1249,6 +1249,7 @@ async function saveActivityEntry(){
   const certId = document.getElementById('activity-cert-id').value;
   const activityId = document.getElementById('activity-edit-id').value;
   const today = new Date().toISOString().slice(0,10);
+  const nowT = nowTime();
   const status = document.getElementById('a-status').value || 'Pending';
   const dateDueRaw = document.getElementById('a-due').value;
   const dateDue = /^\d{4}-\d{2}-\d{2}$/.test(dateDueRaw) ? dateDueRaw : '';
@@ -1262,13 +1263,16 @@ async function saveActivityEntry(){
     if(idx > -1){
       const prevEntry = c.activityLog[idx];
       let dateCompleted = prevEntry.dateCompleted || '';
-      if(status === 'Complete' && !dateCompleted) dateCompleted = today;
-      if(status !== 'Complete') dateCompleted = '';
+      let timeCompleted = prevEntry.timeCompleted || '';
+      if(status === 'Complete' && !dateCompleted){ dateCompleted = today; timeCompleted = nowT; }
+      if(status !== 'Complete'){ dateCompleted = ''; timeCompleted = ''; }
       c.activityLog[idx] = {
         ...prevEntry,
         description, status, dateDue,
         dateUpdated: today,
-        dateCompleted
+        timeUpdated: nowT,
+        dateCompleted,
+        timeCompleted
       };
     }
   }else{
@@ -1276,8 +1280,11 @@ async function saveActivityEntry(){
       id: 'a' + Date.now(),
       description, status, dateDue,
       dateCreated: today,
+      timeCreated: nowT,
       dateUpdated: today,
-      dateCompleted: status === 'Complete' ? today : ''
+      timeUpdated: nowT,
+      dateCompleted: status === 'Complete' ? today : '',
+      timeCompleted: status === 'Complete' ? nowT : ''
     });
   }
   await persist();
@@ -1291,9 +1298,12 @@ async function markActivityComplete(certId, activityId){
   const a = c.activityLog.find(x => x.id === activityId);
   if(!a) return;
   const today = new Date().toISOString().slice(0,10);
+  const nowT = nowTime();
   a.status = 'Complete';
   a.dateUpdated = today;
+  a.timeUpdated = nowT;
   a.dateCompleted = today;
+  a.timeCompleted = nowT;
   await persist();
   render();
 }
