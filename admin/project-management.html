@@ -388,7 +388,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.4</div>
+  <div class="version-footer">v1.5</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -439,14 +439,6 @@
         <label for="f-date">Due date</label>
         <input id="f-date" type="date">
       </div>
-    </div>
-    <div class="field">
-      <label for="f-docs">Documents (one per line: name, or "name | download URL")</label>
-      <textarea id="f-docs" placeholder="e.g. MQTG v1.1.docx | https://drive.google.com/..."></textarea>
-    </div>
-    <div class="field">
-      <label for="f-doclocation">Document location (network path or a Google Drive link)</label>
-      <input id="f-doclocation" placeholder="e.g. G:\Shared drives\Certification\... or https://drive.google.com/...">
     </div>
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
@@ -516,6 +508,42 @@
     <div class="modal-actions">
       <button id="activity-cancel-btn">Cancel</button>
       <button class="btn-primary" id="activity-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="document-modal-bg">
+  <div class="modal">
+    <h3 id="document-modal-title">Add document</h3>
+    <input type="hidden" id="document-cert-id">
+    <input type="hidden" id="document-edit-id">
+    <div class="field">
+      <label for="d-name">Document name</label>
+      <input id="d-name" placeholder="e.g. MQTG v1.1.docx">
+      <div class="err" id="document-err" style="display:none;">Enter a document name.</div>
+    </div>
+    <div class="field">
+      <label for="d-url">Download URL (optional)</label>
+      <input id="d-url" placeholder="e.g. https://drive.google.com/file/d/...">
+    </div>
+    <div class="modal-actions">
+      <button id="document-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="document-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="doclocation-modal-bg">
+  <div class="modal">
+    <h3>Document location</h3>
+    <input type="hidden" id="doclocation-cert-id">
+    <div class="field">
+      <label for="d-location">Network path or a Google Drive link</label>
+      <input id="d-location" placeholder="e.g. G:\Shared drives\Certification\... or https://drive.google.com/...">
+    </div>
+    <div class="modal-actions">
+      <button id="doclocation-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="doclocation-save-btn">Save</button>
     </div>
   </div>
 </div>
@@ -826,6 +854,12 @@ async function load(){
         const normalized = c.docs.map(d => typeof d === 'string' ? {name: d, url: ''} : d);
         const isDifferent = normalized.some((d, i) => typeof c.docs[i] === 'string');
         if(isDifferent){ c.docs = normalized; needsResave = true; }
+        c.docs.forEach((d, di) => {
+          if(!d.id){ d.id = 'd' + Date.now() + ci + di; needsResave = true; }
+        });
+      }else{
+        c.docs = [];
+        needsResave = true;
       }
     });
     if(needsResave){
@@ -988,14 +1022,28 @@ function escapeAttr(s){
 }
 
 function renderDocumentsSection(c){
-  const hasDocs = c.docs && c.docs.length;
+  const docs = Array.isArray(c.docs) ? c.docs : [];
   return `
     <div class="changelog">
-      <div class="fk">Documents</div>
-      <div class="changelog-entry">
-        <span class="changelog-text">${hasDocs ? c.docs.map(renderDocItem).join('<br>') : '<span style="color:var(--ink-faint)">No documents yet</span>'}</span>
+      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Documents</span>
+        <button class="btn-text" onclick="openDocumentModal('${c.id}')">+ Add</button>
       </div>
-      ${renderDocLocation(c.docLocation)}
+      ${docs.length ? docs.map(d => `
+        <div class="activity-entry">
+          <div class="activity-entry-top">
+            <span class="changelog-text">${renderDocItem(d)}</span>
+            <div class="cert-actions">
+              <button class="btn-text" onclick="openDocumentModal('${c.id}', '${d.id}')">Edit</button>
+              <button class="btn-text danger" onclick="deleteDocument('${c.id}', '${d.id}')">Delete</button>
+            </div>
+          </div>
+        </div>
+      `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No documents yet</span></div>'}
+      <div class="activity-entry-top" style="margin-top:6px;">
+        ${c.docLocation ? renderDocLocation(c.docLocation) : '<span class="changelog-text" style="color:var(--ink-faint)">No location set</span>'}
+        <button class="btn-text" onclick="openDocLocationModal('${c.id}')">${c.docLocation ? 'Edit location' : '+ Add location'}</button>
+      </div>
     </div>
   `;
 }
@@ -1157,6 +1205,103 @@ async function deleteActivity(certId, activityId){
   render();
 }
 
+function openDocumentModal(certId, docId){
+  document.getElementById('document-err').style.display = 'none';
+  document.getElementById('document-cert-id').value = certId;
+  document.getElementById('document-edit-id').value = docId || '';
+  const title = document.getElementById('document-modal-title');
+  if(docId){
+    const c = certs.find(x => x.id === certId);
+    const d = c && Array.isArray(c.docs) ? c.docs.find(x => x.id === docId) : null;
+    title.textContent = 'Edit document';
+    document.getElementById('d-name').value = d ? d.name : '';
+    document.getElementById('d-url').value = d ? (d.url || '') : '';
+  }else{
+    title.textContent = 'Add document';
+    document.getElementById('d-name').value = '';
+    document.getElementById('d-url').value = '';
+  }
+  document.getElementById('document-modal-bg').classList.add('open');
+  document.getElementById('document-modal-bg').style.display = 'flex';
+  document.getElementById('d-name').focus();
+}
+
+function closeDocumentModal(){
+  document.getElementById('document-modal-bg').classList.remove('open');
+  document.getElementById('document-modal-bg').style.display = 'none';
+}
+
+async function saveDocumentEntry(){
+  const name = document.getElementById('d-name').value.trim();
+  if(!name){
+    document.getElementById('document-err').style.display = 'block';
+    return;
+  }
+  const certId = document.getElementById('document-cert-id').value;
+  const docId = document.getElementById('document-edit-id').value;
+  const url = document.getElementById('d-url').value.trim();
+  const today = new Date().toISOString().slice(0,10);
+
+  const c = certs.find(x => x.id === certId);
+  if(!c) return;
+  if(!Array.isArray(c.docs)) c.docs = [];
+  if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
+
+  if(docId){
+    const idx = c.docs.findIndex(x => x.id === docId);
+    if(idx > -1){
+      c.docs[idx] = {...c.docs[idx], name, url};
+      c.docChangeLog.push({date: today, text: 'Document updated: ' + name});
+    }
+  }else{
+    c.docs.push({id: 'd' + Date.now(), name, url});
+    c.docChangeLog.push({date: today, text: 'Document added: ' + name});
+  }
+  await persist();
+  closeDocumentModal();
+  render();
+}
+
+async function deleteDocument(certId, docId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.docs)) return;
+  const d = c.docs.find(x => x.id === docId);
+  c.docs = c.docs.filter(x => x.id !== docId);
+  if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
+  if(d) c.docChangeLog.push({date: new Date().toISOString().slice(0,10), text: 'Document removed: ' + d.name});
+  await persist();
+  render();
+}
+
+function openDocLocationModal(certId){
+  document.getElementById('doclocation-cert-id').value = certId;
+  const c = certs.find(x => x.id === certId);
+  document.getElementById('d-location').value = (c && c.docLocation) || '';
+  document.getElementById('doclocation-modal-bg').classList.add('open');
+  document.getElementById('doclocation-modal-bg').style.display = 'flex';
+  document.getElementById('d-location').focus();
+}
+
+function closeDocLocationModal(){
+  document.getElementById('doclocation-modal-bg').classList.remove('open');
+  document.getElementById('doclocation-modal-bg').style.display = 'none';
+}
+
+async function saveDocLocationEntry(){
+  const certId = document.getElementById('doclocation-cert-id').value;
+  const location = document.getElementById('d-location').value.trim();
+  const c = certs.find(x => x.id === certId);
+  if(!c) return;
+  if(location !== (c.docLocation || '')){
+    if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
+    c.docChangeLog.push({date: new Date().toISOString().slice(0,10), text: 'Document location updated: ' + (location || '(cleared)')});
+  }
+  c.docLocation = location;
+  await persist();
+  closeDocLocationModal();
+  render();
+}
+
 function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : s;
@@ -1198,11 +1343,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
-    document.getElementById('f-docs').value = (c.docs || []).map(d => {
-      if(typeof d === 'string') return d;
-      return d.url ? `${d.name} | ${d.url}` : d.name;
-    }).join('\n');
-    document.getElementById('f-doclocation').value = c.docLocation || '';
   }else{
     title.textContent = 'Add certification';
     document.getElementById('edit-id').value = '';
@@ -1215,8 +1355,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = '';
     document.getElementById('f-level').value = '';
     document.getElementById('f-date').value = '';
-    document.getElementById('f-docs').value = '';
-    document.getElementById('f-doclocation').value = '';
   }
   modal.classList.add('open');
   document.getElementById('f-name').focus();
@@ -1242,36 +1380,20 @@ async function saveCert(){
     serial: document.getElementById('f-serial').value.trim(),
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
-    date: document.getElementById('f-date').value,
-    docs: document.getElementById('f-docs').value.split('\n').map(s => s.trim()).filter(Boolean).map(line => {
-      const parts = line.split('|').map(p => p.trim());
-      return parts.length > 1 && parts[1] ? {name: parts[0], url: parts[1]} : {name: parts[0], url: ''};
-    }),
-    docLocation: document.getElementById('f-doclocation').value.trim()
+    date: document.getElementById('f-date').value
   };
 
   if(id){
     const idx = certs.findIndex(c => c.id === id);
     if(idx > -1){
       const prev = certs[idx];
-      const today = new Date().toISOString().slice(0,10);
-      const docEntries = [];
-      const docKey = docs => (docs || []).map(d => typeof d === 'string' ? d : `${d.name}|${d.url || ''}`).join('\n');
-      const prevDocs = docKey(prev.docs);
-      const newDocs = docKey(data.docs);
-      if(newDocs !== prevDocs && data.docs.length){
-        docEntries.push({date: today, text: 'Documents updated: ' + data.docs.map(d => d.name).join(', ')});
-      }
-      if(data.docLocation !== prev.docLocation && data.docLocation){
-        docEntries.push({date: today, text: 'Document location updated: ' + data.docLocation});
-      }
       certs[idx] = {...prev, ...data};
       if(!Array.isArray(certs[idx].activityLog)) certs[idx].activityLog = [];
       if(!Array.isArray(certs[idx].docChangeLog)) certs[idx].docChangeLog = [];
-      certs[idx].docChangeLog.push(...docEntries);
+      if(!Array.isArray(certs[idx].docs)) certs[idx].docs = [];
     }
   }else{
-    certs.push({id: 'c' + Date.now(), ...data, activityLog: [], docChangeLog: []});
+    certs.push({id: 'c' + Date.now(), ...data, docs: [], docLocation: '', activityLog: [], docChangeLog: []});
   }
   await persist();
   closeModal();
@@ -1294,6 +1416,16 @@ document.getElementById('activity-cancel-btn').addEventListener('click', closeAc
 document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
 document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'activity-modal-bg') closeActivityModal();
+});
+document.getElementById('document-cancel-btn').addEventListener('click', closeDocumentModal);
+document.getElementById('document-save-btn').addEventListener('click', saveDocumentEntry);
+document.getElementById('document-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'document-modal-bg') closeDocumentModal();
+});
+document.getElementById('doclocation-cancel-btn').addEventListener('click', closeDocLocationModal);
+document.getElementById('doclocation-save-btn').addEventListener('click', saveDocLocationEntry);
+document.getElementById('doclocation-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'doclocation-modal-bg') closeDocLocationModal();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
