@@ -425,7 +425,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.1.0</div>
+  <div class="version-footer">v2.1.1</div>
 </div>
 
 <script>
@@ -774,10 +774,10 @@ function renderActivityLog(c){
             </div>
           </div>
           <div class="activity-meta">
-            Entered ${fmtDate(a.dateCreated)}
+            Entered ${fmtDate(a.dateCreated)}${a.timeCreated ? ', ' + a.timeCreated : ''}
             ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
-            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
-            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}` : ''}
+            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}${a.timeUpdated ? ', ' + a.timeUpdated : ''}` : ''}
+            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}` : ''}
           </div>
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
