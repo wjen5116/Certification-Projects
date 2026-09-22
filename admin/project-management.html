@@ -388,7 +388,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.8</div>
+  <div class="version-footer">v2.0</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -438,6 +438,12 @@
       <div class="field">
         <label for="f-date">Due date</label>
         <input id="f-date" type="date">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-contact">Primary contact</label>
+        <input id="f-contact" placeholder="e.g. Jane Smith, jane@customer.com">
       </div>
     </div>
     <div class="modal-actions">
@@ -817,12 +823,17 @@ async function load(){
             status: 'Complete',
             dateCreated: a.date || today,
             dateDue: '',
-            dateUpdated: a.date || today
+            dateUpdated: a.date || today,
+            dateCompleted: a.date || today
           };
           needsResave = true;
         }else{
           if(!a.id){ a.id = 'a' + Date.now() + ci + idx; needsResave = true; }
           if(!a.status){ a.status = 'Complete'; needsResave = true; }
+          if(a.status === 'Complete' && !a.dateCompleted){
+            a.dateCompleted = a.dateUpdated || a.dateCreated || today;
+            needsResave = true;
+          }
         }
       });
       // Fold any leftover "Next task" text into a new Pending activity.
@@ -879,6 +890,10 @@ function fmtDate(d){
   if(!d) return '\u2014';
   const dt = new Date(d + 'T00:00:00');
   return dt.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+}
+
+function nowTime(){
+  return new Date().toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
 }
 
 function render(){
@@ -988,6 +1003,10 @@ function render(){
               <div class="fk">Due date</div>
               <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
             </div>
+            <div>
+              <div class="fk">Primary contact</div>
+              <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
+            </div>
           </div>
           ${renderDocumentsSection(c)}
           ${renderDocChangeLog(c)}
@@ -1036,13 +1055,13 @@ function renderDocumentsSection(c){
 
 function renderDocChangeLog(c){
   const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
-  const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
+  const sorted = [...entries].sort((a,b) => (b.ts || 0) - (a.ts || 0) || (b.date||'').localeCompare(a.date||''));
   return `
     <div class="changelog">
       <div class="fk">Document Change Log</div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry">
-          <span class="changelog-date">${fmtDate(entry.date)}</span>
+          <span class="changelog-date">${fmtDate(entry.date)}${entry.time ? ', ' + entry.time : ''}</span>
           <span class="changelog-text">${escapeHtml(entry.text)}</span>
         </div>
       `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
@@ -1096,8 +1115,10 @@ function renderActivityLog(c){
             </div>
           </div>
           <div class="activity-meta">
-            ${a.dateDue ? `Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : 'No due date'}
+            Entered ${fmtDate(a.dateCreated)}
+            ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
             ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
+            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}` : ''}
           </div>
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
@@ -1153,10 +1174,15 @@ async function saveActivityEntry(){
   if(activityId){
     const idx = c.activityLog.findIndex(x => x.id === activityId);
     if(idx > -1){
+      const prevEntry = c.activityLog[idx];
+      let dateCompleted = prevEntry.dateCompleted || '';
+      if(status === 'Complete' && !dateCompleted) dateCompleted = today;
+      if(status !== 'Complete') dateCompleted = '';
       c.activityLog[idx] = {
-        ...c.activityLog[idx],
+        ...prevEntry,
         description, status, dateDue,
-        dateUpdated: today
+        dateUpdated: today,
+        dateCompleted
       };
     }
   }else{
@@ -1164,7 +1190,8 @@ async function saveActivityEntry(){
       id: 'a' + Date.now(),
       description, status, dateDue,
       dateCreated: today,
-      dateUpdated: today
+      dateUpdated: today,
+      dateCompleted: status === 'Complete' ? today : ''
     });
   }
   await persist();
@@ -1177,8 +1204,10 @@ async function markActivityComplete(certId, activityId){
   if(!c || !Array.isArray(c.activityLog)) return;
   const a = c.activityLog.find(x => x.id === activityId);
   if(!a) return;
+  const today = new Date().toISOString().slice(0,10);
   a.status = 'Complete';
-  a.dateUpdated = new Date().toISOString().slice(0,10);
+  a.dateUpdated = today;
+  a.dateCompleted = today;
   await persist();
   render();
 }
@@ -1239,14 +1268,14 @@ async function saveDocumentEntry(){
     const idx = c.docs.findIndex(x => x.id === docId);
     if(idx > -1){
       c.docs[idx] = {...c.docs[idx], name, url};
-      c.docChangeLog.push({date: today, text: 'Document updated: ' + name});
+      c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document updated: ' + name});
     }
   }else{
     c.docs.push({id: 'd' + Date.now(), name, url});
-    c.docChangeLog.push({date: today, text: 'Document added: ' + name});
+    c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document added: ' + name});
   }
   if(location !== (c.docLocation || '')){
-    c.docChangeLog.push({date: today, text: 'Document location updated: ' + (location || '(cleared)')});
+    c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document location updated: ' + (location || '(cleared)')});
     c.docLocation = location;
   }
   await persist();
@@ -1260,7 +1289,7 @@ async function deleteDocument(certId, docId){
   const d = c.docs.find(x => x.id === docId);
   c.docs = c.docs.filter(x => x.id !== docId);
   if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
-  if(d) c.docChangeLog.push({date: new Date().toISOString().slice(0,10), text: 'Document removed: ' + d.name});
+  if(d) c.docChangeLog.push({date: new Date().toISOString().slice(0,10), time: nowTime(), ts: Date.now(), text: 'Document removed: ' + d.name});
   await persist();
   render();
 }
@@ -1306,6 +1335,7 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
+    document.getElementById('f-contact').value = c.primaryContact || '';
   }else{
     title.textContent = 'Add certification';
     document.getElementById('edit-id').value = '';
@@ -1318,6 +1348,7 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = '';
     document.getElementById('f-level').value = '';
     document.getElementById('f-date').value = '';
+    document.getElementById('f-contact').value = '';
   }
   modal.classList.add('open');
   document.getElementById('f-name').focus();
@@ -1343,7 +1374,8 @@ async function saveCert(){
     serial: document.getElementById('f-serial').value.trim(),
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
-    date: document.getElementById('f-date').value
+    date: document.getElementById('f-date').value,
+    primaryContact: document.getElementById('f-contact').value.trim()
   };
 
   if(id){
