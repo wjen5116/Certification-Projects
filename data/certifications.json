@@ -31,7 +31,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a179003588595301",
@@ -39,7 +40,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-16",
         "dateDue": "",
-        "dateUpdated": "2026-09-16"
+        "dateUpdated": "2026-09-16",
+        "dateCompleted": "2026-09-16"
       },
       {
         "id": "a179003588595302",
@@ -47,7 +49,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-16",
         "dateDue": "",
-        "dateUpdated": "2026-09-16"
+        "dateUpdated": "2026-09-16",
+        "dateCompleted": "2026-09-16"
       },
       {
         "id": "a179003588595303",
@@ -121,7 +124,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a179003588595311",
@@ -129,7 +133,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-21",
         "dateDue": "",
-        "dateUpdated": "2026-09-21"
+        "dateUpdated": "2026-09-21",
+        "dateCompleted": "2026-09-21"
       },
       {
         "id": "a179003588595312",
@@ -137,7 +142,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-21",
         "dateDue": "",
-        "dateUpdated": "2026-09-21"
+        "dateUpdated": "2026-09-21",
+        "dateCompleted": "2026-09-21"
       },
       {
         "id": "a17900358859531-migrated",
@@ -153,7 +159,8 @@
         "status": "Complete",
         "dateDue": "",
         "dateCreated": "2026-09-22",
-        "dateUpdated": "2026-09-22"
+        "dateUpdated": "2026-09-22",
+        "dateCompleted": "2026-09-22"
       }
     ],
     "docChangeLog": [
@@ -202,7 +209,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859532-migrated",
@@ -242,7 +250,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859533-migrated",
@@ -282,7 +291,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859534-migrated",
@@ -322,7 +332,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859545-migrated",
@@ -356,7 +367,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a179003588595461",
@@ -364,7 +376,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859546-migrated",
@@ -398,7 +411,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a179003588595471",
@@ -406,7 +420,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-11"
+        "dateUpdated": "2026-09-11",
+        "dateCompleted": "2026-09-11"
       },
       {
         "id": "a17900358859547-migrated",
@@ -446,7 +461,8 @@
         "status": "Complete",
         "dateCreated": "2026-09-22",
         "dateDue": "",
-        "dateUpdated": "2026-09-22"
+        "dateUpdated": "2026-09-22",
+        "dateCompleted": "2026-09-22"
       },
       {
         "id": "a1790092417843",
