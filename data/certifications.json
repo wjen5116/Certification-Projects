@@ -102,10 +102,6 @@
     "docs": [
       {
         "name": "US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx",
-        "url": ""
-      },
-      {
-        "name": "",
         "url": "https://docs.google.com/document/d/1BoyLsTyAL5gh-UedO4s7MvGJP_FbmGCq/edit?usp=drive_link&ouid=117040569555243457327&rtpof=true&sd=true"
       },
       {
@@ -152,6 +148,10 @@
       {
         "date": "2026-09-22",
         "text": "Documents updated: US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx, , Validation_Data_Roadmap__Cessna_C172S_.docx"
+      },
+      {
+        "date": "2026-09-22",
+        "text": "Documents updated: US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx, Validation_Data_Roadmap__Cessna_C172S_.docx"
       }
     ]
   },
