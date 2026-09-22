@@ -44,10 +44,10 @@
       {
         "id": "a179003588595303",
         "description": "Waiting to receive UK CAA Discrepency Report from Skyborne for correction.",
-        "status": "Complete",
+        "status": "Pending",
         "dateCreated": "2026-09-21",
         "dateDue": "",
-        "dateUpdated": "2026-09-21"
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": [
