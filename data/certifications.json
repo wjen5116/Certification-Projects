@@ -420,5 +420,21 @@
       }
     ],
     "docChangeLog": []
+  },
+  {
+    "id": "c1790040118303",
+    "name": "Redbird TD/TD2",
+    "customer": "Redbird",
+    "authority": "FAA",
+    "country": "US",
+    "simLocation": "RBHQ",
+    "serial": "All",
+    "aircraft": "",
+    "level": "BATD",
+    "date": "2026-10-01",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
