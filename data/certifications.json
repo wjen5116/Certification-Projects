@@ -146,6 +146,14 @@
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
+      },
+      {
+        "id": "a1790092970083",
+        "description": "Updated MQTG - initial VD charts",
+        "status": "Complete",
+        "dateDue": "",
+        "dateCreated": "2026-09-22",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": [
