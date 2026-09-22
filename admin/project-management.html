@@ -168,6 +168,8 @@
     word-break:break-all;
     user-select:all;
   }
+  .doc-loc a{color:var(--pine);text-decoration:underline;}
+  .field-grid .fv a{color:var(--pine);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -386,7 +388,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.1</div>
+  <div class="version-footer">v1.3</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -439,12 +441,12 @@
       </div>
     </div>
     <div class="field">
-      <label for="f-docs">Documents (one per line)</label>
-      <textarea id="f-docs" placeholder="e.g. MQTG v1.1.docx"></textarea>
+      <label for="f-docs">Documents (one per line: name, or "name | download URL")</label>
+      <textarea id="f-docs" placeholder="e.g. MQTG v1.1.docx | https://drive.google.com/..."></textarea>
     </div>
     <div class="field">
-      <label for="f-doclocation">Document location</label>
-      <input id="f-doclocation" placeholder="e.g. G:\Shared drives\Certification\...">
+      <label for="f-doclocation">Document location (network path or a Google Drive link)</label>
+      <input id="f-doclocation" placeholder="e.g. G:\Shared drives\Certification\... or https://drive.google.com/...">
     </div>
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
@@ -820,6 +822,11 @@ async function load(){
         needsResave = true;
       }
       if(!Array.isArray(c.docChangeLog)){ c.docChangeLog = []; needsResave = true; }
+      if(Array.isArray(c.docs)){
+        const normalized = c.docs.map(d => typeof d === 'string' ? {name: d, url: ''} : d);
+        const isDifferent = normalized.some((d, i) => typeof c.docs[i] === 'string');
+        if(isDifferent){ c.docs = normalized; needsResave = true; }
+      }
     });
     if(needsResave){
       showBanner('info', remote === null ? 'No data file found yet \u2014 creating one with starting data&hellip;' : 'Updating data format&hellip;');
@@ -960,7 +967,7 @@ function render(){
             </div>
             <div class="full">
               <div class="fk">Documents</div>
-              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${c.docLocation ? `<div class="doc-loc">${escapeHtml(c.docLocation)}</div>` : ''}</div>
+              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(renderDocItem).join('<br>') : '\u2014'}${renderDocLocation(c.docLocation)}</div>
             </div>
           </div>
           ${renderDocChangeLog(c)}
@@ -1146,6 +1153,24 @@ function escapeHtml(s){
   return d.innerHTML;
 }
 
+function renderDocLocation(loc){
+  if(!loc) return '';
+  const isUrl = /^https?:\/\//i.test(loc.trim());
+  if(isUrl){
+    return `<div class="doc-loc"><a href="${escapeHtml(loc.trim())}" target="_blank" rel="noopener noreferrer">${escapeHtml(loc.trim())}</a></div>`;
+  }
+  return `<div class="doc-loc">${escapeHtml(loc)}</div>`;
+}
+
+function renderDocItem(doc){
+  const name = typeof doc === 'string' ? doc : (doc.name || '');
+  const url = typeof doc === 'string' ? '' : (doc.url || '');
+  if(url){
+    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)} \u2193</a>`;
+  }
+  return escapeHtml(name);
+}
+
 function openModal(id, prefillCustomer){
   document.getElementById('err-name').style.display = 'none';
   const modal = document.getElementById('modal-bg');
@@ -1163,7 +1188,10 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
-    document.getElementById('f-docs').value = (c.docs || []).join('\n');
+    document.getElementById('f-docs').value = (c.docs || []).map(d => {
+      if(typeof d === 'string') return d;
+      return d.url ? `${d.name} | ${d.url}` : d.name;
+    }).join('\n');
     document.getElementById('f-doclocation').value = c.docLocation || '';
   }else{
     title.textContent = 'Add certification';
@@ -1205,7 +1233,10 @@ async function saveCert(){
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
     date: document.getElementById('f-date').value,
-    docs: document.getElementById('f-docs').value.split('\n').map(s => s.trim()).filter(Boolean),
+    docs: document.getElementById('f-docs').value.split('\n').map(s => s.trim()).filter(Boolean).map(line => {
+      const parts = line.split('|').map(p => p.trim());
+      return parts.length > 1 && parts[1] ? {name: parts[0], url: parts[1]} : {name: parts[0], url: ''};
+    }),
     docLocation: document.getElementById('f-doclocation').value.trim()
   };
 
@@ -1215,10 +1246,11 @@ async function saveCert(){
       const prev = certs[idx];
       const today = new Date().toISOString().slice(0,10);
       const docEntries = [];
-      const prevDocs = (prev.docs || []).join('\n');
-      const newDocs = data.docs.join('\n');
+      const docKey = docs => (docs || []).map(d => typeof d === 'string' ? d : `${d.name}|${d.url || ''}`).join('\n');
+      const prevDocs = docKey(prev.docs);
+      const newDocs = docKey(data.docs);
       if(newDocs !== prevDocs && data.docs.length){
-        docEntries.push({date: today, text: 'Documents updated: ' + data.docs.join(', ')});
+        docEntries.push({date: today, text: 'Documents updated: ' + data.docs.map(d => d.name).join(', ')});
       }
       if(data.docLocation !== prev.docLocation && data.docLocation){
         docEntries.push({date: today, text: 'Document location updated: ' + data.docLocation});
