@@ -480,7 +480,16 @@
       }
     ],
     "docLocation": "",
-    "activityLog": [],
+    "activityLog": [
+      {
+        "id": "a1790095046828",
+        "description": "Update QAG to include other airfract for NXi",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-09-22",
+        "dateUpdated": "2026-09-22"
+      }
+    ],
     "docChangeLog": [
       {
         "date": "2026-09-22",
