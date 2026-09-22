@@ -13,7 +13,7 @@
     "change": "",
     "docs": [
       {
-        "name": "\"R-MCX-100251 (PA28 Archer) UK_FNPTII_MQTG v1.3.pdf",
+        "name": "R-MCX-100251 (PA28 Archer) UK_FNPTII_MQTG v1.3.pdf",
         "url": "https://drive.google.com/file/d/13XaQDcRCrxv9vy4ARqISD5xFBYERFVhb/view?usp=drive_link"
       }
     ],
@@ -72,6 +72,10 @@
       {
         "date": "2026-09-22",
         "text": "Documents updated: \"R-MCX-100251 (PA28 Archer) UK_FNPTII_MQTG v1.3.pdf"
+      },
+      {
+        "date": "2026-09-22",
+        "text": "Documents updated: R-MCX-100251 (PA28 Archer) UK_FNPTII_MQTG v1.3.pdf"
       }
     ]
   },
