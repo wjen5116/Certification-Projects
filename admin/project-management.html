@@ -154,6 +154,9 @@
   .pill-rejected{background:var(--rust-bg);color:var(--rust);}
   .pill-onhold{background:#2A2A2A;color:var(--ink-soft);}
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
+  .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
+  .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
+  .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
   .actions-cell{white-space:nowrap;}
   .change-cell{max-width:220px;}
@@ -250,18 +253,6 @@
   }
   .field-grid .fv{color:var(--ink);}
   .field-grid .full{grid-column:1 / -1;}
-  .inline-edit-row{margin-top:2px;}
-  .inline-input{
-    width:100%;
-    font-family:var(--sans);
-    font-size:14px;
-    padding:7px 9px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--bg);
-    color:var(--ink);
-  }
-  .inline-input:focus{border-color:var(--pine);outline:none;}
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -279,6 +270,22 @@
     flex-shrink:0;
   }
   .changelog-text{color:var(--ink-soft);}
+  .activity-entry{
+    padding:6px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .activity-entry:last-child{border-bottom:none;}
+  .activity-entry-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .activity-meta{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:3px;
+  }
 
   .modal-bg{
     position:fixed;inset:0;
@@ -379,7 +386,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.0</div>
+  <div class="version-footer">v1.1</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -432,10 +439,6 @@
       </div>
     </div>
     <div class="field">
-      <label for="f-change">Next task</label>
-      <textarea id="f-change" placeholder="What needs to happen next on this certification"></textarea>
-    </div>
-    <div class="field">
       <label for="f-docs">Documents (one per line)</label>
       <textarea id="f-docs" placeholder="e.g. MQTG v1.1.docx"></textarea>
     </div>
@@ -480,6 +483,37 @@
     <div class="modal-actions">
       <button id="settings-cancel-btn">Cancel</button>
       <button class="btn-primary" id="settings-save-btn">Save & connect</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="activity-modal-bg">
+  <div class="modal">
+    <h3 id="activity-modal-title">Add activity</h3>
+    <input type="hidden" id="activity-cert-id">
+    <input type="hidden" id="activity-edit-id">
+    <div class="field">
+      <label for="a-description">Description</label>
+      <textarea id="a-description" placeholder="What needs to happen"></textarea>
+      <div class="err" id="activity-err" style="display:none;">Enter a description.</div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="a-status">Status</label>
+        <select id="a-status">
+          <option value="Pending">Pending</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Complete">Complete</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="a-due">Due date</label>
+        <input id="a-due" type="date">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="activity-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="activity-save-btn">Save</button>
     </div>
   </div>
 </div>
@@ -743,16 +777,56 @@ async function load(){
   try{
     showBanner('info', 'Loading from GitHub&hellip;');
     const remote = await fetchFromGitHub();
+    let needsResave = false;
     if(remote === null){
       // First time: seed the file with starting data
       certs = SEED_DATA;
       currentSha = null;
-      showBanner('info', 'No data file found yet \u2014 creating one with starting data&hellip;');
-      await writeToGitHub(certs, 'Initialize certification tracker data');
-      showBanner('success', 'Created data file in your repo.');
-      setTimeout(hideBanner, 2500);
+      needsResave = true;
     }else{
       certs = remote;
+    }
+    certs.forEach((c, ci) => {
+      if(!Array.isArray(c.activityLog)) c.activityLog = [];
+      const today = new Date().toISOString().slice(0,10);
+      // Migrate legacy {date, text} activity entries to the new shape.
+      c.activityLog.forEach((a, idx) => {
+        if(a.description === undefined){
+          c.activityLog[idx] = {
+            id: a.id || ('a' + Date.now() + ci + idx),
+            description: a.text || '',
+            status: 'Complete',
+            dateCreated: a.date || today,
+            dateDue: '',
+            dateUpdated: a.date || today
+          };
+          needsResave = true;
+        }else{
+          if(!a.id){ a.id = 'a' + Date.now() + ci + idx; needsResave = true; }
+          if(!a.status){ a.status = 'Complete'; needsResave = true; }
+        }
+      });
+      // Fold any leftover "Next task" text into a new Pending activity.
+      if(c.change && c.change.trim()){
+        c.activityLog.push({
+          id: 'a' + Date.now() + ci + '-migrated',
+          description: c.change.trim(),
+          status: 'Pending',
+          dateCreated: today,
+          dateDue: '',
+          dateUpdated: today
+        });
+        c.change = '';
+        needsResave = true;
+      }
+      if(!Array.isArray(c.docChangeLog)){ c.docChangeLog = []; needsResave = true; }
+    });
+    if(needsResave){
+      showBanner('info', remote === null ? 'No data file found yet \u2014 creating one with starting data&hellip;' : 'Updating data format&hellip;');
+      await writeToGitHub(certs, remote === null ? 'Initialize certification tracker data' : 'Merge Next Task into Activities');
+      showBanner('success', remote === null ? 'Created data file in your repo.' : 'Data updated.');
+      setTimeout(hideBanner, 2500);
+    }else{
       hideBanner();
     }
   }catch(e){
@@ -885,15 +959,6 @@ function render(){
               <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
             </div>
             <div class="full">
-              <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-                <span>Next task</span>
-                ${c.change ? `<button class="btn-text" onclick="completeTask('${c.id}')">\u2713 Mark complete</button>` : ''}
-              </div>
-              <div class="inline-edit-row">
-                <input type="text" class="inline-input" value="${escapeHtmlAttr(c.change)}" placeholder="No next task set" onchange="saveNextTask('${c.id}', this.value)">
-              </div>
-            </div>
-            <div class="full">
               <div class="fk">Documents</div>
               <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${c.docLocation ? `<div class="doc-loc">${escapeHtml(c.docLocation)}</div>` : ''}</div>
             </div>
@@ -918,15 +983,12 @@ function escapeAttr(s){
   return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-function renderLogSection(title, entries, options){
-  options = options || {};
+function renderDocChangeLog(c){
+  const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
   const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
   return `
     <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>${escapeHtml(title)}</span>
-        ${options.addHandler ? `<button class="btn-text" onclick="${options.addHandler}">+ Add</button>` : ''}
-      </div>
+      <div class="fk">Document Change Log</div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry">
           <span class="changelog-date">${fmtDate(entry.date)}</span>
@@ -937,63 +999,143 @@ function renderLogSection(title, entries, options){
   `;
 }
 
-function renderDocChangeLog(c){
-  return renderLogSection('Document Change Log', Array.isArray(c.docChangeLog) ? c.docChangeLog : []);
+function isActivityOverdue(a){
+  if(!a.dateDue) return false;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(a.dateDue + 'T00:00:00') < today;
+}
+
+function activityStatusClass(status){
+  if(status === 'Complete') return 'sage';
+  if(status === 'In Progress') return 'gold';
+  return 'slate';
 }
 
 function renderActivityLog(c){
-  return renderLogSection('Activity Log', Array.isArray(c.activityLog) ? c.activityLog : [], {
-    addHandler: `addActivity('${c.id}')`
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  const sorted = [...entries].sort((a,b) => {
+    const aDone = a.status === 'Complete' ? 1 : 0;
+    const bDone = b.status === 'Complete' ? 1 : 0;
+    if(aDone !== bDone) return aDone - bDone;
+    const ad = a.dateDue || a.dateCreated || '';
+    const bd = b.dateDue || b.dateCreated || '';
+    return aDone === 0 ? ad.localeCompare(bd) : bd.localeCompare(ad);
   });
+  return `
+    <div class="changelog">
+      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Activities</span>
+        <button class="btn-text" onclick="openActivityModal('${c.id}')">+ Add</button>
+      </div>
+      ${sorted.length ? sorted.map(a => {
+        const over = isActivityOverdue(a);
+        const status = a.status || 'Pending';
+        const cls = activityStatusClass(status);
+        return `
+        <div class="activity-entry">
+          <div class="activity-entry-top">
+            <div>
+              <span class="pill pill-${cls}">${escapeHtml(status)}</span>
+              <span class="changelog-text">${escapeHtml(a.description)}</span>
+            </div>
+            <div class="cert-actions">
+              ${status !== 'Complete' ? `<button class="btn-text" onclick="markActivityComplete('${c.id}', '${a.id}')">\u2713 Complete</button>` : ''}
+              <button class="btn-text" onclick="openActivityModal('${c.id}', '${a.id}')">Edit</button>
+              <button class="btn-text danger" onclick="deleteActivity('${c.id}', '${a.id}')">Delete</button>
+            </div>
+          </div>
+          <div class="activity-meta">
+            ${a.dateDue ? `Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : 'No due date'}
+            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
+          </div>
+        </div>
+      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
+    </div>
+  `;
 }
 
-async function addActivity(id){
-  const text = prompt('Log a completed task or activity:');
-  if(!text || !text.trim()) return;
-  const c = certs.find(x => x.id === id);
+function openActivityModal(certId, activityId){
+  document.getElementById('activity-err').style.display = 'none';
+  document.getElementById('activity-cert-id').value = certId;
+  document.getElementById('activity-edit-id').value = activityId || '';
+  const title = document.getElementById('activity-modal-title');
+  if(activityId){
+    const c = certs.find(x => x.id === certId);
+    const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
+    title.textContent = 'Edit activity';
+    document.getElementById('a-description').value = a ? a.description : '';
+    document.getElementById('a-status').value = a ? (a.status || 'Pending') : 'Pending';
+    document.getElementById('a-due').value = a ? (a.dateDue || '') : '';
+  }else{
+    title.textContent = 'Add activity';
+    document.getElementById('a-description').value = '';
+    document.getElementById('a-status').value = 'Pending';
+    document.getElementById('a-due').value = '';
+  }
+  document.getElementById('activity-modal-bg').classList.add('open');
+  document.getElementById('activity-modal-bg').style.display = 'flex';
+  document.getElementById('a-description').focus();
+}
+
+function closeActivityModal(){
+  document.getElementById('activity-modal-bg').classList.remove('open');
+  document.getElementById('activity-modal-bg').style.display = 'none';
+}
+
+async function saveActivityEntry(){
+  const description = document.getElementById('a-description').value.trim();
+  if(!description){
+    document.getElementById('activity-err').style.display = 'block';
+    return;
+  }
+  const certId = document.getElementById('activity-cert-id').value;
+  const activityId = document.getElementById('activity-edit-id').value;
+  const today = new Date().toISOString().slice(0,10);
+  const status = document.getElementById('a-status').value || 'Pending';
+  const dateDueRaw = document.getElementById('a-due').value;
+  const dateDue = /^\d{4}-\d{2}-\d{2}$/.test(dateDueRaw) ? dateDueRaw : '';
+
+  const c = certs.find(x => x.id === certId);
   if(!c) return;
   if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  const today = new Date().toISOString().slice(0,10);
-  c.activityLog.push({date: today, text: text.trim()});
+
+  if(activityId){
+    const idx = c.activityLog.findIndex(x => x.id === activityId);
+    if(idx > -1){
+      c.activityLog[idx] = {
+        ...c.activityLog[idx],
+        description, status, dateDue,
+        dateUpdated: today
+      };
+    }
+  }else{
+    c.activityLog.push({
+      id: 'a' + Date.now(),
+      description, status, dateDue,
+      dateCreated: today,
+      dateUpdated: today
+    });
+  }
+  await persist();
+  closeActivityModal();
+  render();
+}
+
+async function markActivityComplete(certId, activityId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.activityLog)) return;
+  const a = c.activityLog.find(x => x.id === activityId);
+  if(!a) return;
+  a.status = 'Complete';
+  a.dateUpdated = new Date().toISOString().slice(0,10);
   await persist();
   render();
 }
 
-async function completeTask(id){
-  const c = certs.find(x => x.id === id);
-  if(!c || !c.change) return;
-  if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  const today = new Date().toISOString().slice(0,10);
-  c.activityLog.push({date: today, text: 'Completed: ' + c.change});
-  c.change = '';
-  await persist();
-  render();
-}
-
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s == null ? '' : s;
-  return d.innerHTML;
-}
-
-function escapeHtmlAttr(s){
-  return String(s == null ? '' : s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-async function saveNextTask(id, value){
-  const c = certs.find(x => x.id === id);
-  if(!c) return;
-  const trimmed = value.trim();
-  if(trimmed === (c.change || '')) return;
-  const today = new Date().toISOString().slice(0,10);
-  if(!Array.isArray(c.activityLog)) c.activityLog = [];
-  if(trimmed) c.activityLog.push({date: today, text: 'Next task: ' + trimmed});
-  c.change = trimmed;
+async function deleteActivity(certId, activityId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.activityLog)) return;
+  c.activityLog = c.activityLog.filter(a => a.id !== activityId);
   await persist();
   render();
 }
@@ -1015,7 +1157,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
-    document.getElementById('f-change').value = c.change || '';
     document.getElementById('f-docs').value = (c.docs || []).join('\n');
     document.getElementById('f-doclocation').value = c.docLocation || '';
   }else{
@@ -1030,7 +1171,6 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = '';
     document.getElementById('f-level').value = '';
     document.getElementById('f-date').value = '';
-    document.getElementById('f-change').value = '';
     document.getElementById('f-docs').value = '';
     document.getElementById('f-doclocation').value = '';
   }
@@ -1059,7 +1199,6 @@ async function saveCert(){
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
     date: document.getElementById('f-date').value,
-    change: document.getElementById('f-change').value.trim(),
     docs: document.getElementById('f-docs').value.split('\n').map(s => s.trim()).filter(Boolean),
     docLocation: document.getElementById('f-doclocation').value.trim()
   };
@@ -1069,11 +1208,7 @@ async function saveCert(){
     if(idx > -1){
       const prev = certs[idx];
       const today = new Date().toISOString().slice(0,10);
-      const activityEntries = [];
       const docEntries = [];
-      if(data.change !== prev.change && data.change){
-        activityEntries.push({date: today, text: 'Next task: ' + data.change});
-      }
       const prevDocs = (prev.docs || []).join('\n');
       const newDocs = data.docs.join('\n');
       if(newDocs !== prevDocs && data.docs.length){
@@ -1085,7 +1220,6 @@ async function saveCert(){
       certs[idx] = {...prev, ...data};
       if(!Array.isArray(certs[idx].activityLog)) certs[idx].activityLog = [];
       if(!Array.isArray(certs[idx].docChangeLog)) certs[idx].docChangeLog = [];
-      certs[idx].activityLog.push(...activityEntries);
       certs[idx].docChangeLog.push(...docEntries);
     }
   }else{
@@ -1107,6 +1241,11 @@ document.getElementById('cancel-btn').addEventListener('click', closeModal);
 document.getElementById('save-btn').addEventListener('click', saveCert);
 document.getElementById('modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'modal-bg') closeModal();
+});
+document.getElementById('activity-cancel-btn').addEventListener('click', closeActivityModal);
+document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
+document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'activity-modal-bg') closeActivityModal();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
