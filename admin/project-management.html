@@ -388,7 +388,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.6</div>
+  <div class="version-footer">v1.8</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -526,24 +526,13 @@
       <label for="d-url">Download URL (optional)</label>
       <input id="d-url" placeholder="e.g. https://drive.google.com/file/d/...">
     </div>
-    <div class="modal-actions">
-      <button id="document-cancel-btn">Cancel</button>
-      <button class="btn-primary" id="document-save-btn">Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="doclocation-modal-bg">
-  <div class="modal">
-    <h3>Document location</h3>
-    <input type="hidden" id="doclocation-cert-id">
     <div class="field">
-      <label for="d-location">Network path or a Google Drive link</label>
+      <label for="d-location">Document location (network path or a Google Drive link)</label>
       <input id="d-location" placeholder="e.g. G:\Shared drives\Certification\... or https://drive.google.com/...">
     </div>
     <div class="modal-actions">
-      <button id="doclocation-cancel-btn">Cancel</button>
-      <button class="btn-primary" id="doclocation-save-btn">Save</button>
+      <button id="document-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="document-save-btn">Save</button>
     </div>
   </div>
 </div>
@@ -1040,10 +1029,7 @@ function renderDocumentsSection(c){
           </div>
         </div>
       `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No documents yet</span></div>'}
-      <div class="activity-entry-top" style="margin-top:6px;">
-        ${c.docLocation ? renderDocLocation(c.docLocation) : ''}
-        <button class="btn-text" onclick="openDocLocationModal('${c.id}')">${c.docLocation ? 'Edit location' : '+ Add location'}</button>
-      </div>
+      ${c.docLocation ? `<div style="margin-top:6px;">${renderDocLocation(c.docLocation)}</div>` : ''}
     </div>
   `;
 }
@@ -1210,8 +1196,8 @@ function openDocumentModal(certId, docId){
   document.getElementById('document-cert-id').value = certId;
   document.getElementById('document-edit-id').value = docId || '';
   const title = document.getElementById('document-modal-title');
+  const c = certs.find(x => x.id === certId);
   if(docId){
-    const c = certs.find(x => x.id === certId);
     const d = c && Array.isArray(c.docs) ? c.docs.find(x => x.id === docId) : null;
     title.textContent = 'Edit document';
     document.getElementById('d-name').value = d ? d.name : '';
@@ -1221,6 +1207,7 @@ function openDocumentModal(certId, docId){
     document.getElementById('d-name').value = '';
     document.getElementById('d-url').value = '';
   }
+  document.getElementById('d-location').value = (c && c.docLocation) || '';
   document.getElementById('document-modal-bg').classList.add('open');
   document.getElementById('document-modal-bg').style.display = 'flex';
   document.getElementById('d-name').focus();
@@ -1240,6 +1227,7 @@ async function saveDocumentEntry(){
   const certId = document.getElementById('document-cert-id').value;
   const docId = document.getElementById('document-edit-id').value;
   const url = document.getElementById('d-url').value.trim();
+  const location = document.getElementById('d-location').value.trim();
   const today = new Date().toISOString().slice(0,10);
 
   const c = certs.find(x => x.id === certId);
@@ -1257,6 +1245,10 @@ async function saveDocumentEntry(){
     c.docs.push({id: 'd' + Date.now(), name, url});
     c.docChangeLog.push({date: today, text: 'Document added: ' + name});
   }
+  if(location !== (c.docLocation || '')){
+    c.docChangeLog.push({date: today, text: 'Document location updated: ' + (location || '(cleared)')});
+    c.docLocation = location;
+  }
   await persist();
   closeDocumentModal();
   render();
@@ -1270,35 +1262,6 @@ async function deleteDocument(certId, docId){
   if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
   if(d) c.docChangeLog.push({date: new Date().toISOString().slice(0,10), text: 'Document removed: ' + d.name});
   await persist();
-  render();
-}
-
-function openDocLocationModal(certId){
-  document.getElementById('doclocation-cert-id').value = certId;
-  const c = certs.find(x => x.id === certId);
-  document.getElementById('d-location').value = (c && c.docLocation) || '';
-  document.getElementById('doclocation-modal-bg').classList.add('open');
-  document.getElementById('doclocation-modal-bg').style.display = 'flex';
-  document.getElementById('d-location').focus();
-}
-
-function closeDocLocationModal(){
-  document.getElementById('doclocation-modal-bg').classList.remove('open');
-  document.getElementById('doclocation-modal-bg').style.display = 'none';
-}
-
-async function saveDocLocationEntry(){
-  const certId = document.getElementById('doclocation-cert-id').value;
-  const location = document.getElementById('d-location').value.trim();
-  const c = certs.find(x => x.id === certId);
-  if(!c) return;
-  if(location !== (c.docLocation || '')){
-    if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
-    c.docChangeLog.push({date: new Date().toISOString().slice(0,10), text: 'Document location updated: ' + (location || '(cleared)')});
-  }
-  c.docLocation = location;
-  await persist();
-  closeDocLocationModal();
   render();
 }
 
@@ -1421,11 +1384,6 @@ document.getElementById('document-cancel-btn').addEventListener('click', closeDo
 document.getElementById('document-save-btn').addEventListener('click', saveDocumentEntry);
 document.getElementById('document-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'document-modal-bg') closeDocumentModal();
-});
-document.getElementById('doclocation-cancel-btn').addEventListener('click', closeDocLocationModal);
-document.getElementById('doclocation-save-btn').addEventListener('click', saveDocLocationEntry);
-document.getElementById('doclocation-modal-bg').addEventListener('click', (e) => {
-  if(e.target.id === 'doclocation-modal-bg') closeDocLocationModal();
 });
 
 document.getElementById('settings-btn').addEventListener('click', () => {
