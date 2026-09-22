@@ -241,6 +241,35 @@
     align-items:flex-start;
     gap:10px;
   }
+  .cert-collapse-toggle{
+    width:100%;
+    background:none;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    text-align:left;
+    font-family:var(--sans);
+    color:var(--ink);
+  }
+  .cert-collapse-toggle:hover .cert-name{color:var(--pine);}
+  .cert-collapse-toggle .chevron{
+    display:inline-block;
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-right:6px;
+    transition:transform 0.15s ease;
+  }
+  .cert-collapse-toggle .chevron.open{transform:rotate(90deg);}
+  .serial-heading{
+    font-family:var(--serif);
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin:16px 0 4px;
+  }
+  .serial-heading:first-child{margin-top:0;}
   .field-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
@@ -396,12 +425,13 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.0</div>
+  <div class="version-footer">v2.1.0</div>
 </div>
 
 <script>
 let certs = [];
 let activeCustomer = null;
+let expandedCertIds = new Set();
 let currentSha = null;
 
 // Hardcoded, read-only connection to the public data repo.
@@ -553,18 +583,29 @@ function render(){
     `;
   }).join('');
 
-  const activeItems = groups[activeCustomer] || [];
+  const activeItems = sortCerts(groups[activeCustomer] || []);
+  const { groups: serialGroups, order: serialOrder } = groupBySerial(activeItems);
+  const showSerialHeaders = serialOrder.length > 1;
 
   list.innerHTML = `
     <div class="tabs" role="tablist">${tabBar}</div>
     <div class="tab-panel">
-      ${activeItems.map(c => {
+      ${serialOrder.map(serialKey => `
+        ${showSerialHeaders ? `<div class="serial-heading">${escapeHtml(serialKey)}</div>` : ''}
+        ${serialGroups[serialKey].map(c => {
         const over = isOverdue(c);
+        const expanded = expandedCertIds.has(c.id);
+        const status = computeCertStatus(c);
         return `
         <div class="cert-block">
-          <div class="cert-block-top">
-            <span class="cert-name">${escapeHtml(c.name)}</span>
-          </div>
+          <button class="cert-block-top cert-collapse-toggle" onclick="toggleCertExpand('${c.id}')">
+            <span class="cert-name">
+              <span class="chevron ${expanded ? 'open' : ''}" aria-hidden="true">&#9656;</span>
+              ${escapeHtml(c.name)}
+            </span>
+            <span class="pill pill-${status.cls}">${status.label}</span>
+          </button>
+          ${expanded ? `
           <div class="field-grid">
             <div>
               <div class="fk">SIM location</div>
@@ -602,10 +643,55 @@ function render(){
           ${renderDocumentsSection(c)}
           ${renderDocChangeLog(c)}
           ${renderActivityLog(c)}
+          ` : ''}
         </div>
       `; }).join('')}
+      `).join('')}
     </div>
   `;
+}
+
+function isCertOverdue(c){
+  if(isOverdue(c)) return true;
+  const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
+  return acts.some(isActivityOverdue);
+}
+
+function computeCertStatus(c){
+  if(isCertOverdue(c)) return {label: 'Overdue', cls: 'overdue'};
+  const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
+  if(acts.length === 0) return {label: 'No Activity', cls: 'slate'};
+  const anyOpen = acts.some(a => a.status !== 'Complete');
+  if(anyOpen) return {label: 'In Progress', cls: 'gold'};
+  return {label: 'On Track', cls: 'sage'};
+}
+
+function sortCerts(items){
+  return [...items].sort((a,b) => {
+    const aOver = isCertOverdue(a) ? 0 : 1;
+    const bOver = isCertOverdue(b) ? 0 : 1;
+    if(aOver !== bOver) return aOver - bOver;
+    const ad = a.date || '9999-99-99';
+    const bd = b.date || '9999-99-99';
+    return ad.localeCompare(bd);
+  });
+}
+
+function groupBySerial(items){
+  const groups = {};
+  const order = [];
+  items.forEach(c => {
+    const key = c.serial || 'No serial number';
+    if(!groups[key]){ groups[key] = []; order.push(key); }
+    groups[key].push(c);
+  });
+  return { groups, order };
+}
+
+function toggleCertExpand(id){
+  if(expandedCertIds.has(id)) expandedCertIds.delete(id);
+  else expandedCertIds.add(id);
+  render();
 }
 
 function selectCustomer(name){
