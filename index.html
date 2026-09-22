@@ -396,7 +396,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.4</div>
+  <div class="version-footer">v1.5</div>
 </div>
 
 <script>
@@ -614,14 +614,18 @@ function escapeAttr(s){
 }
 
 function renderDocumentsSection(c){
-  const hasDocs = c.docs && c.docs.length;
+  const docs = Array.isArray(c.docs) ? c.docs : [];
   return `
     <div class="changelog">
       <div class="fk">Documents</div>
-      <div class="changelog-entry">
-        <span class="changelog-text">${hasDocs ? c.docs.map(renderDocItem).join('<br>') : '<span style="color:var(--ink-faint)">No documents yet</span>'}</span>
-      </div>
-      ${renderDocLocation(c.docLocation)}
+      ${docs.length ? docs.map(d => `
+        <div class="activity-entry">
+          <div class="activity-entry-top">
+            <span class="changelog-text">${renderDocItem(d)}</span>
+          </div>
+        </div>
+      `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No documents yet</span></div>'}
+      ${c.docLocation ? `<div class="activity-entry-top" style="margin-top:6px;">${renderDocLocation(c.docLocation)}</div>` : ''}
     </div>
   `;
 }
