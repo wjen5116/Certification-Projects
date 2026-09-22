@@ -168,6 +168,7 @@
     word-break:break-all;
     user-select:all;
   }
+  .doc-loc a{color:var(--pine);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -394,7 +395,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.1</div>
+  <div class="version-footer">v1.2</div>
 </div>
 
 <script>
@@ -594,7 +595,7 @@ function render(){
             </div>
             <div class="full">
               <div class="fk">Documents</div>
-              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${c.docLocation ? `<div class="doc-loc">${escapeHtml(c.docLocation)}</div>` : ''}</div>
+              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${renderDocLocation(c.docLocation)}</div>
             </div>
           </div>
           ${renderDocChangeLog(c)}
@@ -682,6 +683,15 @@ function escapeHtml(s){
   const d = document.createElement('div');
   d.textContent = s == null ? '' : s;
   return d.innerHTML;
+}
+
+function renderDocLocation(loc){
+  if(!loc) return '';
+  const isUrl = /^https?:\/\//i.test(loc.trim());
+  if(isUrl){
+    return `<div class="doc-loc"><a href="${escapeHtml(loc.trim())}" target="_blank" rel="noopener noreferrer">${escapeHtml(loc.trim())}</a></div>`;
+  }
+  return `<div class="doc-loc">${escapeHtml(loc)}</div>`;
 }
 
 load();
