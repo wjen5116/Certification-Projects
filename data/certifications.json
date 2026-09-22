@@ -440,9 +440,20 @@
     "aircraft": "",
     "level": "BATD",
     "date": "2026-10-01",
-    "docs": [],
+    "docs": [
+      {
+        "id": "d1790092081185",
+        "name": "Redbird_TD_TD2_Revised_QAG_v3.5.docx",
+        "url": "https://docs.google.com/document/d/1aBQfyKi6A64bkeZgLJdofqeMhHlrMisT/edit?usp=drive_link&ouid=117040569555243457327&rtpof=true&sd=true"
+      }
+    ],
     "docLocation": "",
     "activityLog": [],
-    "docChangeLog": []
+    "docChangeLog": [
+      {
+        "date": "2026-09-22",
+        "text": "Document added: Redbird_TD_TD2_Revised_QAG_v3.5.docx"
+      }
+    ]
   }
 ]
