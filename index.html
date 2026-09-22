@@ -396,7 +396,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.8</div>
+  <div class="version-footer">v2.0</div>
 </div>
 
 <script>
@@ -594,6 +594,10 @@ function render(){
               <div class="fk">Due date</div>
               <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
             </div>
+            <div>
+              <div class="fk">Primary contact</div>
+              <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
+            </div>
           </div>
           ${renderDocumentsSection(c)}
           ${renderDocChangeLog(c)}
@@ -632,13 +636,13 @@ function renderDocumentsSection(c){
 
 function renderDocChangeLog(c){
   const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
-  const sorted = [...entries].sort((a,b) => b.date.localeCompare(a.date));
+  const sorted = [...entries].sort((a,b) => (b.ts || 0) - (a.ts || 0) || (b.date||'').localeCompare(a.date||''));
   return `
     <div class="changelog">
       <div class="fk">Document Change Log</div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry">
-          <span class="changelog-date">${fmtDate(entry.date)}</span>
+          <span class="changelog-date">${fmtDate(entry.date)}${entry.time ? ', ' + entry.time : ''}</span>
           <span class="changelog-text">${escapeHtml(entry.text)}</span>
         </div>
       `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
@@ -684,8 +688,10 @@ function renderActivityLog(c){
             </div>
           </div>
           <div class="activity-meta">
-            ${a.dateDue ? `Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : 'No due date'}
+            Entered ${fmtDate(a.dateCreated)}
+            ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
             ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}` : ''}
+            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}` : ''}
           </div>
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
