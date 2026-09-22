@@ -18,20 +18,36 @@
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251."
+        "id": "a179003588595300",
+        "description": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-16",
-        "text": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification."
+        "id": "a179003588595301",
+        "description": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification.",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-16",
-        "text": "Completed: MQTG review with UKCAA"
+        "id": "a179003588595302",
+        "description": "Completed: MQTG review with UKCAA",
+        "status": "Complete",
+        "dateCreated": "2026-09-16",
+        "dateDue": "",
+        "dateUpdated": "2026-09-16"
       },
       {
-        "date": "2026-09-21",
-        "text": "Waiting to receive UK CAA Discrepency Report from Skyborne for correction."
+        "id": "a179003588595303",
+        "description": "Waiting to receive UK CAA Discrepency Report from Skyborne for correction.",
+        "status": "Complete",
+        "dateCreated": "2026-09-21",
+        "dateDue": "",
+        "dateUpdated": "2026-09-21"
       }
     ],
     "docChangeLog": [
@@ -52,7 +68,7 @@
     "aircraft": "Cessna C172S",
     "level": "FTD Level 5",
     "date": "2026-11-16",
-    "change": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
+    "change": "",
     "docs": [
       "US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx",
       "Validation_Data_Roadmap__Cessna_C172S_.docx"
@@ -60,16 +76,36 @@
     "docLocation": "G:\\Shared drives\\Certification\\FAA\\FTD 5\\Customers\\US Aviation\\MQTG Docs",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD."
+        "id": "a179003588595310",
+        "description": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-21",
-        "text": "Called Retty - Informed him their SME should perform the Subjective Tests ASAP to provide feedback before FAA inspection."
+        "id": "a179003588595311",
+        "description": "Called Retty - Informed him their SME should perform the Subjective Tests ASAP to provide feedback before FAA inspection.",
+        "status": "Complete",
+        "dateCreated": "2026-09-21",
+        "dateDue": "",
+        "dateUpdated": "2026-09-21"
       },
       {
-        "date": "2026-09-21",
-        "text": "Need to update MQTG/VDR based on recent inspection feedback received from UKCAA. [In Progress, due 2026-09-23]"
+        "id": "a179003588595312",
+        "description": "Need to update MQTG/VDR based on recent inspection feedback received from UKCAA. [In Progress, due 2026-09-23]",
+        "status": "Complete",
+        "dateCreated": "2026-09-21",
+        "dateDue": "",
+        "dateUpdated": "2026-09-21"
+      },
+      {
+        "id": "a17900358859531-migrated",
+        "description": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -85,15 +121,27 @@
     "aircraft": "Diamond DA42 (FADEC)",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
+    "change": "",
     "docs": [
       "R-FMX-100954__DA42__EASA_FNPTII_-MEP.docx"
     ],
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179003588595320",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859532-migrated",
+        "description": "Waiting for Qatar to inspect devices for certification.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -109,15 +157,27 @@
     "aircraft": "Piper PA28-181",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
+    "change": "",
     "docs": [
       "R-FMX-100954__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"
     ],
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179003588595330",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859533-migrated",
+        "description": "Waiting for Qatar to inspect devices for certification.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -133,15 +193,27 @@
     "aircraft": "Diamond DA42 (FADEC)",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
+    "change": "",
     "docs": [
       "R-FMX-100953__DA42__EASA_FNPTII_-MEP.docx"
     ],
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179003588595340",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859534-migrated",
+        "description": "Waiting for Qatar to inspect devices for certification.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -157,15 +229,27 @@
     "aircraft": "Piper PA28-181",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
+    "change": "",
     "docs": [
       "R-FMX-100953__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"
     ],
     "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+        "id": "a179003588595450",
+        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859545-migrated",
+        "description": "Waiting for Qatar to inspect devices for certification.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -181,17 +265,33 @@
     "aircraft": "Cessna C172",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for payment",
+    "change": "",
     "docs": [],
     "docLocation": "",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+        "id": "a179003588595460",
+        "description": "Completed: Provide an estimate of total time to complete certification, start to finish.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-11",
-        "text": "Next task: Waiting for payment"
+        "id": "a179003588595461",
+        "description": "Next task: Waiting for payment",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859546-migrated",
+        "description": "Waiting for payment",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -207,17 +307,33 @@
     "aircraft": "Tecnam P2006T",
     "level": "FNPT II",
     "date": "",
-    "change": "Waiting for payment",
+    "change": "",
     "docs": [],
     "docLocation": "",
     "activityLog": [
       {
-        "date": "2026-09-11",
-        "text": "Completed: Provide an estimate of total time to complete certification, start to finish."
+        "id": "a179003588595470",
+        "description": "Completed: Provide an estimate of total time to complete certification, start to finish.",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
       },
       {
-        "date": "2026-09-11",
-        "text": "Next task: Waiting for payment"
+        "id": "a179003588595471",
+        "description": "Next task: Waiting for payment",
+        "status": "Complete",
+        "dateCreated": "2026-09-11",
+        "dateDue": "",
+        "dateUpdated": "2026-09-11"
+      },
+      {
+        "id": "a17900358859547-migrated",
+        "description": "Waiting for payment",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
       }
     ],
     "docChangeLog": []
@@ -233,10 +349,19 @@
     "aircraft": "",
     "level": "",
     "date": "2026-09-21",
-    "change": "Look into how to possibly restore their QTG on new SSD.",
+    "change": "",
     "docs": [],
     "docLocation": "",
-    "activityLog": [],
+    "activityLog": [
+      {
+        "id": "a17900358859548-migrated",
+        "description": "Look into how to possibly restore their QTG on new SSD.",
+        "status": "Pending",
+        "dateCreated": "2026-09-22",
+        "dateDue": "",
+        "dateUpdated": "2026-09-22"
+      }
+    ],
     "docChangeLog": []
   }
 ]
