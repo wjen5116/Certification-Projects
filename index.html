@@ -169,6 +169,7 @@
     user-select:all;
   }
   .doc-loc a{color:var(--pine);text-decoration:underline;}
+  .field-grid .fv a{color:var(--pine);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -395,7 +396,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v1.2</div>
+  <div class="version-footer">v1.3</div>
 </div>
 
 <script>
@@ -595,7 +596,7 @@ function render(){
             </div>
             <div class="full">
               <div class="fk">Documents</div>
-              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(escapeHtml).join('<br>') : '\u2014'}${renderDocLocation(c.docLocation)}</div>
+              <div class="fv">${(c.docs && c.docs.length) ? c.docs.map(renderDocItem).join('<br>') : '\u2014'}${renderDocLocation(c.docLocation)}</div>
             </div>
           </div>
           ${renderDocChangeLog(c)}
@@ -692,6 +693,15 @@ function renderDocLocation(loc){
     return `<div class="doc-loc"><a href="${escapeHtml(loc.trim())}" target="_blank" rel="noopener noreferrer">${escapeHtml(loc.trim())}</a></div>`;
   }
   return `<div class="doc-loc">${escapeHtml(loc)}</div>`;
+}
+
+function renderDocItem(doc){
+  const name = typeof doc === 'string' ? doc : (doc.name || '');
+  const url = typeof doc === 'string' ? '' : (doc.url || '');
+  if(url){
+    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)} \u2193</a>`;
+  }
+  return escapeHtml(name);
 }
 
 load();
