@@ -15,7 +15,7 @@
       "https://drive.google.com/file/d/13XaQDcRCrxv9vy4ARqISD5xFBYERFVhb/view?usp=drive_link",
       "https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link"
     ],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
+    "docLocation": "https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link",
     "activityLog": [
       {
         "id": "a179003588595300",
@@ -58,6 +58,10 @@
       {
         "date": "2026-09-22",
         "text": "Documents updated: https://drive.google.com/file/d/13XaQDcRCrxv9vy4ARqISD5xFBYERFVhb/view?usp=drive_link, https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link"
+      },
+      {
+        "date": "2026-09-22",
+        "text": "Document location updated: https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link"
       }
     ]
   },
