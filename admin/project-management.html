@@ -1140,6 +1140,12 @@ async function deleteActivity(certId, activityId){
   render();
 }
 
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : s;
+  return d.innerHTML;
+}
+
 function openModal(id, prefillCustomer){
   document.getElementById('err-name').style.display = 'none';
   const modal = document.getElementById('modal-bg');
