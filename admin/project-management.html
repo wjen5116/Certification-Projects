@@ -495,6 +495,20 @@
   }
   .activity-entry-top > :first-child{min-width:0;overflow-wrap:anywhere;}
   .activity-entry-top .cert-actions{flex-shrink:0;}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .icon-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    padding:0;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink-soft);
+  }
+  .icon-btn:hover{color:var(--pine);border-color:var(--pine);}
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--pine);outline-offset:2px;}
   @media (max-width: 760px){
@@ -508,9 +522,9 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <header class="page-head">
     <h1>Certification Project Tracker</h1>
-    <p class="sub">Certification Projects</p>
+    <button class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </header>
 
   <div class="stats" id="stats"></div>
@@ -519,14 +533,10 @@
 
   <div class="toolbar">
     <h2>Certifications</h2>
-    <div style="display:flex;gap:8px;">
-      <button id="settings-btn">Settings</button>
-      <button class="btn-primary" id="add-btn">Add certification</button>
-    </div>
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.2.2</div>
+  <div class="version-footer">v2.2.3</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -919,7 +929,7 @@ async function writeToGitHub(data, message){
 
 async function persist(){
   if(!ghConfig){
-    showBanner('error', 'Not connected to GitHub. Click Settings to connect.');
+    showBanner('error', 'Not connected to GitHub. Click the gear icon at the top right to connect.');
     return;
   }
   try{
@@ -936,7 +946,7 @@ async function load(){
   ghConfig = loadSettings();
   if(!ghConfig || !ghConfig.owner || !ghConfig.repo || !ghConfig.token){
     document.getElementById('list').innerHTML = '';
-    showBanner('info', 'Not connected yet. Click <b>Settings</b> above to link this page to a GitHub repo.');
+    showBanner('info', 'Not connected yet. Click the gear icon at the top right to link this page to a GitHub repo.');
     document.getElementById('stats').innerHTML = '';
     return;
   }
@@ -1635,7 +1645,6 @@ async function removeCert(id){
   render();
 }
 
-document.getElementById('add-btn').addEventListener('click', () => openModal());
 document.getElementById('cancel-btn').addEventListener('click', closeModal);
 document.getElementById('save-btn').addEventListener('click', saveCert);
 document.getElementById('modal-bg').addEventListener('click', (e) => {
