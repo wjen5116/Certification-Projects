@@ -7,9 +7,12 @@
 <style>
   :root{
     color-scheme: light dark;
-    --bg:#F3F4F5;
+    --bg:#A70E13;
+    --on-bg:#FFFFFF;
+    --on-bg-soft:#F6D2D4;
+    --on-bg-line:rgba(255,255,255,0.35);
     --card:#FFFFFF;
-    --card-line:#A70E13;
+    --card-line:#4A545B;
     --line:#D8DCDF;
     --line-strong:#B4BBC0;
     --hover:#E1E5E8;
@@ -36,6 +39,11 @@
     --sage-bg-strong:#CFE6C8;
     --slate:#2E5A88;
     --slate-bg:#E2EBF5;
+    --del:#A70E13;
+    --del-line:#A70E13;
+    --del-bg:#FBE8E9;
+    --del-strong:#7A0A0E;
+    --del-bg-strong:#F6D2D4;
     --radius:10px;
     --serif: Calibri, "Segoe UI", Georgia, serif;
     --sans: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
@@ -43,6 +51,9 @@
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#000000;
+      --on-bg:#FFFFFF;
+      --on-bg-soft:#B8C1C7;
+      --on-bg-line:#333333;
       --card:#353D43;
       --card-line:#A70E13;
       --line:#4A545B;
@@ -71,6 +82,11 @@
       --sage-bg-strong:#3A5A3C;
       --slate:#C9D6E6;
       --slate-bg:#2E3C4B;
+      --del:#FF8E91;
+      --del-line:#FF6B6F;
+      --del-bg:#4A2A2E;
+      --del-strong:#FFA3A6;
+      --del-bg-strong:#5C3238;
     }
   }
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
@@ -87,13 +103,14 @@
   .wrap{max-width:min(1200px, 96vw);margin:0 auto;}
   header{margin-bottom:28px;}
   h1{
+    color:var(--on-bg);
     font-family:var(--serif);
     font-weight:700;
     font-size:31px;
     margin:0 0 4px;
     letter-spacing:0.2px;
   }
-  .sub{color:var(--ink-soft);font-size:16px;margin:0;}
+  .sub{color:var(--on-bg-soft);font-size:16px;margin:0;}
   .stats{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
@@ -116,6 +133,7 @@
     gap:10px;
   }
   .toolbar h2{
+    color:var(--on-bg);
     font-family:var(--serif);
     font-size:19px;
     font-weight:500;
@@ -155,7 +173,7 @@
   }
   
   .btn-text svg{width:15px;height:15px;flex-shrink:0;}
-  .btn-text.danger{color:var(--rust);border-color:var(--rust);}
+  .btn-text.danger{color:var(--del);border-color:var(--del-line);background:var(--del-bg);}
   
   .btn-text.ok{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
   
@@ -447,7 +465,7 @@
     margin-top:18px;
   }
   .err{color:var(--rust);font-size:13px;margin-top:4px;display:none;}
-  .loading{color:var(--ink-soft);font-size:14px;padding:20px 0;}
+  .loading{color:var(--on-bg-soft);font-size:14px;padding:20px 0;}
 
   @media (max-width: 640px){
     .field-grid{grid-template-columns:1fr;}
@@ -468,9 +486,9 @@
   .version-footer{
     margin-top:24px;
     padding-top:12px;
-    border-top:1px solid var(--line);
+    border-top:1px solid var(--on-bg-line);
     font-size:11px;
-    color:var(--ink-faint);
+    color:var(--on-bg-soft);
     text-align:center;
   }
   /* v2.2.0 sidebar layout */
@@ -506,6 +524,7 @@
   }
   
   .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:700;}
+  .side-customer.has-active .side-customer-name{color:var(--hover-ink);font-weight:700;}
   .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .sidebar .chevron{
     display:inline-block;
@@ -537,10 +556,10 @@
     text-align:left;
   }
   
-  .side-cert.active{color:var(--ink);font-weight:700;}
+  .side-cert.active{color:var(--hover-ink);font-weight:700;}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
-  .side-cert.active .side-cert-auth{color:var(--ink-soft);font-weight:700;}
+  .side-cert.active .side-cert-auth{color:var(--hover-ink);font-weight:700;}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
   .dot-overdue{background:var(--rust);}
   .dot-gold{background:var(--gold);}
@@ -596,9 +615,11 @@
   /* Hover: grey shading; customer names turn bold Redbird red; button borders take their color */
   .side-customer-btn:hover{background:var(--hover);}
   .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover{background:var(--hover);}
+  .side-cert:hover{background:var(--hover);color:var(--hover-ink);font-weight:700;}
+  .side-cert:hover .side-cert-auth{color:var(--hover-ink);font-weight:700;}
   .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--hover-ink);}
-  .btn-text.danger:hover{background:var(--rust-bg-strong);color:var(--rust);border-color:var(--rust-strong);}
+  .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
+  a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
   .icon-btn:hover{background:var(--hover);}
 </style>
@@ -618,7 +639,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.1</div>
+  <div class="version-footer">v2.4.2</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1328,6 +1349,7 @@ function groupBySerial(items){
 }
 
 const ICON = {
+  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
@@ -1339,6 +1361,13 @@ function actionBtn(kind, label, onclick, opts){
   const o = opts || {};
   const cls = ['btn-text', o.cls || '', o.compact === false ? '' : 'compact'].join(' ').trim();
   return `<button class="${cls}" onclick="${onclick}" title="${label}" aria-label="${label}">${ICON[kind]}<span class="btn-label" data-label="${label}">${label}</span></button>`;
+}
+
+// "View" button: opens a document's link in a new tab (only for documents that have a link).
+function viewBtn(doc){
+  const url = typeof doc === 'string' ? '' : (doc.url || '');
+  if(!url) return '';
+  return `<a class="btn-text compact" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" title="View" aria-label="View">${ICON.eye}<span class="btn-label">View</span></a>`;
 }
 
 function customerKey(c){
@@ -1378,6 +1407,7 @@ function renderDocumentsSection(c){
           <div class="activity-entry-top">
             <span class="changelog-text">${renderDocItem(d)}</span>
             <div class="cert-actions">
+              ${viewBtn(d)}
               ${actionBtn('edit', 'Edit', `openDocumentModal('${c.id}', '${d.id}')`)}
               ${actionBtn('trash', 'Delete', `deleteDocument('${c.id}', '${d.id}')`, {cls: 'danger'})}
             </div>
@@ -1728,10 +1758,6 @@ function renderDocLocation(loc){
 
 function renderDocItem(doc){
   const name = typeof doc === 'string' ? doc : (doc.name || '');
-  const url = typeof doc === 'string' ? '' : (doc.url || '');
-  if(url){
-    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(name)} \u2193</a>`;
-  }
   return escapeHtml(name);
 }
 
