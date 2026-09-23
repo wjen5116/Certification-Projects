@@ -39,6 +39,11 @@
     --sage-bg-strong:#CFE6C8;
     --slate:#2E5A88;
     --slate-bg:#E2EBF5;
+    --edit-hover-line:#1D5FA8;
+    --field-bg:#FFFFFF;
+    --action:#1D5FA8;
+    --action-hover:#174C87;
+    --action-ink:#1D5FA8;
     --del:#A70E13;
     --del-line:#A70E13;
     --del-bg:#FBE8E9;
@@ -82,6 +87,11 @@
       --sage-bg-strong:#3A5A3C;
       --slate:#C9D6E6;
       --slate-bg:#2E3C4B;
+      --edit-hover-line:#6FA8E8;
+      --field-bg:#000000;
+      --action:#2F6DB5;
+      --action-hover:#3B7BC4;
+      --action-ink:#6FA8E8;
       --del:#FF8E91;
       --del-line:#FF6B6F;
       --del-bg:#4A2A2E;
@@ -90,7 +100,7 @@
     }
   }
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-  a{color:var(--accent-ink);}
+  a{color:var(--action-ink);}
   *{box-sizing:border-box;}
   body{
     margin:0;
@@ -152,11 +162,11 @@
   button:hover{border-color:var(--ink-faint);}
 
   .btn-primary{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:var(--on-accent);
+    background:var(--action);
+    border-color:var(--action);
+    color:#FFFFFF;
   }
-  .btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+  .btn-primary:hover{background:var(--action-hover);border-color:var(--action-hover);}
   .btn-text{
     display:inline-flex;
     align-items:center;
@@ -235,7 +245,7 @@
     display:inline-block;
   }
   .pill-notstarted{background:var(--neutral-bg);color:var(--ink-soft);}
-  .pill-inprogress{background:var(--accent-bg);color:var(--accent-ink);}
+  .pill-inprogress{background:var(--slate-bg);color:var(--slate);}
   .pill-submitted{background:var(--slate-bg);color:var(--slate);}
   .pill-underreview{background:var(--gold-bg);color:var(--gold);}
   .pill-approved{background:var(--sage-bg);color:var(--sage);}
@@ -256,8 +266,8 @@
     word-break:break-all;
     user-select:all;
   }
-  .doc-loc a{color:var(--accent-ink);text-decoration:underline;}
-  .field-grid .fv a{color:var(--accent-ink);text-decoration:underline;}
+  .doc-loc a{color:var(--action-ink);text-decoration:underline;}
+  .field-grid .fv a{color:var(--action-ink);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -339,7 +349,7 @@
     font-family:var(--sans);
     color:var(--ink);
   }
-  .cert-collapse-toggle:hover .cert-name{color:var(--accent-ink);}
+  .cert-collapse-toggle:hover .cert-name{color:var(--action-ink);}
   .cert-collapse-toggle .chevron{
     display:inline-block;
     font-size:12px;
@@ -452,7 +462,7 @@
     padding:8px 10px;
     border:1px solid var(--line);
     border-radius:8px;
-    background:var(--bg);
+    background:var(--field-bg);
     color:var(--ink);
   }
   .field textarea{resize:vertical;min-height:56px;}
@@ -601,10 +611,10 @@
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--card);
-    color:var(--accent-ink);
+    color:var(--action-ink);
   }
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
-  button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;}
+  button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
   @media (max-width: 760px){
     .layout{grid-template-columns:1fr;}
     .sidebar{position:static;max-height:none;}
@@ -617,11 +627,24 @@
   .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
   .side-cert:hover{background:var(--hover);color:var(--hover-ink);font-weight:700;}
   .side-cert:hover .side-cert-auth{color:var(--hover-ink);font-weight:700;}
-  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--hover-ink);}
+  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
   .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
   a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
   .icon-btn:hover{background:var(--hover);}
+  /* Dark mode sidebar: selected customer gets a Redbird red highlight; text stays white */
+  @media (prefers-color-scheme: dark){
+    .side-customer.has-active .side-customer-btn,
+    .side-customer.has-active .side-customer-btn:hover{background:var(--accent);color:#FFFFFF;}
+    .side-customer.has-active .side-customer-name,
+    .side-customer.has-active .side-customer-btn:hover .side-customer-name{color:#FFFFFF;font-weight:700;}
+    .side-customer.has-active .chevron{color:#FFFFFF;}
+    .side-customer-btn:hover .side-customer-name{color:var(--ink);font-weight:700;}
+    .side-cert.active,
+    .side-cert:hover{color:var(--ink);}
+    .side-cert.active .side-cert-auth,
+    .side-cert:hover .side-cert-auth{color:var(--ink-faint);}
+  }
 </style>
 </head>
 <body>
@@ -639,7 +662,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.2</div>
+  <div class="version-footer">v2.4.3</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
