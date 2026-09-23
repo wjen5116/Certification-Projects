@@ -2,29 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Certification Project Tracker</title>
 <style>
   :root{
-    --bg:#000000;
-    --card:#121212;
-    --line:#333333;
-    --ink:#FFFFFF;
-    --ink-soft:#CCCCCC;
-    --ink-faint:#999999;
-    --pine:#8FCDB5;
-    --pine-bg:#1F3B32;
-    --gold:#E7C07E;
-    --gold-bg:#3D2F14;
-    --rust:#EC9B92;
-    --rust-bg:#3D1F1B;
-    --sage:#B3D2AA;
-    --sage-bg:#233B22;
-    --slate:#B3C4DA;
-    --slate-bg:#25303D;
+    color-scheme: light dark;
+    --bg:#F3F4F5;
+    --card:#FFFFFF;
+    --line:#D8DCDF;
+    --line-strong:#B4BBC0;
+    --hover:#EEF0F2;
+    --neutral-bg:#E6E9EB;
+    --backdrop:rgba(20,24,27,0.45);
+    --ink:#23292E;
+    --ink-soft:#4A545B;
+    --ink-faint:#6A747B;
+    --accent:#A70E13;
+    --accent-hover:#8C0B10;
+    --accent-ink:#A70E13;
+    --accent-bg:#FBE8E9;
+    --on-accent:#FFFFFF;
+    --rust:#C2410C;
+    --rust-bg:#FFEDD5;
+    --gold:#875A00;
+    --gold-bg:#FCEFD3;
+    --sage:#2E6A2A;
+    --sage-bg:#E2F0DE;
+    --slate:#2E5A88;
+    --slate-bg:#E2EBF5;
     --radius:10px;
     --serif: Calibri, "Segoe UI", Georgia, serif;
     --sans: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
   }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#272D32;
+      --card:#353D43;
+      --line:#4A545B;
+      --line-strong:#66717A;
+      --hover:#3F484F;
+      --neutral-bg:#454E55;
+      --backdrop:rgba(0,0,0,0.55);
+      --ink:#F2F4F5;
+      --ink-soft:#C9D0D4;
+      --ink-faint:#A1ABB2;
+      --accent:#A70E13;
+      --accent-hover:#C0151B;
+      --accent-ink:#FF8E91;
+      --accent-bg:#522B30;
+      --on-accent:#FFFFFF;
+      --rust:#FF8A4C;
+      --rust-bg:#4E3325;
+      --gold:#E7C07E;
+      --gold-bg:#4A3D22;
+      --sage:#B3D2AA;
+      --sage-bg:#2E4630;
+      --slate:#B3C4DA;
+      --slate-bg:#2E3C4B;
+    }
+  }
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  a{color:var(--accent-ink);}
   *{box-sizing:border-box;}
   body{
     margin:0;
@@ -83,19 +121,38 @@
   }
   button:hover{border-color:var(--ink-faint);}
   .btn-primary{
-    background:var(--pine);
-    border-color:var(--pine);
-    color:#0A1F19;
+    background:var(--accent);
+    border-color:var(--accent);
+    color:var(--on-accent);
   }
-  .btn-primary:hover{background:#7AB89E;}
+  .btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
   .btn-text{
-    border:none;
-    background:none;
-    padding:4px 6px;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    height:28px;
+    padding:0 10px;
+    font-size:13px;
+    line-height:1;
+    border-radius:6px;
+    border:1px solid var(--line-strong);
+    background:transparent;
     color:var(--ink-soft);
-    text-decoration:underline;
+    white-space:nowrap;
   }
-  .btn-text.danger{color:var(--rust);}
+  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--ink-faint);}
+  .btn-text svg{width:15px;height:15px;flex-shrink:0;}
+  .btn-text.danger{color:var(--rust);border-color:var(--rust);}
+  .btn-text.danger:hover{background:var(--rust-bg);color:var(--rust);}
+  .btn-text.ok{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
+  .btn-text.ok:hover{filter:brightness(1.05);color:var(--sage);}
+  .cert-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+  .detail-actions{gap:6px;}
+  @media (max-width: 640px){
+    .btn-text.compact .btn-label{display:none;}
+    .btn-text{height:34px;}
+    .btn-text.compact{padding:0;width:34px;justify-content:center;}
+  }
 
   .empty{
     background:var(--card);
@@ -124,7 +181,7 @@
     color:var(--ink-soft);
     padding:10px 12px;
     border-bottom:1px solid var(--line);
-    background:#1A1A1A;
+    background:var(--hover);
     overflow-wrap:break-word;
   }
   tbody td{
@@ -135,7 +192,7 @@
     word-break:break-word;
   }
   tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:#1A1A1A;}
+  tbody tr:hover{background:var(--hover);}
   .cert-name{font-weight:500;font-family:var(--serif);font-size:16px;}
   .muted{color:var(--ink-soft);}
   .pill{
@@ -146,13 +203,13 @@
     font-weight:600;
     display:inline-block;
   }
-  .pill-notstarted{background:#2A2A2A;color:var(--ink-soft);}
-  .pill-inprogress{background:var(--pine-bg);color:var(--pine);}
+  .pill-notstarted{background:var(--neutral-bg);color:var(--ink-soft);}
+  .pill-inprogress{background:var(--accent-bg);color:var(--accent-ink);}
   .pill-submitted{background:var(--slate-bg);color:var(--slate);}
   .pill-underreview{background:var(--gold-bg);color:var(--gold);}
   .pill-approved{background:var(--sage-bg);color:var(--sage);}
   .pill-rejected{background:var(--rust-bg);color:var(--rust);}
-  .pill-onhold{background:#2A2A2A;color:var(--ink-soft);}
+  .pill-onhold{background:var(--neutral-bg);color:var(--ink-soft);}
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
@@ -168,8 +225,8 @@
     word-break:break-all;
     user-select:all;
   }
-  .doc-loc a{color:var(--pine);text-decoration:underline;}
-  .field-grid .fv a{color:var(--pine);text-decoration:underline;}
+  .doc-loc a{color:var(--accent-ink);text-decoration:underline;}
+  .field-grid .fv a{color:var(--accent-ink);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -194,7 +251,7 @@
     font-size:15px;
     cursor:pointer;
   }
-  .tab:hover{color:var(--ink);background:#1A1A1A;}
+  .tab:hover{color:var(--ink);background:var(--hover);}
   .tab.active{
     color:var(--ink);
     background:var(--card);
@@ -251,7 +308,7 @@
     font-family:var(--sans);
     color:var(--ink);
   }
-  .cert-collapse-toggle:hover .cert-name{color:var(--pine);}
+  .cert-collapse-toggle:hover .cert-name{color:var(--accent-ink);}
   .cert-collapse-toggle .chevron{
     display:inline-block;
     font-size:12px;
@@ -292,17 +349,20 @@
   .changelog-entry{
     display:flex;
     gap:10px;
-    font-size:13px;
+    font-size:15px;
     padding:3px 0;
   }
   .changelog-date{
+    font-size:13px;
+    padding-top:1px;
     color:var(--ink-faint);
     min-width:80px;
     flex-shrink:0;
   }
   .changelog-text{color:var(--ink-soft);}
   .activity-entry{
-    padding:6px 0;
+    font-size:15px;
+    padding:8px 0;
     border-bottom:1px solid var(--line);
   }
   .activity-entry:last-child{border-bottom:none;}
@@ -318,14 +378,14 @@
   .changelog-editable .cert-actions{flex-shrink:0;}
   .late-note{color:var(--ink-faint);font-style:italic;}
   .activity-meta{
-    font-size:12px;
+    font-size:13px;
     color:var(--ink-faint);
     margin-top:3px;
   }
 
   .modal-bg{
     position:fixed;inset:0;
-    background:rgba(31,42,36,0.35);
+    background:var(--backdrop);
     display:none;
     align-items:flex-start;
     justify-content:center;
@@ -432,7 +492,7 @@
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-customer-btn:hover{background:#1A1A1A;color:var(--ink);}
+  .side-customer-btn:hover{background:var(--hover);color:var(--ink);}
   .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:600;}
   .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .sidebar .chevron{
@@ -465,8 +525,8 @@
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-cert:hover{background:#1A1A1A;color:var(--ink);}
-  .side-cert.active{background:var(--pine-bg);color:var(--ink);border-left-color:var(--pine);}
+  .side-cert:hover{background:var(--hover);color:var(--ink);}
+  .side-cert.active{background:var(--accent-bg);color:var(--ink);border-left-color:var(--accent-ink);}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
   .side-cert.active .side-cert-auth{color:var(--ink-soft);}
@@ -475,7 +535,7 @@
   .dot-gold{background:var(--gold);}
   .dot-slate{background:var(--slate);}
   .dot-sage{background:var(--sage);}
-  .side-add{font-size:13px;margin:4px 0 0 6px;}
+  .side-add{margin:6px 0 2px 10px;}
   .detail{
     background:var(--card);
     border:1px solid var(--line);
@@ -511,11 +571,11 @@
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--card);
-    color:var(--ink-soft);
+    color:var(--accent-ink);
   }
-  .icon-btn:hover{color:var(--pine);border-color:var(--pine);}
+  .icon-btn:hover{color:var(--accent-ink);border-color:var(--accent-ink);background:var(--hover);}
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
-  button:focus-visible{outline:2px solid var(--pine);outline-offset:2px;}
+  button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;}
   @media (max-width: 760px){
     .layout{grid-template-columns:1fr;}
     .sidebar{position:static;max-height:none;}
@@ -540,7 +600,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.3.1</div>
+  <div class="version-footer">v2.4.0</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1145,7 +1205,7 @@ function render(){
               </button>`;
             }).join('')}
           `).join('')}
-          <button class="btn-text side-add" onclick="openModal(null, '${escapeAttr(customer)}')">+ Add certification</button>
+          ${actionBtn('plus', 'Add certification', `openModal(null, '${escapeAttr(customer)}')`, {cls: 'side-add', compact: false})}
         </div>` : ''}
       </div>
     `;
@@ -1167,8 +1227,8 @@ function render(){
           <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
       <div class="detail-actions">
-        <button class="btn-text" onclick="openModal('${c.id}')">Edit</button>
-        <button class="btn-text danger" onclick="removeCert('${c.id}')">Delete</button>
+        ${actionBtn('edit', 'Edit', `openModal('${c.id}')`)}
+        ${actionBtn('trash', 'Delete', `removeCert('${c.id}')`, {cls: 'danger'})}
       </div>
         <div class="field-grid">
           <div>
@@ -1249,6 +1309,20 @@ function groupBySerial(items){
   return { groups, order };
 }
 
+const ICON = {
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>'
+};
+
+// Small outlined action button. compact = icon-only on phones (label kept as tooltip).
+function actionBtn(kind, label, onclick, opts){
+  const o = opts || {};
+  const cls = ['btn-text', o.cls || '', o.compact === false ? '' : 'compact'].join(' ').trim();
+  return `<button class="${cls}" onclick="${onclick}" title="${label}" aria-label="${label}">${ICON[kind]}<span class="btn-label">${label}</span></button>`;
+}
+
 function customerKey(c){
   return (c.customer || 'Unassigned').trim() || 'Unassigned';
 }
@@ -1279,15 +1353,15 @@ function renderDocumentsSection(c){
     <div class="changelog">
       <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
         <span>Documents</span>
-        <button class="btn-text" onclick="openDocumentModal('${c.id}')">+ Add</button>
+        ${actionBtn('plus', 'Add', `openDocumentModal('${c.id}')`, {compact: false})}
       </div>
       ${docs.length ? docs.map(d => `
         <div class="activity-entry">
           <div class="activity-entry-top">
             <span class="changelog-text">${renderDocItem(d)}</span>
             <div class="cert-actions">
-              <button class="btn-text" onclick="openDocumentModal('${c.id}', '${d.id}')">Edit</button>
-              <button class="btn-text danger" onclick="deleteDocument('${c.id}', '${d.id}')">Delete</button>
+              ${actionBtn('edit', 'Edit', `openDocumentModal('${c.id}', '${d.id}')`)}
+              ${actionBtn('trash', 'Delete', `deleteDocument('${c.id}', '${d.id}')`, {cls: 'danger'})}
             </div>
           </div>
         </div>
@@ -1304,7 +1378,7 @@ function renderDocChangeLog(c){
     <div class="changelog">
       <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
         <span>Document Change Log</span>
-        <button class="btn-text" onclick="openChangeLogModal('${c.id}')">+ Add</button>
+        ${actionBtn('plus', 'Add', `openChangeLogModal('${c.id}')`, {compact: false})}
       </div>
       ${sorted.length ? sorted.map(entry => `
         <div class="changelog-entry changelog-editable">
@@ -1313,8 +1387,8 @@ function renderDocChangeLog(c){
             <span class="changelog-text">${escapeHtml(entry.text)}</span>
           </div>
           <div class="cert-actions">
-            <button class="btn-text" onclick="openChangeLogModal('${c.id}', '${entry.id}')">Edit</button>
-            <button class="btn-text danger" onclick="deleteChangeLogEntry('${c.id}', '${entry.id}')">Delete</button>
+            ${actionBtn('edit', 'Edit', `openChangeLogModal('${c.id}', '${entry.id}')`)}
+            ${actionBtn('trash', 'Delete', `deleteChangeLogEntry('${c.id}', '${entry.id}')`, {cls: 'danger'})}
           </div>
         </div>
       `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
@@ -1357,7 +1431,7 @@ function renderActivityLog(c){
     <div class="changelog">
       <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
         <span>Activities</span>
-        <button class="btn-text" onclick="openActivityModal('${c.id}')">+ Add</button>
+        ${actionBtn('plus', 'Add', `openActivityModal('${c.id}')`, {compact: false})}
       </div>
       ${sorted.length ? sorted.map(a => {
         const over = isActivityOverdue(a);
@@ -1371,9 +1445,9 @@ function renderActivityLog(c){
               <span class="changelog-text">${escapeHtml(a.description)}</span>
             </div>
             <div class="cert-actions">
-              ${status !== 'Complete' ? `<button class="btn-text" onclick="markActivityComplete('${c.id}', '${a.id}')">\u2713 Complete</button>` : ''}
-              <button class="btn-text" onclick="openActivityModal('${c.id}', '${a.id}')">Edit</button>
-              <button class="btn-text danger" onclick="deleteActivity('${c.id}', '${a.id}')">Delete</button>
+              ${status !== 'Complete' ? actionBtn('check', 'Complete', `markActivityComplete('${c.id}', '${a.id}')`, {cls: 'ok'}) : ''}
+              ${actionBtn('edit', 'Edit', `openActivityModal('${c.id}', '${a.id}')`)}
+              ${actionBtn('trash', 'Delete', `deleteActivity('${c.id}', '${a.id}')`, {cls: 'danger'})}
             </div>
           </div>
           <div class="activity-meta">
