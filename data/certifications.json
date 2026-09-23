@@ -540,5 +540,22 @@
         "text": "Document added: Redbird TD TD2 QAG v3.5 Application.docx"
       }
     ]
+  },
+  {
+    "id": "c1790176865966",
+    "name": "Redbird TD",
+    "customer": "Redbird Flight Simulations, Inc",
+    "authority": "FAA",
+    "country": "",
+    "simLocation": "",
+    "serial": "",
+    "aircraft": "",
+    "level": "BATD",
+    "date": "",
+    "primaryContact": "",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
