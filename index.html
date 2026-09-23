@@ -507,6 +507,20 @@
   }
   .activity-entry-top > :first-child{min-width:0;overflow-wrap:anywhere;}
   .activity-entry-top .cert-actions{flex-shrink:0;}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .icon-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    padding:0;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink-soft);
+  }
+  .icon-btn:hover{color:var(--pine);border-color:var(--pine);}
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--pine);outline-offset:2px;}
   @media (max-width: 760px){
@@ -520,9 +534,12 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Certification Project Tracker</h1>
-    <p class="sub">View only</p>
+  <header class="page-head">
+    <div>
+      <h1>Certification Project Tracker</h1>
+      <p class="sub">View only</p>
+    </div>
+    <button class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </header>
 
   <div class="stats" id="stats"></div>
@@ -534,7 +551,41 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.2.5</div>
+  <div class="version-footer">v2.3.0</div>
+</div>
+
+<div class="modal-bg" id="settings-modal-bg">
+  <div class="modal">
+    <h3>Sign in to edit</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin-top:-8px;">Enter a GitHub token with write access to open the editor. Your token is kept only in this browser's local storage — never written into the page or committed to the repo.</p>
+    <div class="field">
+      <label for="s-owner">Repo owner (user or org)</label>
+      <input id="s-owner" placeholder="e.g. octocat">
+    </div>
+    <div class="field">
+      <label for="s-repo">Repository name</label>
+      <input id="s-repo" placeholder="e.g. certification-tracker">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="s-branch">Branch</label>
+        <input id="s-branch" placeholder="main">
+      </div>
+      <div class="field">
+        <label for="s-path">File path</label>
+        <input id="s-path" placeholder="data/certifications.json">
+      </div>
+    </div>
+    <div class="field">
+      <label for="s-token">Personal access token (repo write scope)</label>
+      <input id="s-token" type="password" placeholder="ghp_...">
+    </div>
+    <div class="err" id="settings-err" style="display:none;"></div>
+    <div class="modal-actions">
+      <button id="settings-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="settings-save-btn">Connect &amp; open editor</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -946,6 +997,111 @@ function renderDocItem(doc){
   }
   return escapeHtml(name);
 }
+
+// ---- Sign-in to the editor (project-management.html) ----
+const SETTINGS_KEY = 'gh_cert_tracker_settings';
+const FILE_PATH_DEFAULT = 'data/certifications.json';
+
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){
+    return null;
+  }
+}
+
+function saveSettings(cfg){
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(cfg));
+}
+
+function showSettingsError(msg){
+  const el = document.getElementById('settings-err');
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+function openSettings(message){
+  const cfg = loadSettings() || {};
+  document.getElementById('s-owner').value = cfg.owner || ghConfig.owner;
+  document.getElementById('s-repo').value = cfg.repo || ghConfig.repo;
+  document.getElementById('s-branch').value = cfg.branch || ghConfig.branch;
+  document.getElementById('s-path').value = cfg.path || ghConfig.path;
+  document.getElementById('s-token').value = cfg.token || '';
+  showSettingsError(message || '');
+  document.getElementById('settings-modal-bg').classList.add('open');
+  document.getElementById('s-token').focus();
+}
+
+function closeSettings(){
+  document.getElementById('settings-modal-bg').classList.remove('open');
+}
+
+// Confirms the token can reach the repo and write to it. Returns an error message, or '' if OK.
+async function verifyCredentials(cfg){
+  const headers = {
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Authorization': 'Bearer ' + cfg.token
+  };
+  let res;
+  try{
+    res = await fetch(`https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`, {headers});
+  }catch(e){
+    return 'Could not reach GitHub. Check your connection and try again.';
+  }
+  if(res.status === 401) return 'GitHub rejected this token. Check it has not expired or been revoked.';
+  if(res.status === 403) return 'GitHub refused access with this token (403). It may be rate-limited or blocked by organisation policy.';
+  if(res.status === 404) return `Repo ${cfg.owner}/${cfg.repo} was not found, or this token cannot access it.`;
+  if(!res.ok) return `GitHub check failed (${res.status}).`;
+  const repo = await res.json();
+  if(repo.permissions && repo.permissions.push === false){
+    return 'This token can read the repo but does not have write access. Use a token with Contents: read and write.';
+  }
+  return '';
+}
+
+document.getElementById('settings-btn').addEventListener('click', () => openSettings());
+document.getElementById('settings-cancel-btn').addEventListener('click', closeSettings);
+document.getElementById('settings-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'settings-modal-bg') closeSettings();
+});
+document.getElementById('settings-save-btn').addEventListener('click', async () => {
+  const owner = document.getElementById('s-owner').value.trim();
+  const repo = document.getElementById('s-repo').value.trim();
+  const branch = document.getElementById('s-branch').value.trim() || 'main';
+  const path = document.getElementById('s-path').value.trim() || FILE_PATH_DEFAULT;
+  const token = document.getElementById('s-token').value.trim();
+  if(!owner || !repo || !token){
+    showSettingsError('Owner, repo, and token are required.');
+    return;
+  }
+  const btn = document.getElementById('settings-save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Checking\u2026';
+  showSettingsError('');
+  const cfg = {owner, repo, branch, path, token};
+  const problem = await verifyCredentials(cfg);
+  btn.disabled = false;
+  btn.textContent = 'Connect & open editor';
+  if(problem){
+    showSettingsError(problem);
+    return;
+  }
+  saveSettings(cfg);
+  location.href = 'project-management.html';
+});
+
+// Arriving from the editor (no credentials, or the saved token was rejected)
+(function(){
+  const params = new URLSearchParams(location.search);
+  if(params.get('settings') === '1'){
+    openSettings(params.get('reason') === 'rejected'
+      ? 'GitHub rejected the saved token. Enter a valid token to open the editor.'
+      : '');
+    history.replaceState(null, '', location.pathname);
+  }
+})();
 
 load();
 </script>
