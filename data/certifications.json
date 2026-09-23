@@ -297,12 +297,12 @@
     "change": "",
     "docs": [
       {
-        "name": "R-FMX-100953__DA42__EASA_FNPTII_-MEP.docx",
-        "url": "",
+        "name": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
+        "url": "https://drive.google.com/drive/folders/1nlWEP_A2gWhaZN2RkBmuzDsXBJWCUM6p?usp=drive_link",
         "id": "d179009084495240"
       }
     ],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
+    "docLocation": "",
     "activityLog": [
       {
         "id": "a179003588595340",
@@ -322,7 +322,22 @@
         "dateUpdated": "2026-09-22"
       }
     ],
-    "docChangeLog": [],
+    "docChangeLog": [
+      {
+        "id": "l1790187199213-5",
+        "date": "2026-09-23",
+        "time": "1:13 PM",
+        "ts": 1790187199213,
+        "text": "Document updated: G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP"
+      },
+      {
+        "id": "l1790187199213-6",
+        "date": "2026-09-23",
+        "time": "1:13 PM",
+        "ts": 1790187199213,
+        "text": "Document location updated: (cleared)"
+      }
+    ],
     "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com"
   },
   {
