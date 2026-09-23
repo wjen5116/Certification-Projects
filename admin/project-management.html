@@ -524,7 +524,6 @@
 <div class="wrap">
   <header class="page-head">
     <h1>Certification Project Tracker</h1>
-    <button class="icon-btn" id="settings-btn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </header>
 
   <div class="stats" id="stats"></div>
@@ -536,7 +535,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.2.5</div>
+  <div class="version-footer">v2.3.0</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -597,40 +596,6 @@
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
       <button class="btn-primary" id="save-btn">Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="settings-modal-bg">
-  <div class="modal">
-    <h3>GitHub settings</h3>
-    <p style="font-size:13px;color:var(--ink-soft);margin-top:-8px;">Data is stored as a JSON file in your GitHub repo. Your token is kept only in this browser's local storage — never written into the page or committed to the repo.</p>
-    <div class="field">
-      <label for="s-owner">Repo owner (user or org)</label>
-      <input id="s-owner" placeholder="e.g. octocat">
-    </div>
-    <div class="field">
-      <label for="s-repo">Repository name</label>
-      <input id="s-repo" placeholder="e.g. certification-tracker">
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label for="s-branch">Branch</label>
-        <input id="s-branch" placeholder="main">
-      </div>
-      <div class="field">
-        <label for="s-path">File path</label>
-        <input id="s-path" placeholder="data/certifications.json">
-      </div>
-    </div>
-    <div class="field">
-      <label for="s-token">Personal access token (repo write scope)</label>
-      <input id="s-token" type="password" placeholder="ghp_...">
-    </div>
-    <div class="err" id="settings-err" style="display:none;">Owner, repo, and token are required.</div>
-    <div class="modal-actions">
-      <button id="settings-cancel-btn">Cancel</button>
-      <button class="btn-primary" id="settings-save-btn">Save & connect</button>
     </div>
   </div>
 </div>
@@ -852,6 +817,12 @@ function loadSettings(){
   }
 }
 
+// Sign-in lives on the view-only page (index.html); send the user there when
+// there are no saved credentials or GitHub rejects them.
+function redirectToSignIn(reason){
+  location.replace('index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : ''));
+}
+
 function saveSettings(cfg){
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(cfg));
 }
@@ -896,7 +867,9 @@ async function fetchFromGitHub(){
   }
   if(!res.ok){
     const body = await res.text();
-    throw new Error(`GitHub read failed (${res.status}): ${body.slice(0,200)}`);
+    const err = new Error(`GitHub read failed (${res.status}): ${body.slice(0,200)}`);
+    err.status = res.status;
+    throw err;
   }
   const json = await res.json();
   currentSha = json.sha;
@@ -918,6 +891,9 @@ async function writeToGitHub(data, message){
   });
   if(!res.ok){
     const errBody = await res.text();
+    if(res.status === 401 || res.status === 403){
+      throw new Error('GitHub rejected the saved token. <a href="index.html?settings=1&reason=rejected">Reconnect from the view-only page</a>, then try again.');
+    }
     if(res.status === 409){
       throw new Error('Conflict: the file changed on GitHub since last load. Refresh the page to get the latest version before saving again.');
     }
@@ -929,7 +905,7 @@ async function writeToGitHub(data, message){
 
 async function persist(){
   if(!ghConfig){
-    showBanner('error', 'Not connected to GitHub. Click the gear icon at the top right to connect.');
+    showBanner('error', 'Not connected to GitHub. <a href="index.html?settings=1">Connect from the view-only page</a>.');
     return;
   }
   try{
@@ -938,16 +914,15 @@ async function persist(){
     showBanner('success', 'Saved to GitHub.');
     setTimeout(hideBanner, 2000);
   }catch(e){
-    showBanner('error', 'Save failed: ' + escapeHtml(e.message));
+    const msg = e.message.startsWith('GitHub rejected the saved token.') ? e.message : escapeHtml(e.message);
+    showBanner('error', 'Save failed: ' + msg);
   }
 }
 
 async function load(){
   ghConfig = loadSettings();
   if(!ghConfig || !ghConfig.owner || !ghConfig.repo || !ghConfig.token){
-    document.getElementById('list').innerHTML = '';
-    showBanner('info', 'Not connected yet. Click the gear icon at the top right to link this page to a GitHub repo.');
-    document.getElementById('stats').innerHTML = '';
+    redirectToSignIn();
     return;
   }
   try{
@@ -1022,6 +997,10 @@ async function load(){
       hideBanner();
     }
   }catch(e){
+    if(e.status === 401 || e.status === 403){
+      redirectToSignIn('rejected');
+      return;
+    }
     showBanner('error', 'Could not load from GitHub: ' + escapeHtml(e.message));
     certs = [];
   }
@@ -1659,38 +1638,6 @@ document.getElementById('document-cancel-btn').addEventListener('click', closeDo
 document.getElementById('document-save-btn').addEventListener('click', saveDocumentEntry);
 document.getElementById('document-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'document-modal-bg') closeDocumentModal();
-});
-
-document.getElementById('settings-btn').addEventListener('click', () => {
-  const cfg = loadSettings() || {};
-  document.getElementById('s-owner').value = cfg.owner || '';
-  document.getElementById('s-repo').value = cfg.repo || '';
-  document.getElementById('s-branch').value = cfg.branch || 'main';
-  document.getElementById('s-path').value = cfg.path || FILE_PATH_DEFAULT;
-  document.getElementById('s-token').value = cfg.token || '';
-  document.getElementById('settings-err').style.display = 'none';
-  document.getElementById('settings-modal-bg').classList.add('open');
-});
-document.getElementById('settings-cancel-btn').addEventListener('click', () => {
-  document.getElementById('settings-modal-bg').classList.remove('open');
-});
-document.getElementById('settings-modal-bg').addEventListener('click', (e) => {
-  if(e.target.id === 'settings-modal-bg') document.getElementById('settings-modal-bg').classList.remove('open');
-});
-document.getElementById('settings-save-btn').addEventListener('click', async () => {
-  const owner = document.getElementById('s-owner').value.trim();
-  const repo = document.getElementById('s-repo').value.trim();
-  const branch = document.getElementById('s-branch').value.trim() || 'main';
-  const path = document.getElementById('s-path').value.trim() || FILE_PATH_DEFAULT;
-  const token = document.getElementById('s-token').value.trim();
-  if(!owner || !repo || !token){
-    document.getElementById('settings-err').style.display = 'block';
-    return;
-  }
-  saveSettings({owner, repo, branch, path, token});
-  document.getElementById('settings-modal-bg').classList.remove('open');
-  currentSha = null;
-  await load();
 });
 
 load();
