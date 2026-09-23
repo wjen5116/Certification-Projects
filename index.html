@@ -2,29 +2,67 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Certification Project Tracker (View Only)</title>
 <style>
   :root{
-    --bg:#000000;
-    --card:#121212;
-    --line:#333333;
-    --ink:#FFFFFF;
-    --ink-soft:#CCCCCC;
-    --ink-faint:#999999;
-    --pine:#8FCDB5;
-    --pine-bg:#1F3B32;
-    --gold:#E7C07E;
-    --gold-bg:#3D2F14;
-    --rust:#EC9B92;
-    --rust-bg:#3D1F1B;
-    --sage:#B3D2AA;
-    --sage-bg:#233B22;
-    --slate:#B3C4DA;
-    --slate-bg:#25303D;
+    color-scheme: light dark;
+    --bg:#F3F4F5;
+    --card:#FFFFFF;
+    --line:#D8DCDF;
+    --line-strong:#B4BBC0;
+    --hover:#EEF0F2;
+    --neutral-bg:#E6E9EB;
+    --backdrop:rgba(20,24,27,0.45);
+    --ink:#23292E;
+    --ink-soft:#4A545B;
+    --ink-faint:#6A747B;
+    --accent:#A70E13;
+    --accent-hover:#8C0B10;
+    --accent-ink:#A70E13;
+    --accent-bg:#FBE8E9;
+    --on-accent:#FFFFFF;
+    --rust:#C2410C;
+    --rust-bg:#FFEDD5;
+    --gold:#875A00;
+    --gold-bg:#FCEFD3;
+    --sage:#2E6A2A;
+    --sage-bg:#E2F0DE;
+    --slate:#2E5A88;
+    --slate-bg:#E2EBF5;
     --radius:10px;
     --serif: Calibri, "Segoe UI", Georgia, serif;
     --sans: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
   }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#272D32;
+      --card:#353D43;
+      --line:#4A545B;
+      --line-strong:#66717A;
+      --hover:#3F484F;
+      --neutral-bg:#454E55;
+      --backdrop:rgba(0,0,0,0.55);
+      --ink:#F2F4F5;
+      --ink-soft:#C9D0D4;
+      --ink-faint:#A1ABB2;
+      --accent:#A70E13;
+      --accent-hover:#C0151B;
+      --accent-ink:#FF8E91;
+      --accent-bg:#522B30;
+      --on-accent:#FFFFFF;
+      --rust:#FF8A4C;
+      --rust-bg:#4E3325;
+      --gold:#E7C07E;
+      --gold-bg:#4A3D22;
+      --sage:#B3D2AA;
+      --sage-bg:#2E4630;
+      --slate:#B3C4DA;
+      --slate-bg:#2E3C4B;
+    }
+  }
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  a{color:var(--accent-ink);}
   *{box-sizing:border-box;}
   body{
     margin:0;
@@ -83,11 +121,11 @@
   }
   button:hover{border-color:var(--ink-faint);}
   .btn-primary{
-    background:var(--pine);
-    border-color:var(--pine);
-    color:#0A1F19;
+    background:var(--accent);
+    border-color:var(--accent);
+    color:var(--on-accent);
   }
-  .btn-primary:hover{background:#7AB89E;}
+  .btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
   .btn-text{
     border:none;
     background:none;
@@ -124,7 +162,7 @@
     color:var(--ink-soft);
     padding:10px 12px;
     border-bottom:1px solid var(--line);
-    background:#1A1A1A;
+    background:var(--hover);
     overflow-wrap:break-word;
   }
   tbody td{
@@ -135,7 +173,7 @@
     word-break:break-word;
   }
   tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:#1A1A1A;}
+  tbody tr:hover{background:var(--hover);}
   .cert-name{font-weight:500;font-family:var(--serif);font-size:16px;}
   .muted{color:var(--ink-soft);}
   .pill{
@@ -146,13 +184,13 @@
     font-weight:600;
     display:inline-block;
   }
-  .pill-notstarted{background:#2A2A2A;color:var(--ink-soft);}
-  .pill-inprogress{background:var(--pine-bg);color:var(--pine);}
+  .pill-notstarted{background:var(--neutral-bg);color:var(--ink-soft);}
+  .pill-inprogress{background:var(--accent-bg);color:var(--accent-ink);}
   .pill-submitted{background:var(--slate-bg);color:var(--slate);}
   .pill-underreview{background:var(--gold-bg);color:var(--gold);}
   .pill-approved{background:var(--sage-bg);color:var(--sage);}
   .pill-rejected{background:var(--rust-bg);color:var(--rust);}
-  .pill-onhold{background:#2A2A2A;color:var(--ink-soft);}
+  .pill-onhold{background:var(--neutral-bg);color:var(--ink-soft);}
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
@@ -168,8 +206,8 @@
     word-break:break-all;
     user-select:all;
   }
-  .doc-loc a{color:var(--pine);text-decoration:underline;}
-  .field-grid .fv a{color:var(--pine);text-decoration:underline;}
+  .doc-loc a{color:var(--accent-ink);text-decoration:underline;}
+  .field-grid .fv a{color:var(--accent-ink);text-decoration:underline;}
 
   .tabs{
     display:flex;
@@ -194,7 +232,7 @@
     font-size:15px;
     cursor:pointer;
   }
-  .tab:hover{color:var(--ink);background:#1A1A1A;}
+  .tab:hover{color:var(--ink);background:var(--hover);}
   .tab.active{
     color:var(--ink);
     background:var(--card);
@@ -251,7 +289,7 @@
     font-family:var(--sans);
     color:var(--ink);
   }
-  .cert-collapse-toggle:hover .cert-name{color:var(--pine);}
+  .cert-collapse-toggle:hover .cert-name{color:var(--accent-ink);}
   .cert-collapse-toggle .chevron{
     display:inline-block;
     font-size:12px;
@@ -295,7 +333,7 @@
     background:var(--bg);
     color:var(--ink);
   }
-  .inline-input:focus{border-color:var(--pine);outline:none;}
+  .inline-input:focus{border-color:var(--accent-ink);outline:none;}
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -304,17 +342,20 @@
   .changelog-entry{
     display:flex;
     gap:10px;
-    font-size:13px;
+    font-size:15px;
     padding:3px 0;
   }
   .changelog-date{
+    font-size:13px;
+    padding-top:1px;
     color:var(--ink-faint);
     min-width:80px;
     flex-shrink:0;
   }
   .changelog-text{color:var(--ink-soft);}
   .activity-entry{
-    padding:6px 0;
+    font-size:15px;
+    padding:8px 0;
     border-bottom:1px solid var(--line);
   }
   .activity-entry:last-child{border-bottom:none;}
@@ -326,14 +367,14 @@
   }
   .late-note{color:var(--ink-faint);font-style:italic;}
   .activity-meta{
-    font-size:12px;
+    font-size:13px;
     color:var(--ink-faint);
     margin-top:3px;
   }
 
   .modal-bg{
     position:fixed;inset:0;
-    background:rgba(31,42,36,0.35);
+    background:var(--backdrop);
     display:none;
     align-items:flex-start;
     justify-content:center;
@@ -440,7 +481,7 @@
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-customer-btn:hover{background:#1A1A1A;color:var(--ink);}
+  .side-customer-btn:hover{background:var(--hover);color:var(--ink);}
   .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:600;}
   .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .sidebar .chevron{
@@ -473,8 +514,8 @@
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-cert:hover{background:#1A1A1A;color:var(--ink);}
-  .side-cert.active{background:var(--pine-bg);color:var(--ink);border-left-color:var(--pine);}
+  .side-cert:hover{background:var(--hover);color:var(--ink);}
+  .side-cert.active{background:var(--accent-bg);color:var(--ink);border-left-color:var(--accent-ink);}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
   .side-cert.active .side-cert-auth{color:var(--ink-soft);}
@@ -519,11 +560,11 @@
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--card);
-    color:var(--ink-soft);
+    color:var(--accent-ink);
   }
-  .icon-btn:hover{color:var(--pine);border-color:var(--pine);}
+  .icon-btn:hover{color:var(--accent-ink);border-color:var(--accent-ink);background:var(--hover);}
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
-  button:focus-visible{outline:2px solid var(--pine);outline-offset:2px;}
+  button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;}
   @media (max-width: 760px){
     .layout{grid-template-columns:1fr;}
     .sidebar{position:static;max-height:none;}
@@ -552,7 +593,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.3.1</div>
+  <div class="version-footer">v2.4.0</div>
 </div>
 
 <div class="modal-bg" id="settings-modal-bg">
