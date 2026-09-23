@@ -106,8 +106,8 @@
         "id": "d179009084495210"
       },
       {
-        "name": "Validation_Data_Roadmap__Cessna_C172S_.docx",
-        "url": "https://docs.google.com/document/d/1SFs-_GNtb-a2A4Q69EIGRBJtiENxzpur/edit?usp=drive_link&ouid=117040569555243457327&rtpof=true&sd=true",
+        "name": "Validation_Data_Roadmap__Cessna_C172S",
+        "url": "https://drive.google.com/drive/folders/1rYb41R5pu9lVJMbg7F3E8mtOtnhndKhP?usp=drive_link",
         "id": "d179009084495211"
       }
     ],
@@ -186,6 +186,13 @@
         "time": "3:40 PM",
         "ts": 1790196030211,
         "text": "Document updated: US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG"
+      },
+      {
+        "id": "l1790196040801-1",
+        "date": "2026-09-23",
+        "time": "3:40 PM",
+        "ts": 1790196040801,
+        "text": "Document updated: Validation_Data_Roadmap__Cessna_C172S"
       }
     ],
     "primaryContact": "Retty Ennis - rennis@usaviation.aero"
