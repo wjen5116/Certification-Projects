@@ -27,7 +27,7 @@
     "activityLog": [
       {
         "id": "a179003588595300",
-        "description": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251.",
+        "description": "Upload MQTG v1.1 to R-MCX-100251.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
@@ -36,16 +36,16 @@
       },
       {
         "id": "a179003588595301",
-        "description": "Completed: Clay and I on-site at Skyborne Sep 14 for the certification.",
+        "description": "Clay and I on-site at Skyborne Sep 14 for the certification.",
         "status": "Complete",
-        "dateCreated": "2026-09-16",
+        "dateCreated": "2026-09-11",
         "dateDue": "",
-        "dateUpdated": "2026-09-16",
-        "dateCompleted": "2026-09-16"
+        "dateUpdated": "2026-09-21",
+        "dateCompleted": "2026-09-18"
       },
       {
         "id": "a179003588595302",
-        "description": "Completed: MQTG review with UKCAA",
+        "description": "MQTG review with UKCAA",
         "status": "Complete",
         "dateCreated": "2026-09-16",
         "dateDue": "",
@@ -54,7 +54,7 @@
       },
       {
         "id": "a179003588595303",
-        "description": "Waiting to receive UK CAA Discrepency Report from Skyborne for correction.",
+        "description": "Review UK CAA Discrepency Report from Skyborne for correction.",
         "status": "Pending",
         "dateCreated": "2026-09-21",
         "dateDue": "",
@@ -64,31 +64,19 @@
         "id": "a1790182345279",
         "description": "UK CAA FNPTII Conditional Certification (Received)",
         "status": "Complete",
-        "dateDue": "2026-09-18",
-        "dateCreated": "2026-09-23",
-        "timeCreated": "11:52 AM",
+        "dateDue": "2026-09-17",
+        "dateCreated": "2026-09-17",
+        "timeCreated": "",
         "dateUpdated": "2026-09-23",
         "timeUpdated": "11:52 AM",
-        "dateCompleted": "2026-09-23",
-        "timeCompleted": "11:52 AM"
+        "dateCompleted": "2026-09-18",
+        "timeCompleted": "05:52 PM"
       }
     ],
     "docChangeLog": [
       {
         "date": "2026-09-21",
         "text": "Documents updated: R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_3.docx, Validation_Data_Roadmap__PA28_Archer_v1.1.docx"
-      },
-      {
-        "date": "2026-09-22",
-        "text": "Documents updated: https://drive.google.com/file/d/13XaQDcRCrxv9vy4ARqISD5xFBYERFVhb/view?usp=drive_link, https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link"
-      },
-      {
-        "date": "2026-09-22",
-        "text": "Document location updated: https://drive.google.com/file/d/1NBz1LKb4HFwohMsvaKH7Nj-i-Aj4Bbc6/view?usp=drive_link"
-      },
-      {
-        "date": "2026-09-22",
-        "text": "Document location updated: https://drive.google.com/file/d/13XaQDcRCrxv9vy4ARqISD5xFBYERFVhb/view?usp=drive_link"
       },
       {
         "date": "2026-09-22",
@@ -133,7 +121,7 @@
     "activityLog": [
       {
         "id": "a179003588595310",
-        "description": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD.",
+        "description": "Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
@@ -228,7 +216,7 @@
     "activityLog": [
       {
         "id": "a179003588595320",
-        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "description": "MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
@@ -270,7 +258,7 @@
     "activityLog": [
       {
         "id": "a179003588595330",
-        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "description": "MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
@@ -311,7 +299,7 @@
     "activityLog": [
       {
         "id": "a179003588595340",
-        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "description": "MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
@@ -352,7 +340,7 @@
     "activityLog": [
       {
         "id": "a179003588595450",
-        "description": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
+        "description": "MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank.",
         "status": "Complete",
         "dateCreated": "2026-09-11",
         "dateDue": "",
