@@ -9,9 +9,10 @@
     color-scheme: light dark;
     --bg:#F3F4F5;
     --card:#FFFFFF;
+    --card-line:#A70E13;
     --line:#D8DCDF;
     --line-strong:#B4BBC0;
-    --hover:#EEF0F2;
+    --hover:#E1E5E8;
     --neutral-bg:#E6E9EB;
     --backdrop:rgba(20,24,27,0.45);
     --ink:#23292E;
@@ -20,14 +21,19 @@
     --accent:#A70E13;
     --accent-hover:#8C0B10;
     --accent-ink:#A70E13;
+    --hover-ink:#A70E13;
     --accent-bg:#FBE8E9;
     --on-accent:#FFFFFF;
     --rust:#C2410C;
     --rust-bg:#FFEDD5;
+    --rust-strong:#9A3409;
+    --rust-bg-strong:#FFE0C2;
     --gold:#875A00;
     --gold-bg:#FCEFD3;
     --sage:#2E6A2A;
     --sage-bg:#E2F0DE;
+    --sage-strong:#1F4D1C;
+    --sage-bg-strong:#CFE6C8;
     --slate:#2E5A88;
     --slate-bg:#E2EBF5;
     --radius:10px;
@@ -36,28 +42,34 @@
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#272D32;
+      --bg:#000000;
       --card:#353D43;
+      --card-line:#A70E13;
       --line:#4A545B;
-      --line-strong:#66717A;
-      --hover:#3F484F;
+      --line-strong:#7C8790;
+      --hover:#434C53;
       --neutral-bg:#454E55;
-      --backdrop:rgba(0,0,0,0.55);
-      --ink:#F2F4F5;
-      --ink-soft:#C9D0D4;
-      --ink-faint:#A1ABB2;
+      --backdrop:rgba(0,0,0,0.6);
+      --ink:#FFFFFF;
+      --ink-soft:#E4E8EB;
+      --ink-faint:#B8C1C7;
       --accent:#A70E13;
       --accent-hover:#C0151B;
-      --accent-ink:#FF8E91;
-      --accent-bg:#522B30;
+      --accent-ink:#FF6B6F;
+      --hover-ink:#FF6B6F;
+      --accent-bg:#4A2A2E;
       --on-accent:#FFFFFF;
-      --rust:#FF8A4C;
+      --rust:#FF9D66;
       --rust-bg:#4E3325;
+      --rust-strong:#FFB085;
+      --rust-bg-strong:#4E3325;
       --gold:#E7C07E;
       --gold-bg:#4A3D22;
-      --sage:#B3D2AA;
+      --sage:#C6E0BE;
       --sage-bg:#2E4630;
-      --slate:#B3C4DA;
+      --sage-strong:#D6EBCF;
+      --sage-bg-strong:#3A5A3C;
+      --slate:#C9D6E6;
       --slate-bg:#2E3C4B;
     }
   }
@@ -90,7 +102,7 @@
   }
   .stat{
     background:var(--card);
-    border:1px solid var(--line);
+    border:1px solid var(--card-line);
     border-radius:var(--radius);
     padding:12px 14px;
   }
@@ -120,6 +132,7 @@
     color:var(--ink);
   }
   button:hover{border-color:var(--ink-faint);}
+
   .btn-primary{
     background:var(--accent);
     border-color:var(--accent);
@@ -140,12 +153,12 @@
     color:var(--ink-soft);
     white-space:nowrap;
   }
-  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--ink-faint);}
+  
   .btn-text svg{width:15px;height:15px;flex-shrink:0;}
   .btn-text.danger{color:var(--rust);border-color:var(--rust);}
-  .btn-text.danger:hover{background:var(--rust-bg);color:var(--rust);}
+  
   .btn-text.ok{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
-  .btn-text.ok:hover{filter:brightness(1.05);color:var(--sage);}
+  
   .cert-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
   .detail-actions{gap:6px;}
   @media (max-width: 640px){
@@ -156,7 +169,7 @@
 
   .empty{
     background:var(--card);
-    border:1px dashed var(--line);
+    border:1px dashed var(--card-line);
     border-radius:var(--radius);
     padding:36px 20px;
     text-align:center;
@@ -251,7 +264,7 @@
     font-size:15px;
     cursor:pointer;
   }
-  .tab:hover{color:var(--ink);background:var(--hover);}
+  
   .tab.active{
     color:var(--ink);
     background:var(--card);
@@ -469,7 +482,7 @@
   }
   .sidebar{
     background:var(--card);
-    border:1px solid var(--line);
+    border:1px solid var(--card-line);
     border-radius:var(--radius);
     padding:6px;
     position:sticky;
@@ -477,7 +490,6 @@
     max-height:calc(100vh - 32px);
     overflow-y:auto;
   }
-  .side-customer + .side-customer{border-top:1px solid var(--line);}
   .side-customer-btn{
     width:100%;
     display:flex;
@@ -492,8 +504,8 @@
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-customer-btn:hover{background:var(--hover);color:var(--ink);}
-  .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:600;}
+  
+  .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:700;}
   .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .sidebar .chevron{
     display:inline-block;
@@ -518,18 +530,17 @@
     gap:8px;
     background:none;
     border:none;
-    border-left:2px solid transparent;
-    border-radius:0 6px 6px 0;
+    border-radius:6px;
     padding:7px 10px;
     font-size:14px;
     color:var(--ink-soft);
     text-align:left;
   }
-  .side-cert:hover{background:var(--hover);color:var(--ink);}
-  .side-cert.active{background:var(--accent-bg);color:var(--ink);border-left-color:var(--accent-ink);}
+  
+  .side-cert.active{color:var(--ink);font-weight:700;}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
-  .side-cert.active .side-cert-auth{color:var(--ink-soft);}
+  .side-cert.active .side-cert-auth{color:var(--ink-soft);font-weight:700;}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
   .dot-overdue{background:var(--rust);}
   .dot-gold{background:var(--gold);}
@@ -538,7 +549,7 @@
   .side-add{margin:6px 0 2px 10px;}
   .detail{
     background:var(--card);
-    border:1px solid var(--line);
+    border:1px solid var(--card-line);
     border-radius:var(--radius);
     padding:16px 20px 18px;
     min-width:0;
@@ -573,7 +584,6 @@
     background:var(--card);
     color:var(--accent-ink);
   }
-  .icon-btn:hover{color:var(--accent-ink);border-color:var(--accent-ink);background:var(--hover);}
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--accent-ink);outline-offset:2px;}
   @media (max-width: 760px){
@@ -583,6 +593,14 @@
   @media (prefers-reduced-motion: reduce){
     .sidebar .chevron{transition:none;}
   }
+  /* Hover: grey shading; customer names turn bold Redbird red; button borders take their color */
+  .side-customer-btn:hover{background:var(--hover);}
+  .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
+  .side-cert:hover{background:var(--hover);}
+  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--hover-ink);}
+  .btn-text.danger:hover{background:var(--rust-bg-strong);color:var(--rust);border-color:var(--rust-strong);}
+  .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
+  .icon-btn:hover{background:var(--hover);}
 </style>
 </head>
 <body>
@@ -600,7 +618,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.0</div>
+  <div class="version-footer">v2.4.1</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1320,7 +1338,7 @@ const ICON = {
 function actionBtn(kind, label, onclick, opts){
   const o = opts || {};
   const cls = ['btn-text', o.cls || '', o.compact === false ? '' : 'compact'].join(' ').trim();
-  return `<button class="${cls}" onclick="${onclick}" title="${label}" aria-label="${label}">${ICON[kind]}<span class="btn-label">${label}</span></button>`;
+  return `<button class="${cls}" onclick="${onclick}" title="${label}" aria-label="${label}">${ICON[kind]}<span class="btn-label" data-label="${label}">${label}</span></button>`;
 }
 
 function customerKey(c){
