@@ -347,12 +347,12 @@
     "change": "",
     "docs": [
       {
-        "name": "R-FMX-100953__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx",
-        "url": "",
+        "name": "Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
+        "url": "https://drive.google.com/drive/folders/1iW373YA4JPnp2N5CgA60pwZeRRlu4Ev4?usp=drive_link",
         "id": "d179009084495250"
       }
     ],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
+    "docLocation": "",
     "activityLog": [
       {
         "id": "a179003588595450",
@@ -372,7 +372,22 @@
         "dateUpdated": "2026-09-22"
       }
     ],
-    "docChangeLog": [],
+    "docChangeLog": [
+      {
+        "id": "l1790187242257-7",
+        "date": "2026-09-23",
+        "time": "1:14 PM",
+        "ts": 1790187242257,
+        "text": "Document updated: Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP"
+      },
+      {
+        "id": "l1790187242257-8",
+        "date": "2026-09-23",
+        "time": "1:14 PM",
+        "ts": 1790187242257,
+        "text": "Document location updated: (cleared)"
+      }
+    ],
     "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com"
   },
   {
