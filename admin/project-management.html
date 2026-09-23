@@ -463,6 +463,8 @@
   .side-cert:hover{background:#1A1A1A;color:var(--ink);}
   .side-cert.active{background:var(--pine-bg);color:var(--ink);border-left-color:var(--pine);}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
+  .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
+  .side-cert.active .side-cert-auth{color:var(--ink-soft);}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
   .dot-overdue{background:var(--rust);}
   .dot-gold{background:var(--gold);}
@@ -524,7 +526,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.2.0</div>
+  <div class="version-footer">v2.2.1</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1110,14 +1112,13 @@ function render(){
         ${open ? `
         <div class="side-certs">
           ${so.map(sk => `
-            ${showSerial ? `<div class="side-serial">${escapeHtml(sk)}</div>` : ''}
             ${sg[sk].map(x => {
               const st = computeCertStatus(x);
               const isActive = x.id === activeCertId;
               return `
-              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} onclick="selectCert('${x.id}')">
+              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(x.name)}" onclick="selectCert('${x.id}')">
                 <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
-                <span class="side-cert-name">${escapeHtml(x.name)}</span>
+                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${x.authority ? `<span class="side-cert-auth">${escapeHtml(x.authority)}</span>` : ''}</span>
               </button>`;
             }).join('')}
           `).join('')}
