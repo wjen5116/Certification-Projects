@@ -312,6 +312,11 @@
     align-items:flex-start;
     gap:10px;
   }
+  .changelog-editable{justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding:5px 0;}
+  .changelog-editable:last-child{border-bottom:none;}
+  .changelog-main{display:flex;gap:10px;min-width:0;overflow-wrap:anywhere;}
+  .changelog-editable .cert-actions{flex-shrink:0;}
+  .late-note{color:var(--ink-faint);font-style:italic;}
   .activity-meta{
     font-size:12px;
     color:var(--ink-faint);
@@ -535,7 +540,7 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.3.0</div>
+  <div class="version-footer">v2.3.1</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -596,6 +601,27 @@
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
       <button class="btn-primary" id="save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="changelog-modal-bg">
+  <div class="modal">
+    <h3 id="changelog-modal-title">Add change log entry</h3>
+    <input type="hidden" id="changelog-cert-id">
+    <input type="hidden" id="changelog-edit-id">
+    <div class="field">
+      <label for="l-date">Date</label>
+      <input id="l-date" type="date">
+    </div>
+    <div class="field">
+      <label for="l-text">Entry</label>
+      <textarea id="l-text" placeholder="e.g. Document updated: MQTG v1.3"></textarea>
+      <div class="err" id="changelog-err" style="display:none;"></div>
+    </div>
+    <div class="modal-actions">
+      <button id="changelog-cancel-btn">Cancel</button>
+      <button class="btn-primary" id="changelog-save-btn">Save</button>
     </div>
   </div>
 </div>
@@ -976,6 +1002,9 @@ async function load(){
         needsResave = true;
       }
       if(!Array.isArray(c.docChangeLog)){ c.docChangeLog = []; needsResave = true; }
+      c.docChangeLog.forEach((e, ei) => {
+        if(!e.id){ e.id = 'l' + Date.now() + ci + '-' + ei; needsResave = true; }
+      });
       if(Array.isArray(c.docs)){
         const normalized = c.docs.map(d => typeof d === 'string' ? {name: d, url: ''} : d);
         const isDifferent = normalized.some((d, i) => typeof c.docs[i] === 'string');
@@ -1020,6 +1049,11 @@ function fmtDate(d){
   if(!d) return '\u2014';
   const dt = new Date(d + 'T00:00:00');
   return dt.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+}
+
+let logIdCounter = 0;
+function newLogId(){
+  return 'l' + Date.now() + '-' + (logIdCounter++);
 }
 
 function nowTime(){
@@ -1265,21 +1299,39 @@ function renderDocumentsSection(c){
 
 function renderDocChangeLog(c){
   const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
-  const sorted = [...entries].sort((a,b) => (b.ts || 0) - (a.ts || 0) || (b.date||'').localeCompare(a.date||''));
+  const sorted = [...entries].sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.ts || 0) - (a.ts || 0));
   return `
     <div class="changelog">
-      <div class="fk">Document Change Log</div>
+      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Document Change Log</span>
+        <button class="btn-text" onclick="openChangeLogModal('${c.id}')">+ Add</button>
+      </div>
       ${sorted.length ? sorted.map(entry => `
-        <div class="changelog-entry">
-          <span class="changelog-date">${fmtDate(entry.date)}${entry.time ? ', ' + entry.time : ''}</span>
-          <span class="changelog-text">${escapeHtml(entry.text)}</span>
+        <div class="changelog-entry changelog-editable">
+          <div class="changelog-main">
+            <span class="changelog-date">${fmtDate(entry.date)}${entry.time ? ', ' + entry.time : ''}</span>
+            <span class="changelog-text">${escapeHtml(entry.text)}</span>
+          </div>
+          <div class="cert-actions">
+            <button class="btn-text" onclick="openChangeLogModal('${c.id}', '${entry.id}')">Edit</button>
+            <button class="btn-text danger" onclick="deleteChangeLogEntry('${c.id}', '${entry.id}')">Delete</button>
+          </div>
         </div>
       `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
     </div>
   `;
 }
 
+// For completed activities: how many days after the due date they were completed ('' if on time or unknown).
+function lateNote(a){
+  if(a.status !== 'Complete' || !a.dateDue || !a.dateCompleted) return '';
+  const days = Math.round((new Date(a.dateCompleted + 'T00:00:00') - new Date(a.dateDue + 'T00:00:00')) / 86400000);
+  if(days <= 0) return '';
+  return ` <span class="late-note">(${days} day${days === 1 ? '' : 's'} late)</span>`;
+}
+
 function isActivityOverdue(a){
+  if(a.status === 'Complete') return false;
   if(!a.dateDue) return false;
   const today = new Date(); today.setHours(0,0,0,0);
   return new Date(a.dateDue + 'T00:00:00') < today;
@@ -1328,7 +1380,7 @@ function renderActivityLog(c){
             Entered ${fmtDate(a.dateCreated)}${a.timeCreated ? ', ' + a.timeCreated : ''}
             ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
             ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}${a.timeUpdated ? ', ' + a.timeUpdated : ''}` : ''}
-            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}` : ''}
+            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}${lateNote(a)}` : ''}
           </div>
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
@@ -1440,6 +1492,59 @@ async function deleteActivity(certId, activityId){
   render();
 }
 
+function openChangeLogModal(certId, entryId){
+  document.getElementById('changelog-err').style.display = 'none';
+  document.getElementById('changelog-cert-id').value = certId;
+  document.getElementById('changelog-edit-id').value = entryId || '';
+  const c = certs.find(x => x.id === certId);
+  const e = entryId && c && Array.isArray(c.docChangeLog) ? c.docChangeLog.find(x => x.id === entryId) : null;
+  document.getElementById('changelog-modal-title').textContent = e ? 'Edit change log entry' : 'Add change log entry';
+  document.getElementById('l-date').value = e ? (e.date || '') : new Date().toISOString().slice(0,10);
+  document.getElementById('l-text').value = e ? (e.text || '') : '';
+  document.getElementById('changelog-modal-bg').classList.add('open');
+  document.getElementById('l-text').focus();
+}
+
+function closeChangeLogModal(){
+  document.getElementById('changelog-modal-bg').classList.remove('open');
+}
+
+async function saveChangeLogEntry(){
+  const text = document.getElementById('l-text').value.trim();
+  const date = document.getElementById('l-date').value;
+  const err = document.getElementById('changelog-err');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){ err.textContent = 'Enter a date.'; err.style.display = 'block'; return; }
+  if(!text){ err.textContent = 'Enter the change log text.'; err.style.display = 'block'; return; }
+  const c = certs.find(x => x.id === document.getElementById('changelog-cert-id').value);
+  if(!c) return;
+  if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
+  const entryId = document.getElementById('changelog-edit-id').value;
+  if(entryId){
+    const e = c.docChangeLog.find(x => x.id === entryId);
+    if(e){
+      // A recorded time only makes sense for the original date
+      if(e.date !== date){ delete e.time; }
+      e.date = date;
+      e.text = text;
+    }
+  }else{
+    c.docChangeLog.push({id: newLogId(), date, ts: Date.now(), text});
+  }
+  await persist();
+  closeChangeLogModal();
+  render();
+}
+
+async function deleteChangeLogEntry(certId, entryId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.docChangeLog)) return;
+  const e = c.docChangeLog.find(x => x.id === entryId);
+  if(!e) return;
+  c.docChangeLog = c.docChangeLog.filter(x => x.id !== entryId);
+  await persist();
+  render();
+}
+
 function openDocumentModal(certId, docId){
   document.getElementById('document-err').style.display = 'none';
   document.getElementById('document-cert-id').value = certId;
@@ -1488,14 +1593,14 @@ async function saveDocumentEntry(){
     const idx = c.docs.findIndex(x => x.id === docId);
     if(idx > -1){
       c.docs[idx] = {...c.docs[idx], name, url};
-      c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document updated: ' + name});
+      c.docChangeLog.push({id: newLogId(), date: today, time: nowTime(), ts: Date.now(), text: 'Document updated: ' + name});
     }
   }else{
     c.docs.push({id: 'd' + Date.now(), name, url});
-    c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document added: ' + name});
+    c.docChangeLog.push({id: newLogId(), date: today, time: nowTime(), ts: Date.now(), text: 'Document added: ' + name});
   }
   if(location !== (c.docLocation || '')){
-    c.docChangeLog.push({date: today, time: nowTime(), ts: Date.now(), text: 'Document location updated: ' + (location || '(cleared)')});
+    c.docChangeLog.push({id: newLogId(), date: today, time: nowTime(), ts: Date.now(), text: 'Document location updated: ' + (location || '(cleared)')});
     c.docLocation = location;
   }
   await persist();
@@ -1509,7 +1614,7 @@ async function deleteDocument(certId, docId){
   const d = c.docs.find(x => x.id === docId);
   c.docs = c.docs.filter(x => x.id !== docId);
   if(!Array.isArray(c.docChangeLog)) c.docChangeLog = [];
-  if(d) c.docChangeLog.push({date: new Date().toISOString().slice(0,10), time: nowTime(), ts: Date.now(), text: 'Document removed: ' + d.name});
+  if(d) c.docChangeLog.push({id: newLogId(), date: new Date().toISOString().slice(0,10), time: nowTime(), ts: Date.now(), text: 'Document removed: ' + d.name});
   await persist();
   render();
 }
@@ -1633,6 +1738,11 @@ document.getElementById('activity-cancel-btn').addEventListener('click', closeAc
 document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
 document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'activity-modal-bg') closeActivityModal();
+});
+document.getElementById('changelog-cancel-btn').addEventListener('click', closeChangeLogModal);
+document.getElementById('changelog-save-btn').addEventListener('click', saveChangeLogEntry);
+document.getElementById('changelog-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'changelog-modal-bg') closeChangeLogModal();
 });
 document.getElementById('document-cancel-btn').addEventListener('click', closeDocumentModal);
 document.getElementById('document-save-btn').addEventListener('click', saveDocumentEntry);
