@@ -407,6 +407,113 @@
     color:var(--ink-faint);
     text-align:center;
   }
+  /* v2.2.0 sidebar layout */
+  .layout{
+    display:grid;
+    grid-template-columns:minmax(220px, 290px) minmax(0, 1fr);
+    gap:16px;
+    align-items:start;
+  }
+  .sidebar{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:6px;
+    position:sticky;
+    top:16px;
+    max-height:calc(100vh - 32px);
+    overflow-y:auto;
+  }
+  .side-customer + .side-customer{border-top:1px solid var(--line);}
+  .side-customer-btn{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:none;
+    border:none;
+    border-radius:8px;
+    padding:10px;
+    font-family:var(--serif);
+    font-size:15px;
+    color:var(--ink-soft);
+    text-align:left;
+  }
+  .side-customer-btn:hover{background:#1A1A1A;color:var(--ink);}
+  .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:600;}
+  .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
+  .sidebar .chevron{
+    display:inline-block;
+    font-size:12px;
+    color:var(--ink-faint);
+    transition:transform 0.15s ease;
+  }
+  .sidebar .chevron.open{transform:rotate(90deg);}
+  .side-certs{padding:0 0 8px 18px;}
+  .side-serial{
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    padding:8px 10px 2px;
+  }
+  .side-cert{
+    width:100%;
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    background:none;
+    border:none;
+    border-left:2px solid transparent;
+    border-radius:0 6px 6px 0;
+    padding:7px 10px;
+    font-size:14px;
+    color:var(--ink-soft);
+    text-align:left;
+  }
+  .side-cert:hover{background:#1A1A1A;color:var(--ink);}
+  .side-cert.active{background:var(--pine-bg);color:var(--ink);border-left-color:var(--pine);}
+  .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+  .dot-overdue{background:var(--rust);}
+  .dot-gold{background:var(--gold);}
+  .dot-slate{background:var(--slate);}
+  .dot-sage{background:var(--sage);}
+  .side-add{font-size:13px;margin:4px 0 0 6px;}
+  .detail{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 20px 18px;
+    min-width:0;
+    scroll-margin-top:12px;
+  }
+  .detail-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .detail-context{font-size:13px;color:var(--ink-faint);margin-bottom:2px;}
+  .detail-title{
+    font-family:var(--serif);
+    font-size:22px;
+    font-weight:600;
+    margin:0;
+    line-height:1.2;
+  }
+  .activity-entry-top > :first-child{min-width:0;overflow-wrap:anywhere;}
+  .activity-entry-top .cert-actions{flex-shrink:0;}
+  .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
+  button:focus-visible{outline:2px solid var(--pine);outline-offset:2px;}
+  @media (max-width: 760px){
+    .layout{grid-template-columns:1fr;}
+    .sidebar{position:static;max-height:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sidebar .chevron{transition:none;}
+  }
 </style>
 </head>
 <body>
@@ -425,13 +532,15 @@
   </div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.1.1</div>
+  <div class="version-footer">v2.2.0</div>
 </div>
 
 <script>
 let certs = [];
 let activeCustomer = null;
-let expandedCertIds = new Set();
+let activeCertId = null;
+let expandedCustomers = new Set();
+let sidebarInitialised = false;
 let currentSha = null;
 
 // Hardcoded, read-only connection to the public data repo.
@@ -566,87 +675,105 @@ function render(){
     return a.localeCompare(b);
   });
 
-  if(!activeCustomer || !order.includes(activeCustomer)){
-    activeCustomer = order[0];
+  // Resolve the selected certification; fall back to the first one for the current customer
+  let activeCert = certs.find(x => x.id === activeCertId);
+  if(!activeCert){
+    const fallbackCustomer = (activeCustomer && order.includes(activeCustomer)) ? activeCustomer : order[0];
+    activeCert = sortCerts(groups[fallbackCustomer])[0];
+    activeCertId = activeCert.id;
+  }
+  activeCustomer = customerKey(activeCert);
+  if(!sidebarInitialised){
+    expandedCustomers.add(activeCustomer);
+    sidebarInitialised = true;
   }
 
-  const tabBar = order.map(customer => {
-    const items = groups[customer];
-    const anyOverdue = items.some(isOverdue);
-    const isActive = customer === activeCustomer;
+  const sidebar = order.map(customer => {
+    const items = sortCerts(groups[customer]);
+    const anyOverdue = items.some(isCertOverdue);
+    const open = expandedCustomers.has(customer);
+    const { groups: sg, order: so } = groupBySerial(items);
+    const showSerial = so.length > 1;
     return `
-      <button class="tab ${isActive ? 'active' : ''}" onclick="selectCustomer('${escapeAttr(customer)}')">
-        ${escapeHtml(customer)}
-        <span class="tab-count">${items.length}</span>
-        ${anyOverdue ? '<span class="tab-overdue-dot" aria-hidden="true"></span>' : ''}
-      </button>
+      <div class="side-customer ${customer === activeCustomer ? 'has-active' : ''}">
+        <button class="side-customer-btn" aria-expanded="${open}" onclick="toggleCustomer('${escapeAttr(customer)}')">
+          <span class="chevron ${open ? 'open' : ''}" aria-hidden="true">&#9656;</span>
+          <span class="side-customer-name">${escapeHtml(customer)}</span>
+          ${anyOverdue ? '<span class="tab-overdue-dot" title="Has overdue items"></span>' : ''}
+          <span class="tab-count">${items.length}</span>
+        </button>
+        ${open ? `
+        <div class="side-certs">
+          ${so.map(sk => `
+            ${showSerial ? `<div class="side-serial">${escapeHtml(sk)}</div>` : ''}
+            ${sg[sk].map(x => {
+              const st = computeCertStatus(x);
+              const isActive = x.id === activeCertId;
+              return `
+              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} onclick="selectCert('${x.id}')">
+                <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
+                <span class="side-cert-name">${escapeHtml(x.name)}</span>
+              </button>`;
+            }).join('')}
+          `).join('')}
+        </div>` : ''}
+      </div>
     `;
   }).join('');
 
-  const activeItems = sortCerts(groups[activeCustomer] || []);
-  const { groups: serialGroups, order: serialOrder } = groupBySerial(activeItems);
-  const showSerialHeaders = serialOrder.length > 1;
+  const c = activeCert;
+  const over = isOverdue(c);
+  const status = computeCertStatus(c);
 
   list.innerHTML = `
-    <div class="tabs" role="tablist">${tabBar}</div>
-    <div class="tab-panel">
-      ${serialOrder.map(serialKey => `
-        ${showSerialHeaders ? `<div class="serial-heading">${escapeHtml(serialKey)}</div>` : ''}
-        ${serialGroups[serialKey].map(c => {
-        const over = isOverdue(c);
-        const expanded = expandedCertIds.has(c.id);
-        const status = computeCertStatus(c);
-        return `
-        <div class="cert-block">
-          <button class="cert-block-top cert-collapse-toggle" onclick="toggleCertExpand('${c.id}')">
-            <span class="cert-name">
-              <span class="chevron ${expanded ? 'open' : ''}" aria-hidden="true">&#9656;</span>
-              ${escapeHtml(c.name)}
-            </span>
-            <span class="pill pill-${status.cls}">${status.label}</span>
-          </button>
-          ${expanded ? `
-          <div class="field-grid">
-            <div>
-              <div class="fk">SIM location</div>
-              <div class="fv">${escapeHtml(c.simLocation || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">Certifying country</div>
-              <div class="fv">${escapeHtml(c.country || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">Regulatory authority</div>
-              <div class="fv">${escapeHtml(c.authority || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">SIM serial number</div>
-              <div class="fv">${escapeHtml(c.serial || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">Aircraft type</div>
-              <div class="fv">${escapeHtml(c.aircraft || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">Certification level</div>
-              <div class="fv">${escapeHtml(c.level || '\u2014')}</div>
-            </div>
-            <div>
-              <div class="fk">Due date</div>
-              <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
-            </div>
-            <div>
-              <div class="fk">Primary contact</div>
-              <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
-            </div>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Customers and certifications">${sidebar}</nav>
+      <section class="detail" id="detail" aria-live="polite">
+        <div class="detail-head">
+          <div>
+            <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
+            <h2 class="detail-title">${escapeHtml(c.name)}</h2>
           </div>
-          ${renderDocumentsSection(c)}
-          ${renderDocChangeLog(c)}
-          ${renderActivityLog(c)}
-          ` : ''}
+          <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
-      `; }).join('')}
-      `).join('')}
+        <div class="field-grid">
+          <div>
+            <div class="fk">SIM location</div>
+            <div class="fv">${escapeHtml(c.simLocation || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Certifying country</div>
+            <div class="fv">${escapeHtml(c.country || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Regulatory authority</div>
+            <div class="fv">${escapeHtml(c.authority || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">SIM serial number</div>
+            <div class="fv">${escapeHtml(c.serial || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Aircraft type</div>
+            <div class="fv">${escapeHtml(c.aircraft || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Certification level</div>
+            <div class="fv">${escapeHtml(c.level || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Due date</div>
+            <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
+          </div>
+          <div>
+            <div class="fk">Primary contact</div>
+            <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
+          </div>
+        </div>
+        ${renderDocumentsSection(c)}
+        ${renderDocChangeLog(c)}
+        ${renderActivityLog(c)}
+      </section>
     </div>
   `;
 }
@@ -688,15 +815,24 @@ function groupBySerial(items){
   return { groups, order };
 }
 
-function toggleCertExpand(id){
-  if(expandedCertIds.has(id)) expandedCertIds.delete(id);
-  else expandedCertIds.add(id);
+function customerKey(c){
+  return (c.customer || 'Unassigned').trim() || 'Unassigned';
+}
+
+function toggleCustomer(name){
+  if(expandedCustomers.has(name)) expandedCustomers.delete(name);
+  else expandedCustomers.add(name);
   render();
 }
 
-function selectCustomer(name){
-  activeCustomer = name;
+function selectCert(id){
+  activeCertId = id;
   render();
+  if(window.matchMedia('(max-width: 760px)').matches){
+    const d = document.getElementById('detail');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(d) d.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+  }
 }
 
 function escapeAttr(s){
