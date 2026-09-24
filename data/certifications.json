@@ -297,7 +297,7 @@
   },
   {
     "id": "aeroguard-953-da42",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Diamond DA42, multi-engine)",
+    "name": "EASA FNPT II - Diamond DA42 (FADEC) (FMX)",
     "customer": "Aeroguard",
     "authority": "EASA",
     "country": "Qatar",
@@ -343,7 +343,9 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com"
+    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
+    "simModel": "",
+    "nameAuto": true
   },
   {
     "id": "aeroguard-953-pa28",
