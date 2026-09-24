@@ -1,7 +1,7 @@
 [
   {
     "id": "c-skyborne",
-    "name": "FNPT II qualification — Redbird MCX-E (PA-28 Archer)",
+    "name": "UKCAA FNPT II - Piper PA-28-181 Archer (MCX)",
     "customer": "Skyborne Airline Academy",
     "authority": "UKCAA",
     "country": "UK",
@@ -85,7 +85,9 @@
         "id": "l17901866079430-3"
       }
     ],
-    "primaryContact": "Dave Barlog - David.Barlog@skyborne.com"
+    "primaryContact": "Dave Barlog - David.Barlog@skyborne.com",
+    "simModel": "",
+    "nameAuto": true
   },
   {
     "id": "c-usaviation",
