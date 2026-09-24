@@ -91,7 +91,7 @@
   },
   {
     "id": "c-usaviation",
-    "name": "FAA FTD Level 5 qualification — Redbird FMX/SD (Cessna C172S)",
+    "name": "FAA FTD Level 5 - Cessna C172S (FMX)",
     "customer": "US Aviation Academy",
     "authority": "FAA",
     "country": "US",
@@ -187,7 +187,9 @@
         "text": "Document updated: Validation_Data_Roadmap__Cessna_C172S"
       }
     ],
-    "primaryContact": "Retty Ennis - rennis@usaviation.aero"
+    "primaryContact": "Retty Ennis - rennis@usaviation.aero",
+    "simModel": "",
+    "nameAuto": true
   },
   {
     "id": "aeroguard-954-da42",
