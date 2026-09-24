@@ -568,10 +568,9 @@
     text-align:left;
   }
   
-  .side-cert.active{color:var(--hover-ink);font-weight:700;}
+  .side-cert.active{background:var(--hover);}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
-  .side-cert.active .side-cert-auth{color:var(--hover-ink);font-weight:700;}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
   .dot-overdue{background:var(--rust);}
   .dot-gold{background:var(--gold);}
@@ -613,7 +612,7 @@
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--card);
-    color:var(--action-ink);
+    color:var(--accent);
   }
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
@@ -627,13 +626,12 @@
   /* Hover: grey shading; customer names turn bold Redbird red; button borders take their color */
   .side-customer-btn:hover{background:var(--hover);}
   .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover{background:var(--hover);color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover .side-cert-auth{color:var(--hover-ink);font-weight:700;}
+  .side-cert:hover{background:var(--hover);}
   .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
   .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
   a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
-  .icon-btn:hover{background:var(--hover);}
+  .icon-btn:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
   /* Dark mode sidebar: selected customer gets a Redbird red highlight; text stays white */
   @media (prefers-color-scheme: dark){
     .side-customer.has-active .side-customer-btn,
@@ -642,10 +640,6 @@
     .side-customer.has-active .side-customer-btn:hover .side-customer-name{color:#FFFFFF;font-weight:700;}
     .side-customer.has-active .chevron{color:#FFFFFF;}
     .side-customer-btn:hover .side-customer-name{color:var(--ink);font-weight:700;}
-    .side-cert.active,
-    .side-cert:hover{color:var(--ink);}
-    .side-cert.active .side-cert-auth,
-    .side-cert:hover .side-cert-auth{color:var(--ink-faint);}
   }
 </style>
 </head>
@@ -663,12 +657,8 @@
 
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
-  <div class="toolbar">
-    <h2>Certifications</h2>
-  </div>
-
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.3</div>
+  <div class="version-footer">v2.4.4</div>
 </div>
 
 <div class="modal-bg" id="settings-modal-bg">
@@ -879,7 +869,7 @@ function render(){
               const st = computeCertStatus(x);
               const isActive = x.id === activeCertId;
               return `
-              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(x.name)}" onclick="selectCert('${x.id}')">
+              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
                 <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
                 <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
@@ -901,7 +891,7 @@ function render(){
         <div class="detail-head">
           <div>
             <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
-            <h2 class="detail-title">${escapeHtml(c.name)}</h2>
+            <h2 class="detail-title">${escapeHtml(certName(c))}</h2>
           </div>
           <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
@@ -921,6 +911,10 @@ function render(){
           <div>
             <div class="fk">SIM serial number</div>
             <div class="fv">${escapeHtml(c.serial || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">SIM model</div>
+            <div class="fv">${escapeHtml(certModel(c) || '\u2014')}</div>
           </div>
           <div>
             <div class="fk">Aircraft type</div>
@@ -982,6 +976,34 @@ function groupBySerial(items){
     groups[key].push(c);
   });
   return { groups, order };
+}
+
+// ---- Automatic certification name and SIM model ----
+// SIM model is read from the serial: skip a leading "R-" prefix, take the letters before the digits
+// (R-MCX-100251 -> MCX, FMX-0297 -> FMX). A typed model overrides it.
+function detectModel(serial){
+  const m = String(serial || '').trim().toUpperCase().match(/^(?:R-)?([A-Z]+)(?=[-\s]?\d)/);
+  return m ? m[1] : '';
+}
+
+function certModel(c){
+  return (c.simModel || '').trim() || detectModel(c.serial);
+}
+
+// "Authority Level - Aircraft (Model)", e.g. "UKCAA FNPT II - Piper PA-28-181 Archer (MCX)"
+function autoName(c){
+  let n = [c.authority, c.level].map(x => (x || '').trim()).filter(Boolean).join(' ');
+  const aircraft = (c.aircraft || '').trim();
+  if(aircraft) n = n ? `${n} - ${aircraft}` : aircraft;
+  const model = certModel(c);
+  if(model) n = n ? `${n} (${model})` : model;
+  return n;
+}
+
+// Existing certifications (no nameAuto flag) keep their typed names as overrides.
+function certName(c){
+  if(c.nameAuto) return autoName(c) || c.name || 'Untitled certification';
+  return c.name || autoName(c) || 'Untitled certification';
 }
 
 function customerKey(c){
