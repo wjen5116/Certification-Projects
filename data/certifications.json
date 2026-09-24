@@ -245,7 +245,7 @@
   },
   {
     "id": "aeroguard-954-pa28",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Piper PA28-181, single-engine)",
+    "name": "EASA FNPT II - Piper PA28-181 (FMX)",
     "customer": "Aeroguard",
     "authority": "EASA",
     "country": "Qatar",
@@ -291,7 +291,9 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com"
+    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
+    "simModel": "",
+    "nameAuto": true
   },
   {
     "id": "aeroguard-953-da42",
