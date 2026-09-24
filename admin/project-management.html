@@ -474,6 +474,8 @@
     gap:8px;
     margin-top:18px;
   }
+  .mode-tag{font-size:11px;font-weight:400;padding:1px 7px;border-radius:99px;background:var(--slate-bg);color:var(--slate);margin-left:6px;}
+  .field-hint{font-size:12px;color:var(--ink-faint);margin-top:3px;}
   .err{color:var(--rust);font-size:13px;margin-top:4px;display:none;}
   .loading{color:var(--on-bg-soft);font-size:14px;padding:20px 0;}
 
@@ -566,10 +568,9 @@
     text-align:left;
   }
   
-  .side-cert.active{color:var(--hover-ink);font-weight:700;}
+  .side-cert.active{background:var(--hover);}
   .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
   .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
-  .side-cert.active .side-cert-auth{color:var(--hover-ink);font-weight:700;}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
   .dot-overdue{background:var(--rust);}
   .dot-gold{background:var(--gold);}
@@ -611,7 +612,7 @@
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--card);
-    color:var(--action-ink);
+    color:var(--accent);
   }
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
@@ -625,13 +626,12 @@
   /* Hover: grey shading; customer names turn bold Redbird red; button borders take their color */
   .side-customer-btn:hover{background:var(--hover);}
   .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover{background:var(--hover);color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover .side-cert-auth{color:var(--hover-ink);font-weight:700;}
+  .side-cert:hover{background:var(--hover);}
   .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
   .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
   a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
-  .icon-btn:hover{background:var(--hover);}
+  .icon-btn:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
   /* Dark mode sidebar: selected customer gets a Redbird red highlight; text stays white */
   @media (prefers-color-scheme: dark){
     .side-customer.has-active .side-customer-btn,
@@ -640,10 +640,6 @@
     .side-customer.has-active .side-customer-btn:hover .side-customer-name{color:#FFFFFF;font-weight:700;}
     .side-customer.has-active .chevron{color:#FFFFFF;}
     .side-customer-btn:hover .side-customer-name{color:var(--ink);font-weight:700;}
-    .side-cert.active,
-    .side-cert:hover{color:var(--ink);}
-    .side-cert.active .side-cert-auth,
-    .side-cert:hover .side-cert-auth{color:var(--ink-faint);}
   }
 </style>
 </head>
@@ -657,12 +653,8 @@
 
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
-  <div class="toolbar">
-    <h2>Certifications</h2>
-  </div>
-
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.3</div>
+  <div class="version-footer">v2.4.4</div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -670,9 +662,10 @@
     <h3 id="modal-title">Add certification</h3>
     <input type="hidden" id="edit-id">
     <div class="field">
-      <label for="f-name">Certification / project name</label>
-      <input id="f-name" placeholder="e.g. Type approval — Model X">
-      <div class="err" id="err-name">Enter a name for this certification.</div>
+      <label for="f-name">Certification / project name<span class="mode-tag" id="name-mode">Automatic</span></label>
+      <input id="f-name">
+      <div class="field-hint">Built from authority, level, aircraft and SIM model. Type to override; clear to go back to automatic.</div>
+      <div class="err" id="err-name">Enter a name, or fill in the authority, level or aircraft.</div>
     </div>
     <div class="field-row">
       <div class="field">
@@ -696,8 +689,8 @@
     </div>
     <div class="field-row">
       <div class="field">
-        <label for="f-serial">SIM serial number</label>
-        <input id="f-serial" placeholder="e.g. R-MCX-100251">
+        <label for="f-level">Certification level</label>
+        <input id="f-level" placeholder="e.g. FNPT II, FTD Level 5">
       </div>
       <div class="field">
         <label for="f-aircraft">Aircraft type</label>
@@ -706,15 +699,19 @@
     </div>
     <div class="field-row">
       <div class="field">
-        <label for="f-level">Certification level</label>
-        <input id="f-level" placeholder="e.g. FNPT II, FTD Level 5">
+        <label for="f-serial">SIM serial number</label>
+        <input id="f-serial" placeholder="e.g. R-MCX-100251">
       </div>
+      <div class="field">
+        <label for="f-model">SIM model<span class="mode-tag" id="model-mode" style="display:none;"></span></label>
+        <input id="f-model" placeholder="e.g. MCX">
+      </div>
+    </div>
+    <div class="field-row">
       <div class="field">
         <label for="f-date">Due date</label>
         <input id="f-date" type="date">
       </div>
-    </div>
-    <div class="field-row">
       <div class="field">
         <label for="f-contact">Primary contact</label>
         <input id="f-contact" placeholder="e.g. Jane Smith, jane@customer.com">
@@ -1261,7 +1258,7 @@ function render(){
               const st = computeCertStatus(x);
               const isActive = x.id === activeCertId;
               return `
-              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(x.name)}" onclick="selectCert('${x.id}')">
+              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
                 <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
                 <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
@@ -1284,7 +1281,7 @@ function render(){
         <div class="detail-head">
           <div>
             <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
-            <h2 class="detail-title">${escapeHtml(c.name)}</h2>
+            <h2 class="detail-title">${escapeHtml(certName(c))}</h2>
           </div>
           <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
@@ -1308,6 +1305,10 @@ function render(){
           <div>
             <div class="fk">SIM serial number</div>
             <div class="fv">${escapeHtml(c.serial || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">SIM model</div>
+            <div class="fv">${escapeHtml(certModel(c) || '\u2014')}</div>
           </div>
           <div>
             <div class="fk">Aircraft type</div>
@@ -1391,6 +1392,34 @@ function viewBtn(doc){
   const url = typeof doc === 'string' ? '' : (doc.url || '');
   if(!url) return '';
   return `<a class="btn-text compact" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" title="View" aria-label="View">${ICON.eye}<span class="btn-label">View</span></a>`;
+}
+
+// ---- Automatic certification name and SIM model ----
+// SIM model is read from the serial: skip a leading "R-" prefix, take the letters before the digits
+// (R-MCX-100251 -> MCX, FMX-0297 -> FMX). A typed model overrides it.
+function detectModel(serial){
+  const m = String(serial || '').trim().toUpperCase().match(/^(?:R-)?([A-Z]+)(?=[-\s]?\d)/);
+  return m ? m[1] : '';
+}
+
+function certModel(c){
+  return (c.simModel || '').trim() || detectModel(c.serial);
+}
+
+// "Authority Level - Aircraft (Model)", e.g. "UKCAA FNPT II - Piper PA-28-181 Archer (MCX)"
+function autoName(c){
+  let n = [c.authority, c.level].map(x => (x || '').trim()).filter(Boolean).join(' ');
+  const aircraft = (c.aircraft || '').trim();
+  if(aircraft) n = n ? `${n} - ${aircraft}` : aircraft;
+  const model = certModel(c);
+  if(model) n = n ? `${n} (${model})` : model;
+  return n;
+}
+
+// Existing certifications (no nameAuto flag) keep their typed names as overrides.
+function certName(c){
+  if(c.nameAuto) return autoName(c) || c.name || 'Untitled certification';
+  return c.name || autoName(c) || 'Untitled certification';
 }
 
 function customerKey(c){
@@ -1784,6 +1813,35 @@ function renderDocItem(doc){
   return escapeHtml(name);
 }
 
+function readAutoFormFields(){
+  const v = id => document.getElementById(id).value;
+  return {
+    authority: v('f-authority'),
+    level: v('f-level'),
+    aircraft: v('f-aircraft'),
+    serial: v('f-serial'),
+    simModel: v('f-model')
+  };
+}
+
+// Keeps the Name and SIM model boxes showing their automatic values while they are left empty.
+function refreshAutoFields(){
+  const f = readAutoFormFields();
+  const detected = detectModel(f.serial);
+  const modelEl = document.getElementById('f-model');
+  modelEl.placeholder = detected || 'e.g. MCX';
+  document.getElementById('model-mode').textContent = modelEl.value.trim() ? 'Custom' : (detected ? 'From serial' : '');
+  document.getElementById('model-mode').style.display = document.getElementById('model-mode').textContent ? '' : 'none';
+  const nameEl = document.getElementById('f-name');
+  const auto = autoName(f);
+  nameEl.placeholder = auto || 'Fill in authority, level and aircraft, or type a name';
+  document.getElementById('name-mode').textContent = nameEl.value.trim() ? 'Custom' : 'Automatic';
+}
+
+['f-name', 'f-authority', 'f-level', 'f-aircraft', 'f-serial', 'f-model'].forEach(id => {
+  document.getElementById(id).addEventListener('input', refreshAutoFields);
+});
+
 function openModal(id, prefillCustomer){
   document.getElementById('err-name').style.display = 'none';
   const modal = document.getElementById('modal-bg');
@@ -1792,7 +1850,8 @@ function openModal(id, prefillCustomer){
     const c = certs.find(x => x.id === id);
     title.textContent = 'Edit certification';
     document.getElementById('edit-id').value = c.id;
-    document.getElementById('f-name').value = c.name;
+    document.getElementById('f-name').value = c.nameAuto ? '' : (c.name || '');
+    document.getElementById('f-model').value = c.simModel || '';
     document.getElementById('f-customer').value = c.customer || '';
     document.getElementById('f-authority').value = c.authority || '';
     document.getElementById('f-country').value = c.country || '';
@@ -1806,6 +1865,7 @@ function openModal(id, prefillCustomer){
     title.textContent = 'Add certification';
     document.getElementById('edit-id').value = '';
     document.getElementById('f-name').value = '';
+    document.getElementById('f-model').value = '';
     document.getElementById('f-customer').value = prefillCustomer || '';
     document.getElementById('f-authority').value = '';
     document.getElementById('f-country').value = '';
@@ -1816,8 +1876,9 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-date').value = '';
     document.getElementById('f-contact').value = '';
   }
+  refreshAutoFields();
   modal.classList.add('open');
-  document.getElementById('f-name').focus();
+  document.getElementById(id ? 'f-name' : 'f-customer').focus();
 }
 
 function closeModal(){
@@ -1825,14 +1886,10 @@ function closeModal(){
 }
 
 async function saveCert(){
-  const name = document.getElementById('f-name').value.trim();
-  if(!name){
-    document.getElementById('err-name').style.display = 'block';
-    return;
-  }
+  const typedName = document.getElementById('f-name').value.trim();
   const id = document.getElementById('edit-id').value;
   const data = {
-    name,
+    simModel: document.getElementById('f-model').value.trim(),
     customer: document.getElementById('f-customer').value.trim(),
     authority: document.getElementById('f-authority').value.trim(),
     country: document.getElementById('f-country').value.trim(),
@@ -1843,6 +1900,14 @@ async function saveCert(){
     date: document.getElementById('f-date').value,
     primaryContact: document.getElementById('f-contact').value.trim()
   };
+  const generated = autoName(data);
+  if(!typedName && !generated){
+    document.getElementById('err-name').style.display = 'block';
+    return;
+  }
+  // An empty Name box means "automatic"; the generated name is also stored so the data file stays readable.
+  data.nameAuto = !typedName;
+  data.name = typedName || generated;
 
   if(id){
     const idx = certs.findIndex(c => c.id === id);
