@@ -695,15 +695,15 @@
       },
       {
         "id": "a1790350153145",
-        "description": "Send quote for open back modification",
-        "status": "In Progress",
+        "description": "Send quote for open back modification (Emailed Larsen to send quote)",
+        "status": "Complete",
         "dateDue": "2026-09-25",
         "dateCreated": "2026-09-25",
         "timeCreated": "10:29 AM",
         "dateUpdated": "2026-09-25",
-        "timeUpdated": "10:29 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "timeUpdated": "11:28 AM",
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "11:28 AM"
       },
       {
         "id": "a1790353679402",
