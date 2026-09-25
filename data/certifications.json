@@ -662,5 +662,25 @@
     "docChangeLog": [],
     "contactName": "",
     "contactEmail": ""
+  },
+  {
+    "id": "c1790349871136",
+    "simModel": "",
+    "customer": "Academy of Aeronautics",
+    "authority": "Transport Canada",
+    "country": "Canada",
+    "simLocation": "",
+    "serial": "MCX0019",
+    "aircraft": "",
+    "level": "",
+    "date": "",
+    "contactName": "",
+    "contactEmail": "",
+    "nameAuto": true,
+    "name": "Transport Canada (MCX)",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
