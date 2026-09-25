@@ -611,6 +611,18 @@
         "timeUpdated": "10:39 AM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1790353885672",
+        "description": "Add NXi for: C172S, C182T, T182T, C206H, T206H",
+        "status": "Pending",
+        "dateDue": "2026-10-02",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "11:31 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "11:31 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
