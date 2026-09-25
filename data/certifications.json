@@ -522,10 +522,13 @@
       {
         "id": "a1790092417843",
         "description": "The SSD appears to have most of the QTG file system. Emailed asking for error messages.",
-        "status": "Pending",
+        "status": "Complete",
         "dateDue": "",
         "dateCreated": "2026-09-22",
-        "dateUpdated": "2026-09-22"
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "8:49 AM",
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "8:49 AM"
       }
     ],
     "docChangeLog": [
