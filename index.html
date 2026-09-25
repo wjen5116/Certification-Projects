@@ -135,20 +135,7 @@
   }
   .stat .n{font-family:var(--serif);font-size:24px;font-weight:500;line-height:1;}
   .stat .l{font-size:13px;color:var(--ink-soft);margin-top:6px;}
-  .toolbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:14px;
-    gap:10px;
-  }
-  .toolbar h2{
-    color:var(--on-bg);
-    font-family:var(--serif);
-    font-size:19px;
-    font-weight:500;
-    margin:0;
-  }
+
   button{
     font-family:var(--sans);
     font-size:14px;
@@ -183,8 +170,7 @@
   }
   
   .btn-text svg{width:15px;height:15px;flex-shrink:0;}
-  .btn-text.danger{color:var(--del);border-color:var(--del-line);background:var(--del-bg);}
-  
+
   .btn-text.ok{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
   
   .cert-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
@@ -199,37 +185,6 @@
   }
   .empty p{margin:0 0 14px;font-size:16px;}
 
-  table{
-    width:100%;
-    table-layout:fixed;
-    border-collapse:collapse;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    overflow:hidden;
-    font-size:14px;
-  }
-  thead th{
-    text-align:left;
-    font-size:12px;
-    font-weight:600;
-    color:var(--ink-soft);
-    padding:10px 12px;
-    border-bottom:1px solid var(--line);
-    background:var(--hover);
-    overflow-wrap:break-word;
-  }
-  tbody td{
-    padding:12px;
-    border-bottom:1px solid var(--line);
-    vertical-align:top;
-    overflow-wrap:break-word;
-    word-break:break-word;
-  }
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:var(--hover);}
-  .cert-name{font-weight:500;font-family:var(--serif);font-size:16px;}
-  .muted{color:var(--ink-soft);}
   .pill{
     font-size:12px;
     padding:3px 9px;
@@ -238,20 +193,13 @@
     font-weight:600;
     display:inline-block;
   }
-  .pill-notstarted{background:var(--neutral-bg);color:var(--ink-soft);}
-  .pill-inprogress{background:var(--slate-bg);color:var(--slate);}
-  .pill-submitted{background:var(--slate-bg);color:var(--slate);}
-  .pill-underreview{background:var(--gold-bg);color:var(--gold);}
-  .pill-approved{background:var(--sage-bg);color:var(--sage);}
-  .pill-rejected{background:var(--rust-bg);color:var(--rust);}
-  .pill-onhold{background:var(--neutral-bg);color:var(--ink-soft);}
+
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
   .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
-  .actions-cell{white-space:nowrap;}
-  .change-cell{max-width:220px;}
+
   .doc-loc{
     font-family:ui-monospace,"SF Mono",Consolas,monospace;
     font-size:12px;
@@ -263,43 +211,6 @@
   .doc-loc a{color:var(--action-ink);text-decoration:underline;}
   .field-grid .fv a{color:var(--action-ink);text-decoration:underline;}
 
-  .tabs{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    border-bottom:1px solid var(--line);
-    padding-bottom:0;
-    margin-bottom:16px;
-  }
-  .tab{
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 14px;
-    border:1px solid transparent;
-    border-bottom:none;
-    border-radius:8px 8px 0 0;
-    background:none;
-    color:var(--ink-soft);
-    font-family:var(--serif);
-    font-size:15px;
-    cursor:pointer;
-  }
-  
-  .tab.active{
-    color:var(--ink);
-    background:var(--card);
-    border-color:var(--line);
-    font-weight:500;
-  }
-  .tab.active::after{
-    content:'';
-    position:absolute;
-    left:0; right:0; bottom:-1px;
-    height:1px;
-    background:var(--card);
-  }
   .tab-count{
     font-size:12px;
     background:var(--slate-bg);
@@ -315,53 +226,7 @@
     background:var(--rust);
     display:inline-block;
   }
-  .tab-panel{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:0 var(--radius) var(--radius) var(--radius);
-    padding:6px 16px 14px;
-  }
-  .cgroup-add{padding-top:6px;}
-  .cert-block{
-    padding:14px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .cert-block:last-child{border-bottom:none;}
-  .cert-block-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-  }
-  .cert-collapse-toggle{
-    width:100%;
-    background:none;
-    border:none;
-    padding:0;
-    cursor:pointer;
-    text-align:left;
-    font-family:var(--sans);
-    color:var(--ink);
-  }
-  .cert-collapse-toggle:hover .cert-name{color:var(--action-ink);}
-  .cert-collapse-toggle .chevron{
-    display:inline-block;
-    font-size:12px;
-    color:var(--ink-faint);
-    margin-right:6px;
-    transition:transform 0.15s ease;
-  }
-  .cert-collapse-toggle .chevron.open{transform:rotate(90deg);}
-  .serial-heading{
-    font-family:var(--serif);
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    margin:16px 0 4px;
-  }
-  .serial-heading:first-child{margin-top:0;}
+
   .field-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
@@ -375,19 +240,7 @@
     margin-bottom:2px;
   }
   .field-grid .fv{color:var(--ink);}
-  .field-grid .full{grid-column:1 / -1;}
-  .inline-edit-row{margin-top:2px;}
-  .inline-input{
-    width:100%;
-    font-family:var(--sans);
-    font-size:14px;
-    padding:7px 9px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--field-bg);
-    color:var(--ink);
-  }
-  .inline-input:focus{border-color:var(--action-ink);outline:none;}
+
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -481,8 +334,7 @@
 
   @media (max-width: 640px){
     .field-grid{grid-template-columns:1fr;}
-    .tabs{flex-wrap:nowrap;overflow-x:auto;}
-    .tab{flex-shrink:0;}
+
   }
   .sync-banner{
     font-size:13px;
@@ -495,6 +347,12 @@
   .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
   .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
   .sync-banner a{color:inherit;text-decoration:underline;}
+  .status-check{display:inline-flex;width:14px;height:14px;margin-top:3px;flex-shrink:0;color:var(--sage);}
+  .status-check svg{width:14px;height:14px;}
+  .detail-completed{font-size:14px;color:var(--sage);margin-top:3px;}
+  .stat-done .n{color:var(--sage);}
+  .version-footer a{color:var(--on-bg);text-decoration:underline;text-underline-offset:2px;}
+  .version-footer a:hover{text-decoration-thickness:2px;}
   .version-footer{
     margin-top:24px;
     padding-top:12px;
@@ -546,14 +404,7 @@
   }
   .sidebar .chevron.open{transform:rotate(90deg);}
   .side-certs{padding:0 0 8px 18px;}
-  .side-serial{
-    font-size:11px;
-    font-weight:600;
-    color:var(--ink-faint);
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    padding:8px 10px 2px;
-  }
+
   .side-cert{
     width:100%;
     display:flex;
@@ -576,7 +427,7 @@
   .dot-gold{background:var(--gold);}
   .dot-slate{background:var(--slate);}
   .dot-sage{background:var(--sage);}
-  .side-add{font-size:13px;margin:4px 0 0 6px;}
+
   .detail{
     background:var(--card);
     border:1px solid var(--card-line);
@@ -614,7 +465,7 @@
     background:var(--card);
     color:var(--accent);
   }
-  .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
+
   button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
   @media (max-width: 760px){
     .layout{grid-template-columns:1fr;}
@@ -628,7 +479,7 @@
   .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
   .side-cert:hover{background:var(--hover);}
   .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
-  .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
+
   a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
   .icon-btn:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
@@ -658,7 +509,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.4</div>
+  <div class="version-footer"><a href="changelog.html" title="Change log">v2.4.5</a></div>
 </div>
 
 <div class="modal-bg" id="settings-modal-bg">
@@ -776,10 +627,8 @@ async function load(){
   render();
 }
 
-function statusPillClass(){ return ''; }
-
 function isOverdue(c){
-  if(!c.date) return false;
+  if(c.completed || !c.date) return false;
   const today = new Date(); today.setHours(0,0,0,0);
   const d = new Date(c.date + 'T00:00:00');
   return d < today;
@@ -796,19 +645,21 @@ function render(){
   const total = certs.length;
   const overdue = certs.filter(isOverdue).length;
   const dueSoon = certs.filter(c => {
-    if(!c.date || isOverdue(c)) return false;
+    if(c.completed || !c.date || isOverdue(c)) return false;
     const d = new Date(c.date + 'T00:00:00');
     const today = new Date(); today.setHours(0,0,0,0);
     const diff = (d - today) / 86400000;
     return diff >= 0 && diff <= 30;
   }).length;
-  const noDate = certs.filter(c => !c.date).length;
+  const noDate = certs.filter(c => !c.completed && !c.date).length;
+  const completedCount = certs.filter(c => c.completed).length;
 
   stats.innerHTML = `
     <div class="stat"><div class="n">${total}</div><div class="l">Total</div></div>
     <div class="stat"><div class="n">${overdue}</div><div class="l">Overdue</div></div>
     <div class="stat"><div class="n">${dueSoon}</div><div class="l">Due in 30 days</div></div>
     <div class="stat"><div class="n">${noDate}</div><div class="l">No due date</div></div>
+    <div class="stat stat-done"><div class="n">${completedCount}</div><div class="l">Completed</div></div>
   `;
 
   const list = document.getElementById('list');
@@ -852,8 +703,9 @@ function render(){
     const items = sortCerts(groups[customer]);
     const anyOverdue = items.some(isCertOverdue);
     const open = expandedCustomers.has(customer);
-    const { groups: sg, order: so } = groupBySerial(items);
-    const showSerial = so.length > 1;
+    // Active certifications first (grouped by serial), completed ones last.
+    const bySerial = arr => { const g = groupBySerial(arr); return g.order.flatMap(k => g.groups[k]); };
+    const ordered = [...bySerial(items.filter(x => !x.completed)), ...bySerial(items.filter(x => x.completed))];
     return `
       <div class="side-customer ${customer === activeCustomer ? 'has-active' : ''}">
         <button class="side-customer-btn" aria-expanded="${open}" onclick="toggleCustomer('${escapeAttr(customer)}')">
@@ -864,17 +716,15 @@ function render(){
         </button>
         ${open ? `
         <div class="side-certs">
-          ${so.map(sk => `
-            ${sg[sk].map(x => {
+          ${ordered.map(x => {
               const st = computeCertStatus(x);
               const isActive = x.id === activeCertId;
               return `
               <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
-                <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
+                ${x.completed ? `<span class="status-check" title="Completed">${ICON.check}</span>` : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
                 <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
             }).join('')}
-          `).join('')}
         </div>` : ''}
       </div>
     `;
@@ -892,13 +742,14 @@ function render(){
           <div>
             <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
             <h2 class="detail-title">${escapeHtml(certName(c))}</h2>
+            ${c.completed ? `<div class="detail-completed">Completed ${fmtDate(c.dateCompleted)}</div>` : ''}
           </div>
           <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
         <div class="field-grid">
           <div>
             <div class="fk">SIM location</div>
-            <div class="fv">${escapeHtml(c.simLocation || '\u2014')}</div>
+            <div class="fv">${escapeHtml(publicLocation(c.simLocation) || '\u2014')}</div>
           </div>
           <div>
             <div class="fk">Certifying country</div>
@@ -929,8 +780,8 @@ function render(){
             <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
           </div>
           <div>
-            <div class="fk">Primary contact</div>
-            <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
+            <div class="fk">Contact name</div>
+            <div class="fv">${escapeHtml(contactName(c) || '\u2014')}</div>
           </div>
         </div>
         ${renderDocumentsSection(c)}
@@ -942,12 +793,14 @@ function render(){
 }
 
 function isCertOverdue(c){
+  if(c.completed) return false;
   if(isOverdue(c)) return true;
   const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
   return acts.some(isActivityOverdue);
 }
 
 function computeCertStatus(c){
+  if(c.completed) return {label: 'Completed', cls: 'sage'};
   if(isCertOverdue(c)) return {label: 'Overdue', cls: 'overdue'};
   const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
   if(acts.length === 0) return {label: 'No Activity', cls: 'slate'};
@@ -958,6 +811,9 @@ function computeCertStatus(c){
 
 function sortCerts(items){
   return [...items].sort((a,b) => {
+    const aDone = a.completed ? 1 : 0;
+    const bDone = b.completed ? 1 : 0;
+    if(aDone !== bDone) return aDone - bDone;
     const aOver = isCertOverdue(a) ? 0 : 1;
     const bOver = isCertOverdue(b) ? 0 : 1;
     if(aOver !== bOver) return aOver - bOver;
@@ -1006,6 +862,55 @@ function certName(c){
   return c.name || autoName(c) || 'Untitled certification';
 }
 
+// ---- Completed certifications ----
+function localToday(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// ---- Contact details ----
+// Older data keeps name and email together in primaryContact ("Name - name@example.com").
+const EMAIL_RE = /[^\s<>(),;:]+@[^\s<>(),;:]+\.[A-Za-z]{2,}/;
+function splitContact(text){
+  const t = String(text || '').trim();
+  const m = t.match(EMAIL_RE);
+  if(!m) return {name: t, email: ''};
+  const name = t.replace(m[0], ' ')
+    .replace(/[<>()]/g, ' ')
+    .replace(/\s*[-\u2013\u2014,;:|]\s*$/, '')
+    .replace(/^\s*[-\u2013\u2014,;:|]\s*/, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return {name, email: m[0]};
+}
+function contactName(c){
+  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactName || '';
+  return splitContact(c.primaryContact).name;
+}
+function contactEmail(c){
+  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactEmail || '';
+  return splitContact(c.primaryContact).email;
+}
+
+// View-only page shows SIM location as city, state and country only.
+// "2825 Airport Drive, Vero Beach, FL 32960, USA" -> "Vero Beach, FL, USA".
+// Entries without a street number ("Greece", "RBHQ") are shown as entered;
+// any other full address shows just its country (the last part).
+function publicLocation(loc){
+  const s = String(loc || '').trim();
+  if(!s) return '';
+  if(!/\d/.test(s)) return s;
+  const parts = s.split(',').map(x => x.trim()).filter(Boolean);
+  const si = parts.findIndex(x => /^[A-Z]{2}\s+\d{5}(-\d{4})?$/.test(x));
+  if(si > 0){
+    const state = parts[si].slice(0, 2);
+    const country = parts.slice(si + 1).join(', ') || 'USA';
+    return `${parts[si - 1]}, ${state}, ${country}`;
+  }
+  const last = parts[parts.length - 1];
+  return /\d/.test(last) ? '' : last;
+}
+
 function customerKey(c){
   return (c.customer || 'Unassigned').trim() || 'Unassigned';
 }
@@ -1031,6 +936,7 @@ function escapeAttr(s){
 }
 
 const ICON = {
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
@@ -1154,7 +1060,7 @@ function renderDocItem(doc){
   return escapeHtml(name);
 }
 
-// ---- Sign-in to the editor (project-management.html) ----
+// ---- Sign-in to the editor (admin/project-management.html) ----
 const SETTINGS_KEY = 'gh_cert_tracker_settings';
 const FILE_PATH_DEFAULT = 'data/certifications.json';
 
@@ -1245,7 +1151,7 @@ document.getElementById('settings-save-btn').addEventListener('click', async () 
     return;
   }
   saveSettings(cfg);
-  location.href = 'project-management.html';
+  location.href = 'admin/project-management.html';
 });
 
 // Arriving from the editor (no credentials, or the saved token was rejected)
