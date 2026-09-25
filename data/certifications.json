@@ -684,14 +684,14 @@
       {
         "id": "a1790350097441",
         "description": "Call with Govind about TC MCC. They are currently on Rev2. They will need open back mod and needs to contact TC before modifying MCX to ensure IPC is not lost if they move forward with MCC upgrade.",
-        "status": "Pending",
+        "status": "Complete",
         "dateDue": "",
         "dateCreated": "2026-09-25",
         "timeCreated": "10:28 AM",
         "dateUpdated": "2026-09-25",
         "timeUpdated": "10:28 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "10:28 AM"
       }
     ],
     "docChangeLog": []
