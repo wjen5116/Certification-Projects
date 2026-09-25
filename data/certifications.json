@@ -559,7 +559,9 @@
       }
     ],
     "contactName": "Ányos Tamás",
-    "contactEmail": "anyos.tamas@pharmaflight.hu"
+    "contactEmail": "anyos.tamas@pharmaflight.hu",
+    "completed": true,
+    "dateCompleted": "2026-09-25"
   },
   {
     "id": "c1790040118303",
