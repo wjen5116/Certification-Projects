@@ -365,8 +365,10 @@
   .btn-danger svg{width:16px;height:16px;}
   #confirm-body p{margin:0 0 8px;line-height:1.45;}
   .confirm-context{font-size:13px;color:var(--ink-faint);}
-  .status-check{display:inline-flex;width:14px;height:14px;margin-top:3px;flex-shrink:0;color:var(--sage);}
-  .status-check svg{width:14px;height:14px;}
+  /* v2.4.6 sidebar: open-only counts, Completed tag */
+  .tab-count.zero{background:var(--neutral-bg);color:var(--ink-faint);font-weight:400;}
+  .status-spacer{visibility:hidden;}
+  .side-done-tag{display:inline-block;font-size:11px;font-weight:600;line-height:1.4;padding:0 7px;border-radius:99px;background:var(--sage-bg);color:var(--sage);margin-left:4px;vertical-align:1px;}
   .detail-completed{font-size:14px;color:var(--sage);margin-top:3px;}
   .stat-done .n{color:var(--sage);}
   .version-footer a{color:var(--on-bg);text-decoration:underline;text-underline-offset:2px;}
@@ -446,6 +448,12 @@
   .dot-slate{background:var(--slate);}
   .dot-sage{background:var(--sage);}
   .side-add{margin:6px 0 2px 10px;}
+  /* v2.4.6: sidebar column with the "Add customer" button below the panel */
+  .side-col{position:sticky;top:16px;display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .side-col .sidebar{position:static;max-height:calc(100vh - 80px);}
+  .btn-text.side-add-customer{width:100%;height:36px;justify-content:center;background:var(--card);border-color:var(--card-line);color:var(--ink);font-size:14px;}
+  .btn-text.side-add-customer:hover{background:var(--hover);border-color:var(--edit-hover-line);}
+  .tab-note{margin-bottom:16px;}
   .detail{
     background:var(--card);
     border:1px solid var(--card-line);
@@ -477,6 +485,8 @@
   @media (max-width: 760px){
     .layout{grid-template-columns:1fr;}
     .sidebar{position:static;max-height:none;}
+    .side-col{position:static;}
+    .side-col .sidebar{max-height:none;}
   }
   @media (prefers-reduced-motion: reduce){
     .sidebar .chevron{transition:none;}
@@ -507,12 +517,14 @@
     <h1>Certification Project Tracker</h1>
   </header>
 
+  <div id="tab-note" class="sync-banner info tab-note" role="status" style="display:none;">The editor is also open in another tab. Changes saved in one tab show up in the other straight away.</div>
+
   <div class="stats" id="stats"></div>
 
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.5</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.6</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -683,6 +695,9 @@ let activeCertId = null;
 let expandedCustomers = new Set();
 let sidebarInitialised = false;
 let currentSha = null;
+let lastFetchAt = 0;
+let saving = false;
+let localVersion = 0;
 let ghConfig = null;
 
 const SETTINGS_KEY = 'gh_cert_tracker_settings';
@@ -875,8 +890,11 @@ function ghUrl(){
 }
 
 async function fetchFromGitHub(){
+  lastFetchAt = Date.now();
+  // no-cache: always check GitHub for a newer copy (unchanged files come back as a quick 304).
   const res = await fetch(ghUrl() + `?ref=${encodeURIComponent(ghConfig.branch)}`, {
-    headers: ghHeaders()
+    headers: ghHeaders(),
+    cache: 'no-cache'
   });
   if(res.status === 404){
     return null; // file doesn't exist yet
@@ -924,14 +942,19 @@ async function persist(){
     showBanner('error', 'Not connected to GitHub. <a href="../index.html?settings=1">Connect from the view-only page</a>.');
     return;
   }
+  saving = true;
+  localVersion++;
   try{
     showBanner('info', 'Saving to GitHub&hellip;');
     await writeToGitHub(certs);
+    broadcastSaved();
     showBanner('success', 'Saved to GitHub.');
     setTimeout(hideBanner, 2000);
   }catch(e){
     const msg = e.message.startsWith('GitHub rejected the saved token.') ? e.message : escapeHtml(e.message);
     showBanner('error', 'Save failed: ' + msg);
+  }finally{
+    saving = false;
   }
 }
 
@@ -1080,7 +1103,7 @@ function render(){
   const list = document.getElementById('list');
   if(!ghConfig) return;
   if(certs.length === 0){
-    list.innerHTML = `<div class="empty"><p>No certifications yet. Add the first one you're tracking.</p><button class="btn-primary" onclick="openModal()">Add certification</button></div>`;
+    list.innerHTML = `<div class="empty"><p>No certifications yet. Add the first one you're tracking.</p><button class="btn-primary" onclick="openModal(null, '', 'customer')">Add customer</button></div>`;
     return;
   }
 
@@ -1092,15 +1115,8 @@ function render(){
     groups[key].push(c);
   });
 
-  const CUSTOMER_ORDER = ['skyborne airline academy', 'skyborn airline academy', 'us aviation academy', 'aeroguard', 'superior air'];
-  order.sort((a,b) => {
-    const ai = CUSTOMER_ORDER.indexOf(a.trim().toLowerCase());
-    const bi = CUSTOMER_ORDER.indexOf(b.trim().toLowerCase());
-    const aRank = ai === -1 ? CUSTOMER_ORDER.length : ai;
-    const bRank = bi === -1 ? CUSTOMER_ORDER.length : bi;
-    if(aRank !== bRank) return aRank - bRank;
-    return a.localeCompare(b);
-  });
+  // Customers A\u2013Z (case-insensitive).
+  order.sort((a,b) => a.localeCompare(b, undefined, {sensitivity: 'base', numeric: true}));
 
   // Resolve the selected certification; fall back to the first one for the current customer
   let activeCert = certs.find(x => x.id === activeCertId);
@@ -1119,6 +1135,8 @@ function render(){
     const items = sortCerts(groups[customer]);
     const anyOverdue = items.some(isCertOverdue);
     const open = expandedCustomers.has(customer);
+    // Count open certifications only; completed ones don't count.
+    const openCount = items.filter(x => !x.completed).length;
     // Active certifications first (grouped by serial), completed ones last.
     const bySerial = arr => { const g = groupBySerial(arr); return g.order.flatMap(k => g.groups[k]); };
     const ordered = [...bySerial(items.filter(x => !x.completed)), ...bySerial(items.filter(x => x.completed))];
@@ -1128,7 +1146,7 @@ function render(){
           <span class="chevron ${open ? 'open' : ''}" aria-hidden="true">&#9656;</span>
           <span class="side-customer-name">${escapeHtml(customer)}</span>
           ${anyOverdue ? '<span class="tab-overdue-dot" title="Has overdue items"></span>' : ''}
-          <span class="tab-count">${items.length}</span>
+          <span class="tab-count${openCount ? '' : ' zero'}" title="${openCount} open">${openCount}</span>
         </button>
         ${open ? `
         <div class="side-certs">
@@ -1137,11 +1155,11 @@ function render(){
               const isActive = x.id === activeCertId;
               return `
               <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
-                ${x.completed ? `<span class="status-check" title="Completed">${ICON.check}</span>` : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
-                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
+                ${x.completed ? '<span class="status-dot status-spacer" aria-hidden="true"></span>' : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
+                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${x.completed ? ' <span class="side-done-tag">Completed</span>' : ''}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
             }).join('')}
-          ${actionBtn('plus', 'Add certification', `openModal(null, '${escapeAttr(customer)}')`, {cls: 'side-add', compact: false})}
+          ${actionBtn('plus', 'Add project', `openModal(null, '${escapeAttr(customer)}')`, {cls: 'side-add', compact: false})}
         </div>` : ''}
       </div>
     `;
@@ -1153,7 +1171,10 @@ function render(){
 
   list.innerHTML = `
     <div class="layout">
-      <nav class="sidebar" aria-label="Customers and certifications">${sidebar}</nav>
+      <div class="side-col">
+        <nav class="sidebar" aria-label="Customers and certifications">${sidebar}</nav>
+        <button class="btn-text side-add-customer" onclick="openModal(null, '', 'customer')">${ICON.plus}<span>Add customer</span></button>
+      </div>
       <section class="detail" id="detail" aria-live="polite">
         <div class="detail-head">
           <div>
@@ -1763,7 +1784,8 @@ function refreshAutoFields(){
   document.getElementById(id).addEventListener('input', refreshAutoFields);
 });
 
-function openModal(id, prefillCustomer){
+// kind 'customer' = new customer (from "Add customer"); a prefilled customer = new project for that customer.
+function openModal(id, prefillCustomer, kind){
   document.getElementById('err-name').style.display = 'none';
   const modal = document.getElementById('modal-bg');
   const title = document.getElementById('modal-title');
@@ -1784,7 +1806,7 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-contact-name').value = contactName(c);
     document.getElementById('f-contact-email').value = contactEmail(c);
   }else{
-    title.textContent = 'Add certification';
+    title.textContent = kind === 'customer' ? 'Add customer' : (prefillCustomer ? 'Add project' : 'Add certification');
     document.getElementById('edit-id').value = '';
     document.getElementById('f-name').value = '';
     document.getElementById('f-model').value = '';
@@ -1801,7 +1823,7 @@ function openModal(id, prefillCustomer){
   }
   refreshAutoFields();
   modal.classList.add('open');
-  document.getElementById(id ? 'f-name' : 'f-customer').focus();
+  document.getElementById(id ? 'f-name' : (prefillCustomer ? 'f-simlocation' : 'f-customer')).focus();
 }
 
 function closeModal(){
@@ -1943,6 +1965,81 @@ document.getElementById('document-save-btn').addEventListener('click', saveDocum
 document.getElementById('document-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'document-modal-bg') closeDocumentModal();
 });
+
+// ---- Keeping tabs up to date ----
+function syncKey(){
+  return ghConfig ? `${ghConfig.owner}/${ghConfig.repo}@${ghConfig.branch}:${ghConfig.path}`.toLowerCase() : '';
+}
+
+// Check GitHub again when this tab is selected, unless a pop-up form is open or a save is running.
+async function refreshFromGitHub(){
+  if(!ghConfig || saving || document.querySelector('.modal-bg.open')) return;
+  if(Date.now() - lastFetchAt < 5000) return;
+  const prevSha = currentSha;
+  const versionAtStart = localVersion;
+  try{
+    const remote = await fetchFromGitHub();
+    // A save started meanwhile: keep the local data and its SHA.
+    if(saving || localVersion !== versionAtStart){ currentSha = prevSha; return; }
+    if(Array.isArray(remote) && currentSha !== prevSha && !document.querySelector('.modal-bg.open')){
+      certs = remote;
+      render();
+    }
+  }catch(e){ /* keep showing what's already loaded */ }
+}
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') refreshFromGitHub();
+});
+window.addEventListener('focus', refreshFromGitHub);
+
+// Tabs in the same browser: share saves straight away, and note when the editor is open twice.
+const TAB_ID = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const otherEditors = new Set();
+const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('cert-tracker-sync') : null;
+
+function broadcastSaved(){
+  if(!syncChannel) return;
+  try{ syncChannel.postMessage({type: 'saved', from: TAB_ID, key: syncKey(), sha: currentSha, data: certs}); }catch(e){}
+}
+
+function updateTabNote(){
+  document.getElementById('tab-note').style.display = otherEditors.size ? 'block' : 'none';
+}
+
+if(syncChannel){
+  syncChannel.onmessage = (ev) => {
+    const m = ev.data || {};
+    if(m.from === TAB_ID) return;
+    if(m.type === 'saved'){
+      if(saving || m.key !== syncKey() || !Array.isArray(m.data)) return;
+      certs = m.data;
+      currentSha = m.sha || currentSha;
+      localVersion++;
+      render();
+    }else if(m.type === 'editor-hello'){
+      // A newly opened editor: tell it this one is already open.
+      syncChannel.postMessage({type: 'editor-here', from: TAB_ID});
+    }else if(m.type === 'editor-here'){
+      otherEditors.add(m.from);
+      updateTabNote();
+    }else if(m.type === 'editor-bye'){
+      otherEditors.delete(m.from);
+      updateTabNote();
+    }
+  };
+  syncChannel.postMessage({type: 'editor-hello', from: TAB_ID});
+  window.addEventListener('pagehide', () => {
+    try{ syncChannel.postMessage({type: 'editor-bye', from: TAB_ID}); }catch(e){}
+  });
+  window.addEventListener('pageshow', (ev) => {
+    if(ev.persisted){
+      otherEditors.clear();
+      updateTabNote();
+      syncChannel.postMessage({type: 'editor-hello', from: TAB_ID});
+      refreshFromGitHub();
+    }
+  });
+}
 
 load();
 </script>
