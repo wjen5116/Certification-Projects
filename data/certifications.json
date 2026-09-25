@@ -719,15 +719,15 @@
       },
       {
         "id": "a1790353679402",
-        "description": "Review Appendix E of TP 9685 for MCC compliance",
-        "status": "Pending",
+        "description": "Review Appendix E of TP 9685 for MCC compliance. Initial review indicates the MCX would not meeet MCC requirements.",
+        "status": "Complete",
         "dateDue": "2026-09-28",
         "dateCreated": "2026-09-25",
         "timeCreated": "11:27 AM",
         "dateUpdated": "2026-09-25",
-        "timeUpdated": "11:27 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "timeUpdated": "1:13 PM",
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "1:13 PM"
       }
     ],
     "docChangeLog": []
