@@ -704,6 +704,18 @@
         "timeUpdated": "10:29 AM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1790353679402",
+        "description": "Review Appendix E of TP 9685 for MCC compliance",
+        "status": "Pending",
+        "dateDue": "2026-09-28",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "11:27 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "11:27 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": []
