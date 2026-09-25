@@ -692,6 +692,18 @@
         "timeUpdated": "10:28 AM",
         "dateCompleted": "2026-09-25",
         "timeCompleted": "10:28 AM"
+      },
+      {
+        "id": "a1790350153145",
+        "description": "Send quote for open back modification",
+        "status": "In Progress",
+        "dateDue": "2026-09-25",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "10:29 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "10:29 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": []
