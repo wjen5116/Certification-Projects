@@ -529,6 +529,18 @@
         "timeUpdated": "8:49 AM",
         "dateCompleted": "2026-09-25",
         "timeCompleted": "8:49 AM"
+      },
+      {
+        "id": "a1790344288232",
+        "description": "Logged into the sim. Started the QTG (v2) server and launched a test. Test ran and charted as it should. They are trying to launch QTG from a connected PC. Not shure how that PC was setup. Was not able to advise on that.",
+        "status": "Complete",
+        "dateDue": "2026-09-25",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "8:51 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "8:51 AM",
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "8:51 AM"
       }
     ],
     "docChangeLog": [
