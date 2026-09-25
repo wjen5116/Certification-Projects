@@ -120,7 +120,7 @@
     margin:0 0 4px;
     letter-spacing:0.2px;
   }
-  .sub{color:var(--on-bg-soft);font-size:16px;margin:0;}
+
   .stats{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
@@ -135,20 +135,7 @@
   }
   .stat .n{font-family:var(--serif);font-size:24px;font-weight:500;line-height:1;}
   .stat .l{font-size:13px;color:var(--ink-soft);margin-top:6px;}
-  .toolbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:14px;
-    gap:10px;
-  }
-  .toolbar h2{
-    color:var(--on-bg);
-    font-family:var(--serif);
-    font-size:19px;
-    font-weight:500;
-    margin:0;
-  }
+
   button{
     font-family:var(--sans);
     font-size:14px;
@@ -205,37 +192,6 @@
   }
   .empty p{margin:0 0 14px;font-size:16px;}
 
-  table{
-    width:100%;
-    table-layout:fixed;
-    border-collapse:collapse;
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    overflow:hidden;
-    font-size:14px;
-  }
-  thead th{
-    text-align:left;
-    font-size:12px;
-    font-weight:600;
-    color:var(--ink-soft);
-    padding:10px 12px;
-    border-bottom:1px solid var(--line);
-    background:var(--hover);
-    overflow-wrap:break-word;
-  }
-  tbody td{
-    padding:12px;
-    border-bottom:1px solid var(--line);
-    vertical-align:top;
-    overflow-wrap:break-word;
-    word-break:break-word;
-  }
-  tbody tr:last-child td{border-bottom:none;}
-  tbody tr:hover{background:var(--hover);}
-  .cert-name{font-weight:500;font-family:var(--serif);font-size:16px;}
-  .muted{color:var(--ink-soft);}
   .pill{
     font-size:12px;
     padding:3px 9px;
@@ -244,20 +200,13 @@
     font-weight:600;
     display:inline-block;
   }
-  .pill-notstarted{background:var(--neutral-bg);color:var(--ink-soft);}
-  .pill-inprogress{background:var(--slate-bg);color:var(--slate);}
-  .pill-submitted{background:var(--slate-bg);color:var(--slate);}
-  .pill-underreview{background:var(--gold-bg);color:var(--gold);}
-  .pill-approved{background:var(--sage-bg);color:var(--sage);}
-  .pill-rejected{background:var(--rust-bg);color:var(--rust);}
-  .pill-onhold{background:var(--neutral-bg);color:var(--ink-soft);}
+
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
   .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
-  .actions-cell{white-space:nowrap;}
-  .change-cell{max-width:220px;}
+
   .doc-loc{
     font-family:ui-monospace,"SF Mono",Consolas,monospace;
     font-size:12px;
@@ -269,43 +218,6 @@
   .doc-loc a{color:var(--action-ink);text-decoration:underline;}
   .field-grid .fv a{color:var(--action-ink);text-decoration:underline;}
 
-  .tabs{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    border-bottom:1px solid var(--line);
-    padding-bottom:0;
-    margin-bottom:16px;
-  }
-  .tab{
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:10px 14px;
-    border:1px solid transparent;
-    border-bottom:none;
-    border-radius:8px 8px 0 0;
-    background:none;
-    color:var(--ink-soft);
-    font-family:var(--serif);
-    font-size:15px;
-    cursor:pointer;
-  }
-  
-  .tab.active{
-    color:var(--ink);
-    background:var(--card);
-    border-color:var(--line);
-    font-weight:500;
-  }
-  .tab.active::after{
-    content:'';
-    position:absolute;
-    left:0; right:0; bottom:-1px;
-    height:1px;
-    background:var(--card);
-  }
   .tab-count{
     font-size:12px;
     background:var(--slate-bg);
@@ -321,53 +233,7 @@
     background:var(--rust);
     display:inline-block;
   }
-  .tab-panel{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:0 var(--radius) var(--radius) var(--radius);
-    padding:6px 16px 14px;
-  }
-  .cgroup-add{padding-top:6px;}
-  .cert-block{
-    padding:14px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .cert-block:last-child{border-bottom:none;}
-  .cert-block-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-  }
-  .cert-collapse-toggle{
-    width:100%;
-    background:none;
-    border:none;
-    padding:0;
-    cursor:pointer;
-    text-align:left;
-    font-family:var(--sans);
-    color:var(--ink);
-  }
-  .cert-collapse-toggle:hover .cert-name{color:var(--action-ink);}
-  .cert-collapse-toggle .chevron{
-    display:inline-block;
-    font-size:12px;
-    color:var(--ink-faint);
-    margin-right:6px;
-    transition:transform 0.15s ease;
-  }
-  .cert-collapse-toggle .chevron.open{transform:rotate(90deg);}
-  .serial-heading{
-    font-family:var(--serif);
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    margin:16px 0 4px;
-  }
-  .serial-heading:first-child{margin-top:0;}
+
   .field-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
@@ -381,7 +247,7 @@
     margin-bottom:2px;
   }
   .field-grid .fv{color:var(--ink);}
-  .field-grid .full{grid-column:1 / -1;}
+
   .changelog{
     margin-top:12px;
     padding-top:10px;
@@ -481,8 +347,7 @@
 
   @media (max-width: 640px){
     .field-grid{grid-template-columns:1fr;}
-    .tabs{flex-wrap:nowrap;overflow-x:auto;}
-    .tab{flex-shrink:0;}
+
   }
   .sync-banner{
     font-size:13px;
@@ -495,6 +360,17 @@
   .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
   .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
   .sync-banner a{color:inherit;text-decoration:underline;}
+  .btn-danger{display:inline-flex;align-items:center;gap:6px;background:var(--del-bg);border-color:var(--del-line);color:var(--del);}
+  .btn-danger:hover{background:var(--del-bg-strong);border-color:var(--del-strong);color:var(--del);}
+  .btn-danger svg{width:16px;height:16px;}
+  #confirm-body p{margin:0 0 8px;line-height:1.45;}
+  .confirm-context{font-size:13px;color:var(--ink-faint);}
+  .status-check{display:inline-flex;width:14px;height:14px;margin-top:3px;flex-shrink:0;color:var(--sage);}
+  .status-check svg{width:14px;height:14px;}
+  .detail-completed{font-size:14px;color:var(--sage);margin-top:3px;}
+  .stat-done .n{color:var(--sage);}
+  .version-footer a{color:var(--on-bg);text-decoration:underline;text-underline-offset:2px;}
+  .version-footer a:hover{text-decoration-thickness:2px;}
   .version-footer{
     margin-top:24px;
     padding-top:12px;
@@ -546,14 +422,7 @@
   }
   .sidebar .chevron.open{transform:rotate(90deg);}
   .side-certs{padding:0 0 8px 18px;}
-  .side-serial{
-    font-size:11px;
-    font-weight:600;
-    color:var(--ink-faint);
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    padding:8px 10px 2px;
-  }
+
   .side-cert{
     width:100%;
     display:flex;
@@ -602,18 +471,7 @@
   .activity-entry-top > :first-child{min-width:0;overflow-wrap:anywhere;}
   .activity-entry-top .cert-actions{flex-shrink:0;}
   .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
-  .icon-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:40px;
-    height:40px;
-    padding:0;
-    border-radius:50%;
-    border:1px solid var(--line);
-    background:var(--card);
-    color:var(--accent);
-  }
+
   .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
   button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
   @media (max-width: 760px){
@@ -631,7 +489,7 @@
   .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
   a.btn-text{text-decoration:none;}
   .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
-  .icon-btn:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+
   /* Dark mode sidebar: selected customer gets a Redbird red highlight; text stays white */
   @media (prefers-color-scheme: dark){
     .side-customer.has-active .side-customer-btn,
@@ -654,7 +512,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer">v2.4.4</div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.5</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -709,17 +567,34 @@
     </div>
     <div class="field-row">
       <div class="field">
-        <label for="f-date">Due date</label>
-        <input id="f-date" type="date">
+        <label for="f-contact-name">Contact name</label>
+        <input id="f-contact-name" placeholder="e.g. Jane Smith">
       </div>
       <div class="field">
-        <label for="f-contact">Primary contact</label>
-        <input id="f-contact" placeholder="e.g. Jane Smith, jane@customer.com">
+        <label for="f-contact-email">Contact email</label>
+        <input id="f-contact-email" type="email" placeholder="e.g. jane@customer.com">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="f-date">Due date</label>
+        <input id="f-date" type="date">
       </div>
     </div>
     <div class="modal-actions">
       <button id="cancel-btn">Cancel</button>
       <button class="btn-primary" id="save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="confirm-modal-bg">
+  <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+    <h3 id="confirm-title">Delete this certification?</h3>
+    <div id="confirm-body"></div>
+    <div class="modal-actions">
+      <button id="confirm-cancel-btn">Cancel</button>
+      <button class="btn-danger" id="confirm-delete-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Delete certification</button>
     </div>
   </div>
 </div>
@@ -962,14 +837,10 @@ function loadSettings(){
   }
 }
 
-// Sign-in lives on the view-only page (index.html); send the user there when
+// Sign-in lives on the view-only page (../index.html, one folder up); send the user there when
 // there are no saved credentials or GitHub rejects them.
 function redirectToSignIn(reason){
-  location.replace('index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : ''));
-}
-
-function saveSettings(cfg){
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(cfg));
+  location.replace('../index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : ''));
 }
 
 function showBanner(kind, html){
@@ -1037,7 +908,7 @@ async function writeToGitHub(data, message){
   if(!res.ok){
     const errBody = await res.text();
     if(res.status === 401 || res.status === 403){
-      throw new Error('GitHub rejected the saved token. <a href="index.html?settings=1&reason=rejected">Reconnect from the view-only page</a>, then try again.');
+      throw new Error('GitHub rejected the saved token. <a href="../index.html?settings=1&reason=rejected">Reconnect from the view-only page</a>, then try again.');
     }
     if(res.status === 409){
       throw new Error('Conflict: the file changed on GitHub since last load. Refresh the page to get the latest version before saving again.');
@@ -1050,7 +921,7 @@ async function writeToGitHub(data, message){
 
 async function persist(){
   if(!ghConfig){
-    showBanner('error', 'Not connected to GitHub. <a href="index.html?settings=1">Connect from the view-only page</a>.');
+    showBanner('error', 'Not connected to GitHub. <a href="../index.html?settings=1">Connect from the view-only page</a>.');
     return;
   }
   try{
@@ -1083,6 +954,13 @@ async function load(){
       certs = remote;
     }
     certs.forEach((c, ci) => {
+      if(c.primaryContact !== undefined && c.contactName === undefined && c.contactEmail === undefined){
+        const sc = splitContact(c.primaryContact);
+        c.contactName = sc.name;
+        c.contactEmail = sc.email;
+        delete c.primaryContact;
+        needsResave = true;
+      }
       if(!Array.isArray(c.activityLog)) c.activityLog = [];
       const today = new Date().toISOString().slice(0,10);
       // Migrate legacy {date, text} activity entries to the new shape.
@@ -1155,10 +1033,8 @@ async function load(){
   render();
 }
 
-function statusPillClass(){ return ''; }
-
 function isOverdue(c){
-  if(!c.date) return false;
+  if(c.completed || !c.date) return false;
   const today = new Date(); today.setHours(0,0,0,0);
   const d = new Date(c.date + 'T00:00:00');
   return d < today;
@@ -1184,19 +1060,21 @@ function render(){
   const total = certs.length;
   const overdue = certs.filter(isOverdue).length;
   const dueSoon = certs.filter(c => {
-    if(!c.date || isOverdue(c)) return false;
+    if(c.completed || !c.date || isOverdue(c)) return false;
     const d = new Date(c.date + 'T00:00:00');
     const today = new Date(); today.setHours(0,0,0,0);
     const diff = (d - today) / 86400000;
     return diff >= 0 && diff <= 30;
   }).length;
-  const noDate = certs.filter(c => !c.date).length;
+  const noDate = certs.filter(c => !c.completed && !c.date).length;
+  const completedCount = certs.filter(c => c.completed).length;
 
   stats.innerHTML = `
     <div class="stat"><div class="n">${total}</div><div class="l">Total</div></div>
     <div class="stat"><div class="n">${overdue}</div><div class="l">Overdue</div></div>
     <div class="stat"><div class="n">${dueSoon}</div><div class="l">Due in 30 days</div></div>
     <div class="stat"><div class="n">${noDate}</div><div class="l">No due date</div></div>
+    <div class="stat stat-done"><div class="n">${completedCount}</div><div class="l">Completed</div></div>
   `;
 
   const list = document.getElementById('list');
@@ -1241,8 +1119,9 @@ function render(){
     const items = sortCerts(groups[customer]);
     const anyOverdue = items.some(isCertOverdue);
     const open = expandedCustomers.has(customer);
-    const { groups: sg, order: so } = groupBySerial(items);
-    const showSerial = so.length > 1;
+    // Active certifications first (grouped by serial), completed ones last.
+    const bySerial = arr => { const g = groupBySerial(arr); return g.order.flatMap(k => g.groups[k]); };
+    const ordered = [...bySerial(items.filter(x => !x.completed)), ...bySerial(items.filter(x => x.completed))];
     return `
       <div class="side-customer ${customer === activeCustomer ? 'has-active' : ''}">
         <button class="side-customer-btn" aria-expanded="${open}" onclick="toggleCustomer('${escapeAttr(customer)}')">
@@ -1253,17 +1132,15 @@ function render(){
         </button>
         ${open ? `
         <div class="side-certs">
-          ${so.map(sk => `
-            ${sg[sk].map(x => {
+          ${ordered.map(x => {
               const st = computeCertStatus(x);
               const isActive = x.id === activeCertId;
               return `
               <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
-                <span class="status-dot dot-${st.cls}" title="${st.label}"></span>
+                ${x.completed ? `<span class="status-check" title="Completed">${ICON.check}</span>` : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
                 <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
             }).join('')}
-          `).join('')}
           ${actionBtn('plus', 'Add certification', `openModal(null, '${escapeAttr(customer)}')`, {cls: 'side-add', compact: false})}
         </div>` : ''}
       </div>
@@ -1282,10 +1159,14 @@ function render(){
           <div>
             <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
             <h2 class="detail-title">${escapeHtml(certName(c))}</h2>
+            ${c.completed ? `<div class="detail-completed">Completed ${fmtDate(c.dateCompleted)}</div>` : ''}
           </div>
           <span class="pill pill-${status.cls}">${status.label}</span>
         </div>
       <div class="detail-actions">
+        ${c.completed
+          ? actionBtn('reopen', 'Reopen', `reopenCert('${c.id}')`)
+          : actionBtn('check', 'Mark complete', `completeCert('${c.id}')`, {cls: 'ok'})}
         ${actionBtn('edit', 'Edit', `openModal('${c.id}')`)}
         ${actionBtn('trash', 'Delete', `removeCert('${c.id}')`, {cls: 'danger'})}
       </div>
@@ -1323,8 +1204,12 @@ function render(){
             <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
           </div>
           <div>
-            <div class="fk">Primary contact</div>
-            <div class="fv">${escapeHtml(c.primaryContact || '\u2014')}</div>
+            <div class="fk">Contact name</div>
+            <div class="fv">${escapeHtml(contactName(c) || '\u2014')}</div>
+          </div>
+          <div>
+            <div class="fk">Contact email</div>
+            <div class="fv">${contactEmail(c) ? `<a href="mailto:${escapeHtml(contactEmail(c))}">${escapeHtml(contactEmail(c))}</a>` : '\u2014'}</div>
           </div>
         </div>
         ${renderDocumentsSection(c)}
@@ -1336,12 +1221,14 @@ function render(){
 }
 
 function isCertOverdue(c){
+  if(c.completed) return false;
   if(isOverdue(c)) return true;
   const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
   return acts.some(isActivityOverdue);
 }
 
 function computeCertStatus(c){
+  if(c.completed) return {label: 'Completed', cls: 'sage'};
   if(isCertOverdue(c)) return {label: 'Overdue', cls: 'overdue'};
   const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
   if(acts.length === 0) return {label: 'No Activity', cls: 'slate'};
@@ -1352,6 +1239,9 @@ function computeCertStatus(c){
 
 function sortCerts(items){
   return [...items].sort((a,b) => {
+    const aDone = a.completed ? 1 : 0;
+    const bDone = b.completed ? 1 : 0;
+    if(aDone !== bDone) return aDone - bDone;
     const aOver = isCertOverdue(a) ? 0 : 1;
     const bOver = isCertOverdue(b) ? 0 : 1;
     if(aOver !== bOver) return aOver - bOver;
@@ -1373,6 +1263,7 @@ function groupBySerial(items){
 }
 
 const ICON = {
+  reopen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>',
@@ -1420,6 +1311,36 @@ function autoName(c){
 function certName(c){
   if(c.nameAuto) return autoName(c) || c.name || 'Untitled certification';
   return c.name || autoName(c) || 'Untitled certification';
+}
+
+// ---- Completed certifications ----
+function localToday(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// ---- Contact details ----
+// Older data keeps name and email together in primaryContact ("Name - name@example.com").
+const EMAIL_RE = /[^\s<>(),;:]+@[^\s<>(),;:]+\.[A-Za-z]{2,}/;
+function splitContact(text){
+  const t = String(text || '').trim();
+  const m = t.match(EMAIL_RE);
+  if(!m) return {name: t, email: ''};
+  const name = t.replace(m[0], ' ')
+    .replace(/[<>()]/g, ' ')
+    .replace(/\s*[-\u2013\u2014,;:|]\s*$/, '')
+    .replace(/^\s*[-\u2013\u2014,;:|]\s*/, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  return {name, email: m[0]};
+}
+function contactName(c){
+  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactName || '';
+  return splitContact(c.primaryContact).name;
+}
+function contactEmail(c){
+  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactEmail || '';
+  return splitContact(c.primaryContact).email;
 }
 
 function customerKey(c){
@@ -1860,7 +1781,8 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = c.aircraft || '';
     document.getElementById('f-level').value = c.level || '';
     document.getElementById('f-date').value = c.date || '';
-    document.getElementById('f-contact').value = c.primaryContact || '';
+    document.getElementById('f-contact-name').value = contactName(c);
+    document.getElementById('f-contact-email').value = contactEmail(c);
   }else{
     title.textContent = 'Add certification';
     document.getElementById('edit-id').value = '';
@@ -1874,7 +1796,8 @@ function openModal(id, prefillCustomer){
     document.getElementById('f-aircraft').value = '';
     document.getElementById('f-level').value = '';
     document.getElementById('f-date').value = '';
-    document.getElementById('f-contact').value = '';
+    document.getElementById('f-contact-name').value = '';
+    document.getElementById('f-contact-email').value = '';
   }
   refreshAutoFields();
   modal.classList.add('open');
@@ -1898,7 +1821,8 @@ async function saveCert(){
     aircraft: document.getElementById('f-aircraft').value.trim(),
     level: document.getElementById('f-level').value.trim(),
     date: document.getElementById('f-date').value,
-    primaryContact: document.getElementById('f-contact').value.trim()
+    contactName: document.getElementById('f-contact-name').value.trim(),
+    contactEmail: document.getElementById('f-contact-email').value.trim()
   };
   const generated = autoName(data);
   if(!typedName && !generated){
@@ -1914,6 +1838,7 @@ async function saveCert(){
     if(idx > -1){
       const prev = certs[idx];
       certs[idx] = {...prev, ...data};
+      delete certs[idx].primaryContact;
       if(!Array.isArray(certs[idx].activityLog)) certs[idx].activityLog = [];
       if(!Array.isArray(certs[idx].docChangeLog)) certs[idx].docChangeLog = [];
       if(!Array.isArray(certs[idx].docs)) certs[idx].docs = [];
@@ -1929,7 +1854,62 @@ async function saveCert(){
   render();
 }
 
-async function removeCert(id){
+async function completeCert(id){
+  const c = certs.find(x => x.id === id);
+  if(!c) return;
+  c.completed = true;
+  c.dateCompleted = localToday();
+  await persist();
+  render();
+}
+
+async function reopenCert(id){
+  const c = certs.find(x => x.id === id);
+  if(!c) return;
+  c.completed = false;
+  delete c.dateCompleted;
+  await persist();
+  render();
+}
+
+// Deleting a certification asks first, since it also removes its documents, change log and activities.
+let pendingDeleteId = null;
+
+function countLabel(n, one, many){
+  return `${n} ${n === 1 ? one : many}`;
+}
+
+function removeCert(id){
+  const c = certs.find(x => x.id === id);
+  if(!c) return;
+  pendingDeleteId = id;
+  const parts = [];
+  const docs = Array.isArray(c.docs) ? c.docs.length : 0;
+  const logs = Array.isArray(c.docChangeLog) ? c.docChangeLog.length : 0;
+  const acts = Array.isArray(c.activityLog) ? c.activityLog.length : 0;
+  if(docs) parts.push(countLabel(docs, 'document', 'documents'));
+  if(logs) parts.push(countLabel(logs, 'change log entry', 'change log entries'));
+  if(acts) parts.push(countLabel(acts, 'activity', 'activities'));
+  const also = parts.length
+    ? `This also deletes its ${parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0]}. `
+    : '';
+  document.getElementById('confirm-body').innerHTML = `
+    <p class="confirm-name"><strong>${escapeHtml(certName(c))}</strong><br>
+    <span class="confirm-context">${escapeHtml(customerKey(c))}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</span></p>
+    <p>${also}It can't be undone.</p>`;
+  document.getElementById('confirm-modal-bg').classList.add('open');
+  document.getElementById('confirm-cancel-btn').focus();
+}
+
+function closeDeleteConfirm(){
+  pendingDeleteId = null;
+  document.getElementById('confirm-modal-bg').classList.remove('open');
+}
+
+async function confirmDeleteCert(){
+  const id = pendingDeleteId;
+  closeDeleteConfirm();
+  if(!id) return;
   certs = certs.filter(c => c.id !== id);
   await persist();
   render();
@@ -1944,6 +1924,14 @@ document.getElementById('activity-cancel-btn').addEventListener('click', closeAc
 document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
 document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'activity-modal-bg') closeActivityModal();
+});
+document.getElementById('confirm-cancel-btn').addEventListener('click', closeDeleteConfirm);
+document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteCert);
+document.getElementById('confirm-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'confirm-modal-bg') closeDeleteConfirm();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && document.getElementById('confirm-modal-bg').classList.contains('open')) closeDeleteConfirm();
 });
 document.getElementById('changelog-cancel-btn').addEventListener('click', closeChangeLogModal);
 document.getElementById('changelog-save-btn').addEventListener('click', saveChangeLogEntry);
