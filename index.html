@@ -347,8 +347,10 @@
   .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
   .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
   .sync-banner a{color:inherit;text-decoration:underline;}
-  .status-check{display:inline-flex;width:14px;height:14px;margin-top:3px;flex-shrink:0;color:var(--sage);}
-  .status-check svg{width:14px;height:14px;}
+  /* v2.4.6 sidebar: open-only counts, Completed tag */
+  .tab-count.zero{background:var(--neutral-bg);color:var(--ink-faint);font-weight:400;}
+  .status-spacer{visibility:hidden;}
+  .side-done-tag{display:inline-block;font-size:11px;font-weight:600;line-height:1.4;padding:0 7px;border-radius:99px;background:var(--sage-bg);color:var(--sage);margin-left:4px;vertical-align:1px;}
   .detail-completed{font-size:14px;color:var(--sage);margin-top:3px;}
   .stat-done .n{color:var(--sage);}
   .version-footer a{color:var(--on-bg);text-decoration:underline;text-underline-offset:2px;}
@@ -509,7 +511,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="changelog.html" title="Change log">v2.4.5</a></div>
+  <div class="version-footer"><a href="changelog.html" title="Change log">v2.4.6</a></div>
 </div>
 
 <div class="modal-bg" id="settings-modal-bg">
@@ -553,6 +555,7 @@ let activeCertId = null;
 let expandedCustomers = new Set();
 let sidebarInitialised = false;
 let currentSha = null;
+let lastFetchAt = 0;
 
 // Hardcoded, read-only connection to the public data repo.
 const ghConfig = {
@@ -593,8 +596,11 @@ function ghUrl(){
 }
 
 async function fetchFromGitHub(){
+  lastFetchAt = Date.now();
+  // no-cache: always check GitHub for a newer copy (unchanged files come back as a quick 304).
   const res = await fetch(ghUrl() + `?ref=${encodeURIComponent(ghConfig.branch)}`, {
-    headers: ghHeaders()
+    headers: ghHeaders(),
+    cache: 'no-cache'
   });
   if(res.status === 404){
     return null; // file doesn't exist yet
@@ -676,15 +682,8 @@ function render(){
     groups[key].push(c);
   });
 
-  const CUSTOMER_ORDER = ['skyborne airline academy', 'skyborn airline academy', 'us aviation academy', 'aeroguard', 'superior air'];
-  order.sort((a,b) => {
-    const ai = CUSTOMER_ORDER.indexOf(a.trim().toLowerCase());
-    const bi = CUSTOMER_ORDER.indexOf(b.trim().toLowerCase());
-    const aRank = ai === -1 ? CUSTOMER_ORDER.length : ai;
-    const bRank = bi === -1 ? CUSTOMER_ORDER.length : bi;
-    if(aRank !== bRank) return aRank - bRank;
-    return a.localeCompare(b);
-  });
+  // Customers A\u2013Z (case-insensitive).
+  order.sort((a,b) => a.localeCompare(b, undefined, {sensitivity: 'base', numeric: true}));
 
   // Resolve the selected certification; fall back to the first one for the current customer
   let activeCert = certs.find(x => x.id === activeCertId);
@@ -703,6 +702,8 @@ function render(){
     const items = sortCerts(groups[customer]);
     const anyOverdue = items.some(isCertOverdue);
     const open = expandedCustomers.has(customer);
+    // Count open certifications only; completed ones don't count.
+    const openCount = items.filter(x => !x.completed).length;
     // Active certifications first (grouped by serial), completed ones last.
     const bySerial = arr => { const g = groupBySerial(arr); return g.order.flatMap(k => g.groups[k]); };
     const ordered = [...bySerial(items.filter(x => !x.completed)), ...bySerial(items.filter(x => x.completed))];
@@ -712,7 +713,7 @@ function render(){
           <span class="chevron ${open ? 'open' : ''}" aria-hidden="true">&#9656;</span>
           <span class="side-customer-name">${escapeHtml(customer)}</span>
           ${anyOverdue ? '<span class="tab-overdue-dot" title="Has overdue items"></span>' : ''}
-          <span class="tab-count">${items.length}</span>
+          <span class="tab-count${openCount ? '' : ' zero'}" title="${openCount} open">${openCount}</span>
         </button>
         ${open ? `
         <div class="side-certs">
@@ -721,8 +722,8 @@ function render(){
               const isActive = x.id === activeCertId;
               return `
               <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
-                ${x.completed ? `<span class="status-check" title="Completed">${ICON.check}</span>` : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
-                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
+                ${x.completed ? '<span class="status-dot status-spacer" aria-hidden="true"></span>' : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
+                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${x.completed ? ' <span class="side-done-tag">Completed</span>' : ''}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
               </button>`;
             }).join('')}
         </div>` : ''}
@@ -936,7 +937,6 @@ function escapeAttr(s){
 }
 
 const ICON = {
-  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
@@ -1164,6 +1164,40 @@ document.getElementById('settings-save-btn').addEventListener('click', async () 
     history.replaceState(null, '', location.pathname);
   }
 })();
+
+// ---- Keeping the page up to date ----
+// Check GitHub again when this tab is selected (at most every 5 seconds).
+async function refreshFromGitHub(){
+  if(Date.now() - lastFetchAt < 5000) return;
+  const prevSha = currentSha;
+  try{
+    const remote = await fetchFromGitHub();
+    if(remote && currentSha !== prevSha){
+      certs = remote;
+      hideBanner();
+      render();
+    }
+  }catch(e){ /* keep showing what's already loaded */ }
+}
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible') refreshFromGitHub();
+});
+window.addEventListener('focus', refreshFromGitHub);
+
+// When the editor saves in another tab of this browser, show the new data straight away.
+const SYNC_KEY = `${ghConfig.owner}/${ghConfig.repo}@${ghConfig.branch}:${ghConfig.path}`.toLowerCase();
+if('BroadcastChannel' in window){
+  const syncChannel = new BroadcastChannel('cert-tracker-sync');
+  syncChannel.onmessage = (e) => {
+    const m = e.data || {};
+    if(m.type === 'saved' && m.key === SYNC_KEY && Array.isArray(m.data)){
+      certs = m.data;
+      currentSha = m.sha || currentSha;
+      hideBanner();
+      render();
+    }
+  };
+}
 
 load();
 </script>

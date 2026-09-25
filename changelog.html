@@ -145,8 +145,25 @@
     <button class="back" id="back-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to tracker</button>
   </header>
   <main class="card">
+      <section class="ver" id="v2.4.6">
+        <h2 class="vh"><span class="vn">v2.4.6</span> <span class="vd">Sep 25, 2026</span> <span class="cur">Current</span></h2>
+        <h3 class="grp">Added</h3>
+        <ul>
+          <li>Add customer button below the customer list, for starting a new customer.</li>
+          <li>Changes saved in the editor show up straight away in other tracker tabs open in the same browser.</li>
+          <li>Tracker pages check for the latest data when you return to their tab.</li>
+          <li>A note at the top of the editor when it&#x27;s already open in another tab.</li>
+        </ul>
+        <h3 class="grp">Changed</h3>
+        <ul>
+          <li>Customers are listed alphabetically.</li>
+          <li>Customer counts in the sidebar include only open certifications. Customers with none show a grey 0.</li>
+          <li>Completed certifications show a green Completed tag next to the serial number instead of a check mark.</li>
+          <li>Each customer&#x27;s Add certification button is now Add project, with the customer filled in.</li>
+        </ul>
+      </section>
       <section class="ver" id="v2.4.5">
-        <h2 class="vh"><span class="vn">v2.4.5</span> <span class="vd">Sep 25, 2026</span> <span class="cur">Current</span></h2>
+        <h2 class="vh"><span class="vn">v2.4.5</span> <span class="vd">Sep 25, 2026</span></h2>
         <h3 class="grp">Added</h3>
         <ul>
           <li>Mark a certification complete. Completed certifications get a green check in the sidebar, move to the bottom of each customer&#x27;s list, and show the date they were completed.</li>
@@ -299,7 +316,7 @@
         </ul>
       </section>
   </main>
-  <div class="version-footer">v2.4.5</div>
+  <div class="version-footer">v2.4.6</div>
 </div>
 <script>
 // Return to whichever tracker page opened this one; otherwise go to the view-only page.
