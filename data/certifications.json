@@ -491,6 +491,18 @@
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
+      },
+      {
+        "id": "a1790348373202",
+        "description": "Emailed about regarding whether the inspection has already been scheduled and when that is if it has.",
+        "status": "Complete",
+        "dateDue": "",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "9:59 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "9:59 AM",
+        "dateCompleted": "2026-09-25",
+        "timeCompleted": "9:59 AM"
       }
     ],
     "docChangeLog": [],
