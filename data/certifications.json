@@ -680,7 +680,20 @@
     "name": "Transport Canada MCC - Piper PA44 (MCX)",
     "docs": [],
     "docLocation": "",
-    "activityLog": [],
+    "activityLog": [
+      {
+        "id": "a1790350097441",
+        "description": "Call with Govind about TC MCC. They are currently on Rev2. They will need open back mod and needs to contact TC before modifying MCX to ensure IPC is not lost if they move forward with MCC upgrade.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-09-25",
+        "timeCreated": "10:28 AM",
+        "dateUpdated": "2026-09-25",
+        "timeUpdated": "10:28 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
+      }
+    ],
     "docChangeLog": []
   }
 ]
