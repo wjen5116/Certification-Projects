@@ -85,9 +85,10 @@
         "id": "l17901866079430-3"
       }
     ],
-    "primaryContact": "Dave Barlog - David.Barlog@skyborne.com",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Dave Barlog",
+    "contactEmail": "David.Barlog@skyborne.com"
   },
   {
     "id": "c-usaviation",
@@ -187,9 +188,10 @@
         "text": "Document updated: Validation_Data_Roadmap__Cessna_C172S"
       }
     ],
-    "primaryContact": "Retty Ennis - rennis@usaviation.aero",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Retty Ennis",
+    "contactEmail": "rennis@usaviation.aero"
   },
   {
     "id": "aeroguard-954-da42",
@@ -239,9 +241,10 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Braeden Popelier",
+    "contactEmail": "braedenpopelier@gmail.com"
   },
   {
     "id": "aeroguard-954-pa28",
@@ -291,9 +294,10 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Braeden Popelier",
+    "contactEmail": "braedenpopelier@gmail.com"
   },
   {
     "id": "aeroguard-953-da42",
@@ -343,9 +347,10 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Braeden Popelier",
+    "contactEmail": "braedenpopelier@gmail.com"
   },
   {
     "id": "aeroguard-953-pa28",
@@ -395,9 +400,10 @@
         "text": "Document location updated"
       }
     ],
-    "primaryContact": "Braeden Popelier - braedenpopelier@gmail.com",
     "simModel": "",
-    "nameAuto": true
+    "nameAuto": true,
+    "contactName": "Braeden Popelier",
+    "contactEmail": "braedenpopelier@gmail.com"
   },
   {
     "id": "superior-c172",
@@ -442,7 +448,8 @@
       }
     ],
     "docChangeLog": [],
-    "primaryContact": "Christos Fragkopanagos - chfragkopanagos@gmail.com"
+    "contactName": "Christos Fragkopanagos",
+    "contactEmail": "chfragkopanagos@gmail.com"
   },
   {
     "id": "superior-p2006",
@@ -487,7 +494,8 @@
       }
     ],
     "docChangeLog": [],
-    "primaryContact": "Christos Fragkopanagos - chfragkopanagos@gmail.com"
+    "contactName": "Christos Fragkopanagos",
+    "contactEmail": "chfragkopanagos@gmail.com"
   },
   {
     "id": "c1789427400339",
@@ -550,7 +558,8 @@
         "id": "l17901866079438-0"
       }
     ],
-    "primaryContact": "Ányos Tamás - anyos.tamas@pharmaflight.hu"
+    "contactName": "Ányos Tamás",
+    "contactEmail": "anyos.tamas@pharmaflight.hu"
   },
   {
     "id": "c1790040118303",
@@ -606,7 +615,8 @@
         "text": "Document updated: Redbird TD TD2 QAG v3.5 Application"
       }
     ],
-    "primaryContact": ""
+    "contactName": "",
+    "contactEmail": ""
   },
   {
     "id": "c1790176865966",
@@ -619,7 +629,6 @@
     "aircraft": "",
     "level": "BATD",
     "date": "",
-    "primaryContact": "",
     "docs": [],
     "docLocation": "",
     "activityLog": [
@@ -636,6 +645,8 @@
         "timeCompleted": ""
       }
     ],
-    "docChangeLog": []
+    "docChangeLog": [],
+    "contactName": "",
+    "contactEmail": ""
   }
 ]
