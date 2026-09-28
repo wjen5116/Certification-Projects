@@ -195,6 +195,9 @@
   }
 
   .pill-overdue{background:var(--rust-bg);color:var(--rust);}
+  /* v2.5.0: marker on activities added from email */
+  .src-email{display:inline-flex;align-items:center;gap:3px;font-size:12px;line-height:1.4;color:var(--ink-faint);border:1px solid var(--line-strong);border-radius:99px;padding:0 7px;margin-left:6px;vertical-align:1px;white-space:nowrap;}
+  .src-email svg{width:12px;height:12px;}
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
   .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
@@ -511,7 +514,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="changelog.html" title="Change log">v2.4.6</a></div>
+  <div class="version-footer"><a href="changelog.html" title="Change log">v2.5.0-email.1</a></div>
 </div>
 
 <div class="modal-bg" id="settings-modal-bg">
@@ -561,7 +564,7 @@ let lastFetchAt = 0;
 const ghConfig = {
   owner: 'wjen5116',
   repo: 'Certification-Projects',
-  branch: 'main',
+  branch: 'email-activity', // TEST BRANCH: change back to 'main' when merging
   path: 'data/certifications.json',
   token: ''
 };
@@ -937,6 +940,7 @@ function escapeAttr(s){
 }
 
 const ICON = {
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
@@ -1024,7 +1028,7 @@ function renderActivityLog(c){
           <div class="activity-entry-top">
             <div>
               <span class="pill pill-${cls}">${escapeHtml(status)}</span>
-              <span class="changelog-text">${escapeHtml(a.description || a.text || '')}</span>
+              <span class="changelog-text">${escapeHtml(a.description || a.text || '')}</span>${a.source === 'email' ? `<span class="src-email" title="Added from email">${ICON.mail}<span>Email</span></span>` : ''}
             </div>
           </div>
           <div class="activity-meta">
