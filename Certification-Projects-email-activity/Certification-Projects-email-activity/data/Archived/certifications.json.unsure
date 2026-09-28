@@ -1,0 +1,182 @@
+[
+  {
+    "id": "c-skyborne",
+    "name": "FNPT II qualification — Redbird MCX-E (PA-28 Archer)",
+    "customer": "Skyborne Airline Academy",
+    "authority": "UKCAA",
+    "country": "UK",
+    "simLocation": "2825 Airport Drive, Vero Beach, FL 32960, USA",
+    "serial": "R-MCX-100251",
+    "aircraft": "Piper PA-28-181 Archer",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Clay and I on-site at Skyborne Sep 14 for the certification.",
+    "docs": [
+      "R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx",
+      "Validation_Data_Roadmap__PA28_Archer_.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "c-usaviation",
+    "name": "FAA FTD Level 5 qualification — Redbird FMX/SD (Cessna C172S)",
+    "customer": "US Aviation Academy",
+    "authority": "FAA",
+    "country": "US",
+    "simLocation": "4850 Spartan Drive, Denton, TX 76207, USA",
+    "serial": "R-FMX-100843",
+    "aircraft": "Cessna C172S",
+    "level": "FTD Level 5",
+    "date": "",
+    "change": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
+    "docs": [
+      "US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx",
+      "Validation_Data_Roadmap__Cessna_C172S_.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\FAA\\FTD 5\\Customers\\US Aviation\\MQTG Docs",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "aeroguard-954-da42",
+    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Diamond DA42, multi-engine)",
+    "customer": "Aeroguard",
+    "authority": "EASA",
+    "country": "Qatar",
+    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
+    "serial": "R-FMX-100954",
+    "aircraft": "Diamond DA42 (FADEC)",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Waiting for Qatar to inspect devices for certification.",
+    "docs": [
+      "R-FMX-100954__DA42__EASA_FNPTII_-MEP.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "aeroguard-954-pa28",
+    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Piper PA28-181, single-engine)",
+    "customer": "Aeroguard",
+    "authority": "EASA",
+    "country": "Qatar",
+    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
+    "serial": "R-FMX-100954",
+    "aircraft": "Piper PA28-181",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Waiting for Qatar to inspect devices for certification.",
+    "docs": [
+      "R-FMX-100954__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "aeroguard-953-da42",
+    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Diamond DA42, multi-engine)",
+    "customer": "Aeroguard",
+    "authority": "EASA",
+    "country": "Qatar",
+    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
+    "serial": "R-FMX-100953",
+    "aircraft": "Diamond DA42 (FADEC)",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Waiting for Qatar to inspect devices for certification.",
+    "docs": [
+      "R-FMX-100953__DA42__EASA_FNPTII_-MEP.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "aeroguard-953-pa28",
+    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Piper PA28-181, single-engine)",
+    "customer": "Aeroguard",
+    "authority": "EASA",
+    "country": "Qatar",
+    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
+    "serial": "R-FMX-100953",
+    "aircraft": "Piper PA28-181",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Waiting for Qatar to inspect devices for certification.",
+    "docs": [
+      "R-FMX-100953__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"
+    ],
+    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
+    "activityLog": [
+      {
+        "date": "2026-09-11",
+        "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."
+      }
+    ],
+    "docChangeLog": []
+  },
+  {
+    "id": "superior-c172",
+    "name": "FNPT II qualification — Cessna C172",
+    "customer": "Superior Air",
+    "authority": "EASA",
+    "country": "Greece",
+    "simLocation": "Greece",
+    "serial": "FMX-0297",
+    "aircraft": "Cessna C172",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Provide an estimate of total time to complete certification, start to finish.",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
+  },
+  {
+    "id": "superior-p2006",
+    "name": "FNPT II qualification — Tecnam P2006T",
+    "customer": "Superior Air",
+    "authority": "EASA",
+    "country": "Greece",
+    "simLocation": "Greece",
+    "serial": "FMX-0297",
+    "aircraft": "Tecnam P2006T",
+    "level": "FNPT II",
+    "date": "",
+    "change": "Provide an estimate of total time to complete certification, start to finish.",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
+  }
+]
