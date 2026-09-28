@@ -733,5 +733,25 @@
     "docChangeLog": [],
     "completed": true,
     "dateCompleted": "2026-09-25"
+  },
+  {
+    "id": "c1790607556091",
+    "simModel": "P3D - NAV Data",
+    "customer": "Aeroguard",
+    "authority": "EASA",
+    "country": "Qatar",
+    "simLocation": "Deer Valley, AZ",
+    "serial": "Both",
+    "aircraft": "",
+    "level": "FNPTII",
+    "date": "",
+    "contactName": "",
+    "contactEmail": "",
+    "nameAuto": true,
+    "name": "EASA FNPTII (P3D - NAV Data)",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
