@@ -577,7 +577,7 @@
   },
   {
     "id": "c1790040118303",
-    "name": "Redbird TD2",
+    "name": "Redbird TD/TD2",
     "customer": "Redbird Flight Simulations, Inc",
     "authority": "FAA",
     "country": "US",
@@ -642,7 +642,9 @@
       }
     ],
     "contactName": "",
-    "contactEmail": ""
+    "contactEmail": "",
+    "simModel": "All",
+    "nameAuto": false
   },
   {
     "id": "c1790349871136",
