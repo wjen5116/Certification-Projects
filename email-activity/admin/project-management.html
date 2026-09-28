@@ -527,7 +527,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.5.0-email.1</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.5.0-email.2</a><span id="branch-label"></span></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -1081,7 +1081,14 @@ function nowTime(){
   return new Date().toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
 }
 
+// Test branch: show which branch this page reads, next to the version.
+function setBranchLabel(){
+  const el = document.getElementById('branch-label');
+  if(el) el.textContent = (ghConfig && ghConfig.branch) ? ' \u00b7 Branch: ' + ghConfig.branch : '';
+}
+
 function render(){
+  setBranchLabel();
   const stats = document.getElementById('stats');
   const total = certs.length;
   const overdue = certs.filter(isOverdue).length;
