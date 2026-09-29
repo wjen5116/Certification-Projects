@@ -591,12 +591,12 @@
   },
   {
     "id": "c1790040118303",
-    "name": "Redbird TD2",
+    "name": "Redbird TD/TD2 (NXi Update)",
     "customer": "Redbird Flight Simulations, Inc",
     "authority": "FAA",
     "country": "US",
     "simLocation": "RBHQ",
-    "serial": "Redbird TD2",
+    "serial": "Redbird TD/TD2",
     "aircraft": "",
     "level": "BATD",
     "date": "2026-10-01",
@@ -656,7 +656,9 @@
       }
     ],
     "contactName": "",
-    "contactEmail": ""
+    "contactEmail": "",
+    "simModel": "",
+    "nameAuto": false
   },
   {
     "id": "c1790349871136",
