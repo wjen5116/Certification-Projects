@@ -629,14 +629,14 @@
       {
         "id": "a1790699522192",
         "description": "Update \"Image\" to \"Figure\"\n5a - p4\n37, 38 - p5\n39, 40 - p6\n41 - p7",
-        "status": "Pending",
+        "status": "Complete",
         "dateDue": "",
         "dateCreated": "2026-09-29",
         "timeCreated": "11:32 AM",
         "dateUpdated": "2026-09-29",
-        "timeUpdated": "11:32 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "timeUpdated": "11:33 AM",
+        "dateCompleted": "2026-09-29",
+        "timeCompleted": "11:33 AM"
       }
     ],
     "docChangeLog": [
