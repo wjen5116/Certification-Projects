@@ -455,10 +455,13 @@
       {
         "id": "a17900358859546-migrated",
         "description": "Emailed 9/11/2026 requesting additional information requesting if they have already scheduled inspection.",
-        "status": "Pending",
+        "status": "Complete",
         "dateCreated": "2026-09-22",
         "dateDue": "",
-        "dateUpdated": "2026-09-22"
+        "dateUpdated": "2026-09-30",
+        "timeUpdated": "1:44 PM",
+        "dateCompleted": "2026-09-30",
+        "timeCompleted": "1:44 PM"
       }
     ],
     "docChangeLog": [],
