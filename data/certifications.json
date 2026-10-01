@@ -605,15 +605,15 @@
     "activityLog": [
       {
         "id": "a1790353885672",
-        "description": "Add NXi (TD2 ONLY): C172S, C182T, T182T, C206H, T206H",
-        "status": "Pending",
+        "description": "Add NXi",
+        "status": "Complete",
         "dateDue": "2026-10-02",
         "dateCreated": "2026-09-25",
         "timeCreated": "11:31 AM",
-        "dateUpdated": "2026-09-28",
-        "timeUpdated": "1:03 PM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "dateUpdated": "2026-10-01",
+        "timeUpdated": "11:41 AM",
+        "dateCompleted": "2026-10-01",
+        "timeCompleted": "11:41 AM"
       }
     ],
     "docChangeLog": [
