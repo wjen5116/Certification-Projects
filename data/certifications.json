@@ -614,6 +614,18 @@
         "timeUpdated": "11:41 AM",
         "dateCompleted": "2026-10-01",
         "timeCompleted": "11:41 AM"
+      },
+      {
+        "id": "a1790872982436",
+        "description": "Restructure C172, C182, C182RG (Reassigned C172 RG, CSP to Generic SEP)",
+        "status": "Complete",
+        "dateDue": "",
+        "dateCreated": "2026-10-01",
+        "timeCreated": "11:43 AM",
+        "dateUpdated": "2026-10-01",
+        "timeUpdated": "11:43 AM",
+        "dateCompleted": "2026-10-01",
+        "timeCompleted": "11:43 AM"
       }
     ],
     "docChangeLog": [
