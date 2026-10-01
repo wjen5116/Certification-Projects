@@ -746,7 +746,20 @@
     "name": "Transport Canada (FMX)",
     "docs": [],
     "docLocation": "",
-    "activityLog": [],
+    "activityLog": [
+      {
+        "id": "a1790868603310",
+        "description": "SSD was replaced. Need scenery for CYPQ, CNF4, CYOO, CYTZ for TC recertification.",
+        "status": "In Progress",
+        "dateDue": "2026-10-02",
+        "dateCreated": "2026-10-01",
+        "timeCreated": "10:30 AM",
+        "dateUpdated": "2026-10-01",
+        "timeUpdated": "10:30 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
+      }
+    ],
     "docChangeLog": []
   }
 ]
