@@ -728,5 +728,25 @@
       }
     ],
     "docChangeLog": []
+  },
+  {
+    "id": "c1790868523957",
+    "simModel": "FMX",
+    "customer": "Lake Country Airways",
+    "authority": "Transport Canada",
+    "country": "Transport Canada",
+    "simLocation": "967F+PG Lindsay, Kawartha Lakes, ON, Canada",
+    "serial": "FMX0282",
+    "aircraft": "",
+    "level": "",
+    "date": "",
+    "contactName": "Randy Straeten",
+    "contactEmail": "r.straeten@lakecountryairways.ca",
+    "nameAuto": true,
+    "name": "Transport Canada (FMX)",
+    "docs": [],
+    "docLocation": "",
+    "activityLog": [],
+    "docChangeLog": []
   }
 ]
