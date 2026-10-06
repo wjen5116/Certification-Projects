@@ -115,6 +115,18 @@
         "timeUpdated": "11:28 AM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791304148384",
+        "description": "Avidyne EFIS speed tape colors were wrong on the PA28-G17 AP.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "11:29 AM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "11:29 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
