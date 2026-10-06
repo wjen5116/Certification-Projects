@@ -127,6 +127,18 @@
         "timeUpdated": "11:29 AM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791304155081",
+        "description": "KX26, it was noted that the runway centreline marking was diagonal.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "11:29 AM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "11:29 AM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
