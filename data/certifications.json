@@ -222,7 +222,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:14 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319190375",
+            "text": "Based on test flights at RB and the recorded flight result over a steady climb at 75kts, the average RoC shows to be 1000fpm. Would like the Subjective test be flown again as a manual flight from the QTG application so flight performance can be captured and charted to confirm evaluation observation.",
+            "date": "2026-10-06",
+            "time": "3:39 PM"
+          }
+        ]
       },
       {
         "id": "a1791317818732",
