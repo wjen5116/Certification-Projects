@@ -17,6 +17,7 @@
     --line-strong:#B4BBC0;
     --hover:#E1E5E8;
     --neutral-bg:#E6E9EB;
+    --thread-bg:#F4F6F7;
     --backdrop:rgba(20,24,27,0.45);
     --ink:#23292E;
     --ink-soft:#4A545B;
@@ -65,6 +66,7 @@
       --line-strong:#7C8790;
       --hover:#434C53;
       --neutral-bg:#454E55;
+      --thread-bg:#2C3338;
       --backdrop:rgba(0,0,0,0.6);
       --ink:#FFFFFF;
       --ink-soft:#E4E8EB;
@@ -284,6 +286,45 @@
   .changelog-main{display:flex;gap:10px;min-width:0;overflow-wrap:anywhere;}
   .changelog-editable .cert-actions{flex-shrink:0;}
   .late-note{color:var(--ink-faint);font-style:italic;}
+  /* Activity comments */
+  .comments-toggle{
+    display:inline-flex;align-items:center;gap:4px;
+    margin-top:6px;padding:2px 0;border:none;background:none;
+    font-family:var(--sans);font-size:13px;color:var(--action-ink);cursor:pointer;
+  }
+  .comments-toggle:hover{text-decoration:underline;border:none;}
+  .comments-toggle svg{width:14px;height:14px;transition:transform 0.15s;}
+  .comments-toggle[aria-expanded="true"] svg{transform:rotate(90deg);}
+  .comments-toggle .cc-zero{color:var(--ink-faint);}
+  .comment-thread{
+    margin:8px 0 2px;padding:6px 12px 8px;
+    background:var(--thread-bg);border-left:3px solid var(--line-strong);
+  }
+  .comment{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .comment-list .comment:last-child{border-bottom:none;}
+  .comment-text{color:var(--ink-soft);overflow-wrap:anywhere;min-width:0;}
+  .comment-stamp{font-size:12px;color:var(--ink-faint);margin-top:2px;}
+  .comment-empty{font-size:14px;color:var(--ink-faint);padding:4px 0;}
+  .comment-del{
+    flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;padding:0;border:1px solid transparent;border-radius:6px;
+    background:none;color:var(--ink-faint);cursor:pointer;
+  }
+  .comment-del svg{width:14px;height:14px;}
+  .comment-del:hover{color:var(--del);border-color:var(--del-line);background:var(--del-bg);}
+  .comment-add{display:flex;gap:8px;align-items:flex-start;margin-top:8px;}
+  .comment-add textarea{
+    flex:1;min-width:0;min-height:38px;height:38px;resize:vertical;
+    font-family:var(--sans);font-size:16px;padding:7px 10px;
+    border:1px solid var(--line);border-radius:8px;background:var(--field-bg);color:var(--ink);
+  }
+  .comment-add textarea:focus-visible{outline:2px solid var(--action-ink);outline-offset:1px;}
+  .comment-add .btn-primary{height:38px;padding:0 14px;flex-shrink:0;}
+  .comment-err{font-size:13px;color:var(--del);margin-top:4px;}
+  @media (prefers-reduced-motion: reduce){ .comments-toggle svg{transition:none;} }
+  .rich-text{white-space:normal;overflow-wrap:anywhere;}
+  .rich-text .text-list{margin:2px 0;padding-left:20px;}
+  .rich-text .text-list li{margin:1px 0;}
   .activity-meta{
     font-size:13px;
     color:var(--ink-faint);
@@ -524,7 +565,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.7</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.8</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -693,6 +734,10 @@ let certs = [];
 let activeCustomer = null;
 let activeCertId = null;
 let expandedCustomers = new Set();
+// Activities whose comment thread is open, and unsent comment text (both kept only while the page is open).
+const openThreads = new Set();
+const commentDrafts = {};
+let addingComment = false;
 
 // ---- Keep your place on refresh ----
 // The selected certification is kept in the page address (#id), so a refresh reopens it and
@@ -1317,6 +1362,8 @@ function groupBySerial(items){
 }
 
 const ICON = {
+  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>',
   reopen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
   eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
@@ -1517,7 +1564,7 @@ function renderActivityLog(c){
           <div class="activity-entry-top">
             <div>
               <span class="pill pill-${cls}">${escapeHtml(status)}</span>
-              <span class="changelog-text">${escapeHtml(a.description)}</span>
+              <span class="changelog-text rich-text">${formatText(a.description)}</span>
             </div>
             <div class="cert-actions">
               ${status !== 'Complete' ? actionBtn('check', 'Complete', `markActivityComplete('${c.id}', '${a.id}')`, {cls: 'ok'}) : ''}
@@ -1531,10 +1578,117 @@ function renderActivityLog(c){
             ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}${a.timeUpdated ? ', ' + a.timeUpdated : ''}` : ''}
             ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}${lateNote(a)}` : ''}
           </div>
+          ${renderComments(c, a, true)}
         </div>
       `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
     </div>
   `;
+}
+
+// ---- Activity comments ----
+// Each activity keeps a running thread: comments: [{id, text, date, time}], oldest first.
+// ---- Text with line breaks and bullets ----
+// Shows typed text as written: line breaks are kept, and lines starting with "- ", "* " or "•"
+// become a bulleted list. Text is escaped first, so nothing typed or pasted can change the page.
+function formatText(s){
+  const lines = String(s == null ? '' : s).replace(/\r\n?/g, '\n').split('\n');
+  const out = [];
+  let list = null;
+  lines.forEach(line => {
+    const m = line.match(/^\s*(?:[-*]\s+|\u2022\s*)(.*)$/);
+    if(m){
+      if(!list){ list = []; }
+      list.push(escapeHtml(m[1]));
+      return;
+    }
+    if(list){ out.push({list}); list = null; }
+    out.push({line: escapeHtml(line)});
+  });
+  if(list) out.push({list});
+  let html = '';
+  out.forEach((part, i) => {
+    if(part.list){
+      html += '<ul class="text-list">' + part.list.map(li => `<li>${li}</li>`).join('') + '</ul>';
+    }else{
+      const prevIsLine = i > 0 && !out[i-1].list;
+      html += (prevIsLine ? '<br>' : '') + part.line;
+    }
+  });
+  return html;
+}
+
+function renderComments(c, a, editable){
+  const list = Array.isArray(a.comments) ? a.comments : [];
+  const n = list.length;
+  const open = openThreads.has(a.id);
+  const key = c.id + '|' + a.id;
+  let thread = '';
+  if(open){
+    const items = n ? list.map(cm => `
+        <div class="comment">
+          <div style="min-width:0;">
+            <div class="comment-text rich-text">${formatText(cm.text)}</div>
+            <div class="comment-stamp">${fmtDate(cm.date)}${cm.time ? ', ' + escapeHtml(cm.time) : ''}</div>
+          </div>
+          ${editable ? `<button class="comment-del" type="button" title="Delete comment" aria-label="Delete comment" onclick="deleteComment('${c.id}', '${a.id}', '${cm.id}')">${ICON.x}</button>` : ''}
+        </div>`).join('') : '<div class="comment-empty">No comments yet</div>';
+    const form = editable ? `
+        <div class="comment-add">
+          <textarea id="cmt-${a.id}" aria-label="Add a comment" placeholder="Add a comment" oninput="commentDrafts['${key}'] = this.value; document.getElementById('cmt-err-${a.id}').style.display = 'none';" onkeydown="if(event.key === 'Enter' && (event.ctrlKey || event.metaKey)){ event.preventDefault(); addComment('${c.id}', '${a.id}'); }">${escapeHtml(commentDrafts[key] || '')}</textarea>
+          <button class="btn-primary" type="button" onclick="addComment('${c.id}', '${a.id}')">Add</button>
+        </div>
+        <div class="comment-err" id="cmt-err-${a.id}" style="display:none;">Enter a comment first.</div>` : '';
+    thread = `<div class="comment-thread" id="thread-${a.id}"><div class="comment-list">${items}</div>${form}</div>`;
+  }
+  return `
+          <button class="comments-toggle" type="button" aria-expanded="${open}" aria-controls="thread-${a.id}" onclick="toggleComments('${a.id}')">${ICON.chevron}Comments <span class="${n ? '' : 'cc-zero'}">(${n})</span></button>
+          ${thread}`;
+}
+
+function toggleComments(activityId){
+  if(openThreads.has(activityId)) openThreads.delete(activityId);
+  else openThreads.add(activityId);
+  render();
+  if(openThreads.has(activityId)){
+    const box = document.getElementById('cmt-' + activityId);
+    if(box) box.focus({preventScroll: true});
+  }
+}
+
+async function addComment(certId, activityId){
+  if(addingComment) return;
+  const box = document.getElementById('cmt-' + activityId);
+  const text = box ? box.value.trim() : '';
+  if(!text){
+    const err = document.getElementById('cmt-err-' + activityId);
+    if(err) err.style.display = 'block';
+    return;
+  }
+  const c = certs.find(x => x.id === certId);
+  const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
+  if(!a) return;
+  if(!Array.isArray(a.comments)) a.comments = [];
+  a.comments.push({
+    id: 'k' + Date.now(),
+    text,
+    date: new Date().toISOString().slice(0,10),
+    time: nowTime()
+  });
+  delete commentDrafts[certId + '|' + activityId];
+  openThreads.add(activityId);
+  addingComment = true;
+  try{ await persist(); }finally{ addingComment = false; }
+  render();
+}
+
+async function deleteComment(certId, activityId, commentId){
+  if(!confirm('Delete this comment? This can\'t be undone.')) return;
+  const c = certs.find(x => x.id === certId);
+  const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
+  if(!a || !Array.isArray(a.comments)) return;
+  a.comments = a.comments.filter(cm => cm.id !== commentId);
+  await persist();
+  render();
 }
 
 function openActivityModal(certId, activityId){
