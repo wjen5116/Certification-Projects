@@ -202,7 +202,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:13 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319179926",
+            "text": "Investigating. \n\nNote: Any performance adjustments will affect the overall performance of the aircraft which will also affect all QTG test charts already evaluated and accepted.",
+            "date": "2026-10-06",
+            "time": "3:39 PM"
+          }
+        ]
       },
       {
         "id": "a1791317663342",
