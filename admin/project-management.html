@@ -524,7 +524,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.6</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.7</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -693,6 +693,38 @@ let certs = [];
 let activeCustomer = null;
 let activeCertId = null;
 let expandedCustomers = new Set();
+
+// ---- Keep your place on refresh ----
+// The selected certification is kept in the page address (#id), so a refresh reopens it and
+// the address can be bookmarked or shared. Expanded customers are remembered for this tab.
+const EXPANDED_KEY = 'cert-tracker-expanded';
+function hashCertId(){
+  try{ return decodeURIComponent(location.hash.slice(1)); }catch(e){ return ''; }
+}
+activeCertId = hashCertId() || null;
+try{
+  const savedExpanded = JSON.parse(sessionStorage.getItem(EXPANDED_KEY) || 'null');
+  if(Array.isArray(savedExpanded)) savedExpanded.forEach(n => expandedCustomers.add(n));
+}catch(e){}
+
+function rememberPlace(){
+  if(activeCertId && hashCertId() !== activeCertId){
+    // replaceState: update the address without adding a Back-button step per click.
+    try{ history.replaceState(null, '', location.pathname + location.search + '#' + encodeURIComponent(activeCertId)); }catch(e){}
+  }
+  try{ sessionStorage.setItem(EXPANDED_KEY, JSON.stringify([...expandedCustomers])); }catch(e){}
+}
+
+// A link to another certification pasted into this tab's address bar.
+window.addEventListener('hashchange', () => {
+  const id = hashCertId();
+  const cert = certs.find(c => c.id === id);
+  if(!cert){ rememberPlace(); return; }  // unknown link: keep the current certification
+  if(id === activeCertId) return;
+  activeCertId = id;
+  expandedCustomers.add(customerKey(cert));
+  render();
+});
 let sidebarInitialised = false;
 let currentSha = null;
 let lastFetchAt = 0;
@@ -855,7 +887,7 @@ function loadSettings(){
 // Sign-in lives on the view-only page (../index.html, one folder up); send the user there when
 // there are no saved credentials or GitHub rejects them.
 function redirectToSignIn(reason){
-  location.replace('../index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : ''));
+  location.replace('../index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : '') + location.hash);
 }
 
 function showBanner(kind, html){
@@ -1130,6 +1162,7 @@ function render(){
     expandedCustomers.add(activeCustomer);
     sidebarInitialised = true;
   }
+  rememberPlace();
 
   const sidebar = order.map(customer => {
     const items = sortCerts(groups[customer]);
