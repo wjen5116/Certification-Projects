@@ -211,6 +211,18 @@
         "timeUpdated": "3:18 PM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791317961283",
+        "description": "6.2.B.5 - 4.c Visual Ground segment \nThe visual test placed the aircraft at the incorrect position and the visual RVR’s for day/ dawn were approximately 100 metres short.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "3:19 PM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "3:19 PM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
