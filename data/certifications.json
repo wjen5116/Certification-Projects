@@ -227,12 +227,12 @@
       {
         "id": "a1791318103189",
         "description": "6.2.E.1 - Transport delay Test. \nDue to the unique architecture of this device the transport delay plot captured a shared signal to both visual and instrument. The operator should consider presenting a visual plot and instrument plot not just one combined going forward.",
-        "status": "In Progress",
+        "status": "Pending",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:21 PM",
         "dateUpdated": "2026-10-06",
-        "timeUpdated": "3:21 PM",
+        "timeUpdated": "3:22 PM",
         "dateCompleted": "",
         "timeCompleted": ""
       }
