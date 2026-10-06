@@ -210,7 +210,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:18 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319074084",
+            "text": "Requested aircraft weight and icing trigger to be logged for further investigating.",
+            "date": "2026-10-06",
+            "time": "3:37 PM"
+          }
+        ]
       },
       {
         "id": "a1791317961283",
