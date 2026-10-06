@@ -846,39 +846,6 @@
     "dateCompleted": "2026-09-25"
   },
   {
-    "id": "c1790607556091",
-    "simModel": "P3D - NAV Data",
-    "customer": "Aeroguard",
-    "authority": "EASA",
-    "country": "Qatar",
-    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
-    "serial": "Both",
-    "aircraft": "PA28-81/DA42",
-    "level": "FNPTII",
-    "date": "",
-    "contactName": "",
-    "contactEmail": "",
-    "nameAuto": true,
-    "name": "EASA FNPTII - PA28-81/DA42 (P3D - NAV Data)",
-    "docs": [],
-    "docLocation": "",
-    "activityLog": [
-      {
-        "id": "a1790607591545",
-        "description": "Nav/Airport data issues Follow up",
-        "status": "Pending",
-        "dateDue": "",
-        "dateCreated": "2026-09-28",
-        "timeCreated": "9:59 AM",
-        "dateUpdated": "2026-09-28",
-        "timeUpdated": "10:01 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
-      }
-    ],
-    "docChangeLog": []
-  },
-  {
     "id": "c1790868523957",
     "simModel": "FMX",
     "customer": "Lake Country Airways",
