@@ -94,7 +94,7 @@
       },
       {
         "id": "a1791304052358",
-        "description": "KVRB (Vero Beach) seems to have artifacts causing multiple runways to appear. \n\nVOR(TRV) is no longer in use but it shows up and the new VOR(MLB) is missing.\n\nAvidyne EFIS speed tape colors were wrong on the PA28-G17 AP.\n\nKX26, it was noted that the runway centreline marking was diagonal.",
+        "description": "KVRB (Vero Beach) seems to have artifacts causing multiple runways to appear.",
         "status": "In Progress",
         "dateDue": "",
         "dateCreated": "2026-10-06",
