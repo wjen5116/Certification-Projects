@@ -187,6 +187,18 @@
         "timeUpdated": "3:16 PM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791317844533",
+        "description": "6.1.C.4 - Both electric and manual trim were extremely sensitive and caused the aircraft to overpitch when applied",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "3:17 PM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "3:17 PM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
