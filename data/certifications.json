@@ -222,7 +222,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:19 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319056742",
+            "text": "VDR test to be corrected for proper distance.",
+            "date": "2026-10-06",
+            "time": "3:37 PM"
+          }
+        ]
       },
       {
         "id": "a1791318103189",
