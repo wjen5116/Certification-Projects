@@ -59,11 +59,14 @@
       },
       {
         "id": "a179003588595303",
-        "description": "Review UK CAA Discrepency Report from Skyborne for correction.",
-        "status": "Pending",
+        "description": "UK CAA Discrepency Report from Skyborne for correction (Received)",
+        "status": "Complete",
         "dateCreated": "2026-09-21",
-        "dateDue": "",
-        "dateUpdated": "2026-09-22"
+        "dateDue": "2026-10-06",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "9:02 AM",
+        "dateCompleted": "2026-10-06",
+        "timeCompleted": "9:02 AM"
       },
       {
         "id": "a1790182345279",
