@@ -175,6 +175,18 @@
         "timeUpdated": "3:14 PM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791317818732",
+        "description": "6.1.C.3 - In the cruise on selection of a pop-up thunderstorm, the indicated altitude went from 4000 ft to 3800 ft. When cleared, the indicated altitude went from 4000 ft to 4200ft.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "3:16 PM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "3:16 PM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
