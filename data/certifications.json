@@ -182,7 +182,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:13 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319169554",
+            "text": "I believe this was determined to be the result of the approaches being performed with significant sideslip due to the visual alignment representing the external view from the simulated aircraft. \n\nThe SME did not experience this when the approaches were flown on R-MCX-100177 (SBA-180).\n\nThe monitors’ visual alignment can be adjusted to the same settings used on R-MCX-100177 (SBA-180).",
+            "date": "2026-10-06",
+            "time": "3:39 PM"
+          }
+        ]
       },
       {
         "id": "a1791317632524",
