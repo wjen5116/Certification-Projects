@@ -262,7 +262,15 @@
         "dateUpdated": "2026-10-06",
         "timeUpdated": "3:17 PM",
         "dateCompleted": "",
-        "timeCompleted": ""
+        "timeCompleted": "",
+        "comments": [
+          {
+            "id": "k1791319225438",
+            "text": "This behavior had stopped while towards the end of the evaluation and was behavior as intended. Please advise if this returns or continues.",
+            "date": "2026-10-06",
+            "time": "3:40 PM"
+          }
+        ]
       },
       {
         "id": "a1791317907243",
