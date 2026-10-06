@@ -199,6 +199,18 @@
         "timeUpdated": "3:17 PM",
         "dateCompleted": "",
         "timeCompleted": ""
+      },
+      {
+        "id": "a1791317907243",
+        "description": "6.1.C.8 - In icing conditions at 3000 ft, the aircraft did not gain weight, maintained airspeed without any addition of thrust and the stall speed did not increase. At no point with icing selected in both moderate or severe was icing effects perceivable.",
+        "status": "Pending",
+        "dateDue": "",
+        "dateCreated": "2026-10-06",
+        "timeCreated": "3:18 PM",
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "3:18 PM",
+        "dateCompleted": "",
+        "timeCompleted": ""
       }
     ],
     "docChangeLog": [
