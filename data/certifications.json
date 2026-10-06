@@ -899,14 +899,14 @@
       {
         "id": "a1790868603310",
         "description": "SSD was replaced. Need scenery for CYPQ, CNF4, CYOO, CYTZ for TC recertification.",
-        "status": "In Progress",
+        "status": "Complete",
         "dateDue": "2026-10-02",
         "dateCreated": "2026-10-01",
         "timeCreated": "10:30 AM",
-        "dateUpdated": "2026-10-01",
-        "timeUpdated": "10:30 AM",
-        "dateCompleted": "",
-        "timeCompleted": ""
+        "dateUpdated": "2026-10-06",
+        "timeUpdated": "11:37 AM",
+        "dateCompleted": "2026-10-06",
+        "timeCompleted": "11:37 AM"
       }
     ],
     "docChangeLog": []
