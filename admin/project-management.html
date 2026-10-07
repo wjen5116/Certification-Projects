@@ -40,6 +40,8 @@
     --sage-bg-strong:#CFE6C8;
     --slate:#2E5A88;
     --slate-bg:#E2EBF5;
+    --plum:#6B3FA0;
+    --plum-bg:#EFE6F8;
     --edit-hover-line:#1D5FA8;
     --field-bg:#FFFFFF;
     --action:#1D5FA8;
@@ -89,6 +91,8 @@
       --sage-bg-strong:#3A5A3C;
       --slate:#C9D6E6;
       --slate-bg:#2E3C4B;
+      --plum:#D7C3F0;
+      --plum-bg:#3D2F4E;
       --edit-hover-line:#6FA8E8;
       --field-bg:#000000;
       --action:#2F6DB5;
@@ -207,6 +211,7 @@
   .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
   .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
   .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
+  .pill-plum{background:var(--plum-bg);color:var(--plum);margin-right:6px;}
   .due-cell.overdue{color:var(--rust);font-weight:600;}
 
   .doc-loc{
@@ -286,6 +291,39 @@
   .changelog-main{display:flex;gap:10px;min-width:0;overflow-wrap:anywhere;}
   .changelog-editable .cert-actions{flex-shrink:0;}
   .late-note{color:var(--ink-faint);font-style:italic;}
+  /* Activity status groups */
+  .act-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .act-head-tools{display:flex;gap:6px;align-items:center;}
+  .act-toggle-all{
+    display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;
+    font-family:var(--sans);font-size:13px;line-height:1;white-space:nowrap;
+    border-radius:6px;border:1px solid var(--line-strong);background:transparent;color:var(--ink-soft);
+  }
+  .act-toggle-all svg{width:15px;height:15px;flex-shrink:0;}
+  .act-toggle-all:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
+  @media (max-width: 640px){ .act-toggle-all{height:34px;} }
+  .act-group{
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;
+    padding:10px 0;margin:0;border:none;border-bottom:1px solid var(--line);border-radius:0;
+    background:none;font-family:var(--sans);font-size:15px;color:var(--ink-soft);text-align:left;cursor:pointer;
+  }
+  .act-group:hover{border-color:var(--line);}
+  .act-group:hover .act-group-count{color:var(--action-ink);text-decoration:underline;}
+  .act-group > svg{width:14px;height:14px;flex-shrink:0;color:var(--ink-faint);transition:transform 0.15s;}
+  .act-group[aria-expanded="true"] > svg{transform:rotate(90deg);}
+  .act-group .pill{margin-right:0;}
+  .act-group-date{margin-left:auto;font-size:13px;color:var(--ink-faint);}
+  .act-group-body{padding-left:20px;border-bottom:1px solid var(--line);}
+  .act-group-body .activity-entry:last-child{border-bottom:none;}
+  .act-groups > :last-child{border-bottom:none;}
+  @media (prefers-reduced-motion: reduce){ .act-group > svg{transition:none;} }
+  /* Sidebar Expand all / Collapse all */
+  .side-tools{display:flex;justify-content:flex-end;padding:2px 6px 6px;margin-bottom:4px;border-bottom:1px solid var(--line);}
+  .side-toggle-all{
+    background:none;border:none;padding:2px 4px;border-radius:4px;
+    font-family:var(--sans);font-size:13px;color:var(--action-ink);cursor:pointer;
+  }
+  .side-toggle-all:hover{text-decoration:underline;border:none;}
   /* Activity comments */
   .comments-toggle{
     display:inline-flex;align-items:center;gap:4px;
@@ -565,7 +603,7 @@
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.8</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.9</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -687,8 +725,9 @@
       <div class="field">
         <label for="a-status">Status</label>
         <select id="a-status">
-          <option value="Pending">Pending</option>
+          <option value="Not Started">Not Started</option>
           <option value="In Progress">In Progress</option>
+          <option value="Waiting">Waiting</option>
           <option value="Complete">Complete</option>
         </select>
       </div>
@@ -1079,18 +1118,19 @@ async function load(){
         }else{
           if(!a.id){ a.id = 'a' + Date.now() + ci + idx; needsResave = true; }
           if(!a.status){ a.status = 'Complete'; needsResave = true; }
+          if(a.status === 'Pending'){ a.status = 'Not Started'; needsResave = true; }
           if(a.status === 'Complete' && !a.dateCompleted){
             a.dateCompleted = a.dateUpdated || a.dateCreated || today;
             needsResave = true;
           }
         }
       });
-      // Fold any leftover "Next task" text into a new Pending activity.
+      // Fold any leftover "Next task" text into a new Not Started activity.
       if(c.change && c.change.trim()){
         c.activityLog.push({
           id: 'a' + Date.now() + ci + '-migrated',
           description: c.change.trim(),
-          status: 'Pending',
+          status: 'Not Started',
           dateCreated: today,
           dateDue: '',
           dateUpdated: today
@@ -1116,7 +1156,7 @@ async function load(){
     });
     if(needsResave){
       showBanner('info', remote === null ? 'No data file found yet \u2014 creating one with starting data&hellip;' : 'Updating data format&hellip;');
-      await writeToGitHub(certs, remote === null ? 'Initialize certification tracker data' : 'Merge Next Task into Activities');
+      await writeToGitHub(certs, remote === null ? 'Initialize certification tracker data' : 'Update tracker data format');
       showBanner('success', remote === null ? 'Created data file in your repo.' : 'Data updated.');
       setTimeout(hideBanner, 2500);
     }else{
@@ -1250,7 +1290,7 @@ function render(){
   list.innerHTML = `
     <div class="layout">
       <div class="side-col">
-        <nav class="sidebar" aria-label="Customers and certifications">${sidebar}</nav>
+        <nav class="sidebar" aria-label="Customers and certifications">${sideToolsHtml()}${sidebar}</nav>
         <button class="btn-text side-add-customer" onclick="openModal(null, '', 'customer')">${ICON.plus}<span>Add customer</span></button>
       </div>
       <section class="detail" id="detail" aria-live="polite">
@@ -1362,6 +1402,8 @@ function groupBySerial(items){
 }
 
 const ICON = {
+  expandAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9l5-5 5 5"/><path d="M7 15l5 5 5-5"/></svg>',
+  collapseAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l5 5 5-5"/><path d="M7 20l5-5 5 5"/></svg>',
   chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>',
   reopen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
@@ -1533,33 +1575,26 @@ function isActivityOverdue(a){
   return new Date(a.dateDue + 'T00:00:00') < today;
 }
 
+// Activity statuses: Not Started, In Progress, Waiting (on another party), Complete.
+// "Pending" is the old name for Not Started and is shown as Not Started.
+function activityStatusLabel(status){
+  if(!status || status === 'Pending') return 'Not Started';
+  return status;
+}
+
 function activityStatusClass(status){
   if(status === 'Complete') return 'sage';
   if(status === 'In Progress') return 'gold';
+  if(status === 'Waiting') return 'plum';
   return 'slate';
 }
 
 function renderActivityLog(c){
-  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
-  const sorted = [...entries].sort((a,b) => {
-    const aDone = a.status === 'Complete' ? 1 : 0;
-    const bDone = b.status === 'Complete' ? 1 : 0;
-    if(aDone !== bDone) return aDone - bDone;
-    const ad = a.dateDue || a.dateCreated || '';
-    const bd = b.dateDue || b.dateCreated || '';
-    return aDone === 0 ? ad.localeCompare(bd) : bd.localeCompare(ad);
-  });
-  return `
-    <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Activities</span>
-        ${actionBtn('plus', 'Add', `openActivityModal('${c.id}')`, {compact: false})}
-      </div>
-      ${sorted.length ? sorted.map(a => {
-        const over = isActivityOverdue(a);
-        const status = a.status || 'Pending';
-        const cls = activityStatusClass(status);
-        return `
+  const entry = a => {
+    const over = isActivityOverdue(a);
+    const status = activityStatusLabel(a.status);
+    const cls = activityStatusClass(status);
+    return `
         <div class="activity-entry">
           <div class="activity-entry-top">
             <div>
@@ -1567,7 +1602,9 @@ function renderActivityLog(c){
               <span class="changelog-text rich-text">${formatText(a.description)}</span>
             </div>
             <div class="cert-actions">
-              ${status !== 'Complete' ? actionBtn('check', 'Complete', `markActivityComplete('${c.id}', '${a.id}')`, {cls: 'ok'}) : ''}
+              ${status !== 'Complete'
+                ? actionBtn('check', 'Complete', `markActivityComplete('${c.id}', '${a.id}')`, {cls: 'ok'})
+                : actionBtn('reopen', 'Reopen', `reopenActivity('${c.id}', '${a.id}')`)}
               ${actionBtn('edit', 'Edit', `openActivityModal('${c.id}', '${a.id}')`)}
               ${actionBtn('trash', 'Delete', `deleteActivity('${c.id}', '${a.id}')`, {cls: 'danger'})}
             </div>
@@ -1579,8 +1616,18 @@ function renderActivityLog(c){
             ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}${lateNote(a)}` : ''}
           </div>
           ${renderComments(c, a, true)}
+        </div>`;
+  };
+  return `
+    <div class="changelog">
+      <div class="fk act-head">
+        <span>Activities</span>
+        <div class="act-head-tools">
+          ${activityToggleAllBtn(c)}
+          ${actionBtn('plus', 'Add', `openActivityModal('${c.id}')`, {compact: false})}
         </div>
-      `; }).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>'}
+      </div>
+      ${renderActivityGroups(c, entry)}
     </div>
   `;
 }
@@ -1615,6 +1662,124 @@ function formatText(s){
     }
   });
   return html;
+}
+
+// ---- Activity status groups ----
+// Activities are shown in one expandable group per status, in this order. Groups start collapsed;
+// which groups are open is remembered (per certification) while the page is open.
+const ACTIVITY_GROUPS = ['Not Started', 'In Progress', 'Waiting', 'Complete'];
+const openActivityGroups = new Set();
+
+function activityGroupKey(certId, status){ return certId + '|' + status; }
+
+function activityGroupOf(a){
+  const s = activityStatusLabel(a.status);
+  return ACTIVITY_GROUPS.includes(s) ? s : 'Not Started';
+}
+
+// Non-empty groups for a certification, each with its activities sorted:
+// open groups by due date (entered date when there's no due date), Completed newest first.
+function activityGroups(c){
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  return ACTIVITY_GROUPS.map(status => {
+    const items = entries.filter(a => activityGroupOf(a) === status);
+    if(status === 'Complete'){
+      items.sort((a,b) => {
+        const ad = (a.dateCompleted || a.dateDue || a.dateCreated || '') + (a.dateCompleted ? to24(a.timeCompleted) : '');
+        const bd = (b.dateCompleted || b.dateDue || b.dateCreated || '') + (b.dateCompleted ? to24(b.timeCompleted) : '');
+        return bd.localeCompare(ad);
+      });
+    }else{
+      items.sort((a,b) => (a.dateDue || a.dateCreated || '').localeCompare(b.dateDue || b.dateCreated || ''));
+    }
+    return {status, items};
+  }).filter(g => g.items.length);
+}
+
+// "9:05 AM" -> "09:05" so times sort correctly; unknown formats sort first.
+function to24(t){
+  const m = String(t || '').match(/^(\d{1,2}):(\d{2})\s*([AP]M)?$/i);
+  if(!m) return '';
+  let h = Number(m[1]) % 12;
+  if(m[3] && m[3].toUpperCase() === 'PM') h += 12;
+  if(!m[3]) h = Number(m[1]);
+  return String(h).padStart(2, '0') + ':' + m[2];
+}
+
+function activitiesAnyOpen(c){
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  return ACTIVITY_GROUPS.some(s => openActivityGroups.has(activityGroupKey(c.id, s)))
+    || entries.some(a => openThreads.has(a.id));
+}
+
+function toggleActivityGroup(certId, status){
+  const key = activityGroupKey(certId, status);
+  if(openActivityGroups.has(key)) openActivityGroups.delete(key);
+  else openActivityGroups.add(key);
+  render();
+}
+
+// Collapse all closes every group and comment thread for this certification;
+// Expand all opens every group and leaves comment threads closed.
+function toggleAllActivities(certId){
+  const c = certs.find(x => x.id === certId);
+  if(!c) return;
+  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
+  if(activitiesAnyOpen(c)){
+    ACTIVITY_GROUPS.forEach(s => openActivityGroups.delete(activityGroupKey(certId, s)));
+    entries.forEach(a => openThreads.delete(a.id));
+  }else{
+    activityGroups(c).forEach(g => openActivityGroups.add(activityGroupKey(certId, g.status)));
+  }
+  render();
+}
+
+function activityToggleAllBtn(c){
+  if(!(Array.isArray(c.activityLog) && c.activityLog.length)) return '';
+  const any = activitiesAnyOpen(c);
+  const label = any ? 'Collapse all' : 'Expand all';
+  return `<button class="act-toggle-all" type="button" onclick="toggleAllActivities('${c.id}')" title="${label} activities">${any ? ICON.collapseAll : ICON.expandAll}<span>${label}</span></button>`;
+}
+
+function renderActivityGroups(c, renderEntry){
+  const groups = activityGroups(c);
+  if(!groups.length) return '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>';
+  return '<div class="act-groups">' + groups.map((g, gi) => {
+    const done = g.status === 'Complete';
+    const n = g.items.length;
+    const overdue = done ? 0 : g.items.filter(isActivityOverdue).length;
+    let dateNote;
+    if(done){
+      dateNote = g.items[0].dateCompleted ? `Latest ${fmtDate(g.items[0].dateCompleted)}` : '';
+    }else{
+      const nextDue = g.items.map(a => a.dateDue).filter(Boolean).sort()[0];
+      dateNote = nextDue ? `Next due ${fmtDate(nextDue)}` : 'No due dates';
+    }
+    const open = openActivityGroups.has(activityGroupKey(c.id, g.status));
+    const bodyId = `grp-${c.id}-${gi}`;
+    return `
+      <button class="act-group" type="button" aria-expanded="${open}" aria-controls="${bodyId}" onclick="toggleActivityGroup('${c.id}', '${g.status}')">${ICON.chevron}<span class="pill pill-${activityStatusClass(g.status)}">${done ? 'Completed' : escapeHtml(g.status)}</span><span class="act-group-count">${n} ${n === 1 ? 'activity' : 'activities'}</span>${overdue ? `<span class="pill pill-overdue">${overdue} overdue</span>` : ''}<span class="act-group-date">${dateNote}</span></button>
+      ${open ? `<div class="act-group-body" id="${bodyId}">${g.items.map(a => renderEntry(a)).join('')}</div>` : ''}`;
+  }).join('') + '</div>';
+}
+
+// ---- Sidebar Expand all / Collapse all ----
+function allCustomerKeys(){
+  return [...new Set(certs.map(customerKey))];
+}
+
+function toggleAllCustomers(){
+  const keys = allCustomerKeys();
+  if(keys.some(k => expandedCustomers.has(k))) expandedCustomers.clear();
+  else keys.forEach(k => expandedCustomers.add(k));
+  render();
+}
+
+function sideToolsHtml(){
+  const keys = allCustomerKeys();
+  if(!keys.length) return '';
+  const any = keys.some(k => expandedCustomers.has(k));
+  return `<div class="side-tools"><button class="side-toggle-all" type="button" onclick="toggleAllCustomers()">${any ? 'Collapse all' : 'Expand all'}</button></div>`;
 }
 
 function renderComments(c, a, editable){
@@ -1701,12 +1866,12 @@ function openActivityModal(certId, activityId){
     const a = c && Array.isArray(c.activityLog) ? c.activityLog.find(x => x.id === activityId) : null;
     title.textContent = 'Edit activity';
     document.getElementById('a-description').value = a ? a.description : '';
-    document.getElementById('a-status').value = a ? (a.status || 'Pending') : 'Pending';
+    document.getElementById('a-status').value = a ? activityStatusLabel(a.status) : 'Not Started';
     document.getElementById('a-due').value = a ? (a.dateDue || '') : '';
   }else{
     title.textContent = 'Add activity';
     document.getElementById('a-description').value = '';
-    document.getElementById('a-status').value = 'Pending';
+    document.getElementById('a-status').value = 'Not Started';
     document.getElementById('a-due').value = '';
   }
   document.getElementById('activity-modal-bg').classList.add('open');
@@ -1729,7 +1894,7 @@ async function saveActivityEntry(){
   const activityId = document.getElementById('activity-edit-id').value;
   const today = new Date().toISOString().slice(0,10);
   const nowT = nowTime();
-  const status = document.getElementById('a-status').value || 'Pending';
+  const status = document.getElementById('a-status').value || 'Not Started';
   const dateDueRaw = document.getElementById('a-due').value;
   const dateDue = /^\d{4}-\d{2}-\d{2}$/.test(dateDueRaw) ? dateDueRaw : '';
 
@@ -1745,13 +1910,19 @@ async function saveActivityEntry(){
       let timeCompleted = prevEntry.timeCompleted || '';
       if(status === 'Complete' && !dateCompleted){ dateCompleted = today; timeCompleted = nowT; }
       if(status !== 'Complete'){ dateCompleted = ''; timeCompleted = ''; }
+      const comments = Array.isArray(prevEntry.comments) ? [...prevEntry.comments] : [];
+      if(prevEntry.status === 'Complete' && status !== 'Complete'){
+        const note = reopenNote(prevEntry);
+        if(note) comments.push(note);
+      }
       c.activityLog[idx] = {
         ...prevEntry,
         description, status, dateDue,
         dateUpdated: today,
         timeUpdated: nowT,
         dateCompleted,
-        timeCompleted
+        timeCompleted,
+        comments
       };
     }
   }else{
@@ -1766,8 +1937,44 @@ async function saveActivityEntry(){
       timeCompleted: status === 'Complete' ? nowT : ''
     });
   }
+  // Open the group the activity is now in (except Completed, which stays folded away).
+  if(status !== 'Complete') openActivityGroups.add(activityGroupKey(certId, activityStatusLabel(status)));
   await persist();
   closeActivityModal();
+  render();
+}
+
+// ---- Reopening a completed activity ----
+// Adds an automatic comment so the earlier completion isn't lost.
+function reopenNote(a){
+  if(!a.dateCompleted) return null;
+  return {
+    id: 'k' + Date.now() + Math.floor(Math.random() * 1000),
+    text: `Reopened (was completed ${fmtDate(a.dateCompleted)})`,
+    date: new Date().toISOString().slice(0,10),
+    time: nowTime()
+  };
+}
+
+async function reopenActivity(certId, activityId){
+  const c = certs.find(x => x.id === certId);
+  if(!c || !Array.isArray(c.activityLog)) return;
+  const a = c.activityLog.find(x => x.id === activityId);
+  if(!a) return;
+  const note = reopenNote(a);
+  if(note){
+    if(!Array.isArray(a.comments)) a.comments = [];
+    a.comments.push(note);
+  }
+  const today = new Date().toISOString().slice(0,10);
+  a.status = 'In Progress';
+  a.dateUpdated = today;
+  a.timeUpdated = nowTime();
+  a.dateCompleted = '';
+  a.timeCompleted = '';
+  // Show it where it has moved to.
+  openActivityGroups.add(activityGroupKey(certId, 'In Progress'));
+  await persist();
   render();
 }
 
