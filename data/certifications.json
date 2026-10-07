@@ -175,7 +175,7 @@
       {
         "id": "a1791317605651",
         "description": "6.1.A.1 - On various approaches to various runways with nil wind, excessive rudder was required to ensure the aircraft-maintained runway heading. This adverse behaviour was clarified during the evaluation by the operators SME. In effect at no point during this evaluation were we able to conduct a stable approach. (See Limitation 6.1.D.1)",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:13 PM",
@@ -195,7 +195,7 @@
       {
         "id": "a1791317632524",
         "description": "6.1.B.1 - With full power applied in the climb, nil rudder was required to keep the aircraft straight. The operator should clarify if this behaviour is representative.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:13 PM",
@@ -215,7 +215,7 @@
       {
         "id": "a1791317663342",
         "description": "6.1.B.2 - In the climb at Vy, the aircraft climb rate was excessive at 1200 – 2000 fpm. The operator should clarify if this behaviour is representative.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:14 PM",
@@ -235,7 +235,7 @@
       {
         "id": "a1791317818732",
         "description": "6.1.C.3 - In the cruise on selection of a pop-up thunderstorm, the indicated altitude went from 4000 ft to 3800 ft. When cleared, the indicated altitude went from 4000 ft to 4200ft.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:16 PM",
@@ -275,7 +275,7 @@
       {
         "id": "a1791317907243",
         "description": "6.1.C.8 - In icing conditions at 3000 ft, the aircraft did not gain weight, maintained airspeed without any addition of thrust and the stall speed did not increase. At no point with icing selected in both moderate or severe was icing effects perceivable.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:18 PM",
@@ -295,7 +295,7 @@
       {
         "id": "a1791317961283",
         "description": "6.2.B.5 - 4.c Visual Ground segment \nThe visual test placed the aircraft at the incorrect position and the visual RVR’s for day/ dawn were approximately 100 metres short.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:19 PM",
@@ -335,7 +335,7 @@
       {
         "id": "a1791319304341",
         "description": "6.1.C.7 - During VGS assessment at EBAW (29) on selection of dusk, day was displayed.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "",
         "dateCreated": "2026-10-06",
         "timeCreated": "3:41 PM",
@@ -442,7 +442,7 @@
       {
         "id": "a17900358859531-migrated",
         "description": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -520,7 +520,7 @@
       {
         "id": "a17900358859532-migrated",
         "description": "Waiting for Qatar to inspect devices for certification.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -573,7 +573,7 @@
       {
         "id": "a17900358859533-migrated",
         "description": "Waiting for Qatar to inspect devices for certification.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -626,7 +626,7 @@
       {
         "id": "a17900358859534-migrated",
         "description": "Waiting for Qatar to inspect devices for certification.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -679,7 +679,7 @@
       {
         "id": "a17900358859545-migrated",
         "description": "Waiting for Qatar to inspect devices for certification.",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -784,7 +784,7 @@
       {
         "id": "a17900358859547-migrated",
         "description": "Waiting for payment",
-        "status": "Pending",
+        "status": "Not Started",
         "dateCreated": "2026-09-22",
         "dateDue": "",
         "dateUpdated": "2026-09-22"
@@ -948,7 +948,7 @@
       {
         "id": "a1791304505916",
         "description": "Follow up with AFS-200 on receipt of application",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "2026-10-12",
         "dateCreated": "2026-10-06",
         "timeCreated": "11:35 AM",
@@ -960,7 +960,7 @@
       {
         "id": "a1791304560324",
         "description": "Follow up with AFS-200 on renewal status",
-        "status": "Pending",
+        "status": "Not Started",
         "dateDue": "2026-12-14",
         "dateCreated": "2026-10-06",
         "timeCreated": "11:36 AM",
