@@ -4,121 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Change log — Certification Project Tracker</title>
+<link rel="stylesheet" href="assets/tracker.css?v=2.5.0">
 <style>
-  :root{
-    color-scheme: light dark;
-    --bg:#A70E13;
-    --on-bg:#FFFFFF;
-    --on-bg-soft:#F6D2D4;
-    --on-bg-line:rgba(255,255,255,0.35);
-    --card:#FFFFFF;
-    --card-line:#4A545B;
-    --line:#D8DCDF;
-    --line-strong:#B4BBC0;
-    --hover:#E1E5E8;
-    --neutral-bg:#E6E9EB;
-    --backdrop:rgba(20,24,27,0.45);
-    --ink:#23292E;
-    --ink-soft:#4A545B;
-    --ink-faint:#6A747B;
-    --accent:#A70E13;
-    --accent-hover:#8C0B10;
-    --accent-ink:#A70E13;
-    --hover-ink:#A70E13;
-    --accent-bg:#FBE8E9;
-    --on-accent:#FFFFFF;
-    --rust:#C2410C;
-    --rust-bg:#FFEDD5;
-    --rust-strong:#9A3409;
-    --rust-bg-strong:#FFE0C2;
-    --gold:#875A00;
-    --gold-bg:#FCEFD3;
-    --sage:#2E6A2A;
-    --sage-bg:#E2F0DE;
-    --sage-strong:#1F4D1C;
-    --sage-bg-strong:#CFE6C8;
-    --slate:#2E5A88;
-    --slate-bg:#E2EBF5;
-    --edit-hover-line:#1D5FA8;
-    --field-bg:#FFFFFF;
-    --action:#1D5FA8;
-    --action-hover:#174C87;
-    --action-ink:#1D5FA8;
-    --del:#A70E13;
-    --del-line:#A70E13;
-    --del-bg:#FBE8E9;
-    --del-strong:#7A0A0E;
-    --del-bg-strong:#F6D2D4;
-    --radius:10px;
-    --serif: Calibri, "Segoe UI", Georgia, serif;
-    --sans: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#000000;
-      --on-bg:#FFFFFF;
-      --on-bg-soft:#B8C1C7;
-      --on-bg-line:#333333;
-      --card:#353D43;
-      --card-line:#A70E13;
-      --line:#4A545B;
-      --line-strong:#7C8790;
-      --hover:#434C53;
-      --neutral-bg:#454E55;
-      --backdrop:rgba(0,0,0,0.6);
-      --ink:#FFFFFF;
-      --ink-soft:#E4E8EB;
-      --ink-faint:#B8C1C7;
-      --accent:#A70E13;
-      --accent-hover:#C0151B;
-      --accent-ink:#FF6B6F;
-      --hover-ink:#FF6B6F;
-      --accent-bg:#4A2A2E;
-      --on-accent:#FFFFFF;
-      --rust:#FF9D66;
-      --rust-bg:#4E3325;
-      --rust-strong:#FFB085;
-      --rust-bg-strong:#4E3325;
-      --gold:#E7C07E;
-      --gold-bg:#4A3D22;
-      --sage:#C6E0BE;
-      --sage-bg:#2E4630;
-      --sage-strong:#D6EBCF;
-      --sage-bg-strong:#3A5A3C;
-      --slate:#C9D6E6;
-      --slate-bg:#2E3C4B;
-      --edit-hover-line:#6FA8E8;
-      --field-bg:#000000;
-      --action:#2F6DB5;
-      --action-hover:#3B7BC4;
-      --action-ink:#6FA8E8;
-      --del:#FF8E91;
-      --del-line:#FF6B6F;
-      --del-bg:#4A2A2E;
-      --del-strong:#FFA3A6;
-      --del-bg-strong:#5C3238;
-    }
-  }
-  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--sans);
-    font-size:17px;
-    line-height:1.5;
-  }
+  /* Change log page: shared colors and base styles come from assets/tracker.css. */
+  body{padding:0;line-height:1.5;}
   .wrap{max-width:860px;margin:0 auto;padding:clamp(16px,4vw,40px) clamp(12px,3vw,32px);}
-  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
-  h1{color:var(--on-bg);font-family:var(--serif);font-weight:700;font-size:31px;margin:0 0 4px;letter-spacing:0.2px;}
-  .sub{color:var(--on-bg-soft);margin:0;font-size:15px;}
-  .back{
-    display:inline-flex;align-items:center;gap:6px;
-    font-family:var(--sans);font-size:14px;cursor:pointer;
-    border-radius:8px;border:1px solid var(--line-strong);
-    background:var(--card);color:var(--ink-soft);padding:8px 14px;
-  }
+  .page-head{justify-content:space-between;align-items:flex-start;margin-bottom:22px;}
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:14px;border-radius:8px;border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);padding:8px 14px;}
   .back:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
   .back:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
   .back svg{width:16px;height:16px;}
@@ -130,9 +22,8 @@
   .vd{font-size:14px;color:var(--ink-faint);}
   .cur{font-size:12px;padding:2px 10px;border-radius:99px;background:var(--sage-bg);color:var(--sage);}
   .grp{font-size:12px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:0.05em;margin:12px 0 4px;}
-  ul{margin:0;padding-left:20px;font-size:15px;}
-  li{margin:3px 0;}
-  .version-footer{margin-top:24px;padding-top:12px;border-top:1px solid var(--on-bg-line);font-size:11px;color:var(--on-bg-soft);text-align:center;}
+  .card ul{margin:0;padding-left:20px;font-size:15px;}
+  .card li{margin:3px 0;}
 </style>
 </head>
 <body>
@@ -145,8 +36,29 @@
     <button class="back" id="back-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back to tracker</button>
   </header>
   <main class="card">
+      <section class="ver" id="v2.5.0">
+        <h2 class="vh"><span class="vn">v2.5.0</span> <span class="vd">Oct 7, 2026</span> <span class="cur">Current</span></h2>
+        <h3 class="grp">Added</h3>
+        <ul>
+          <li>Home page. The tracker opens on a home page instead of the first certification. Click the title or Home in the sidebar to return to it.</li>
+          <li>Customizable summary bar. Click Customize to choose what each box shows, add or remove boxes (up to 8), and reorder them with the arrows or by dragging. Your choices are saved in your browser; Reset to default brings back the standard five.</li>
+          <li>New measures for the summary bar, including counts by authority and level, open, overdue and waiting activities, activities waiting over 14 days, and recent comments.</li>
+          <li>Click a summary box to list what it counts in the main panel, sorted by customer, SN, authority, then date. Opening an item from the list gives you a link back to it.</li>
+          <li>Regulatory library in the sidebar: FAA, EASA, UK CAA and Transport Canada documents open in the main panel, with links to open them in a new tab or go to the official source.</li>
+          <li>Search from the header (press / to jump to it) across customers, SNs, activities, comments and the full text of the regulatory library. Clicking a regulation result opens the document at that page.</li>
+          <li>Search suggestions: clicking into the search box shows your three most frequent searches.</li>
+          <li>Editor: add, edit and remove library documents, with their search index built automatically, and an admin panel to clear everyone&#x27;s search history.</li>
+        </ul>
+        <h3 class="grp">Changed</h3>
+        <ul>
+          <li>Summary boxes take a single line each, leaving more room for the main panel.</li>
+          <li>Total is now called All certifications.</li>
+          <li>Activities set to Waiting record the date, which the Waiting over 14 days count uses.</li>
+          <li>Behind the scenes, the two tracker pages now share one set of styles and code, so they load faster after the first visit and stay consistent. No visible changes.</li>
+        </ul>
+      </section>
       <section class="ver" id="v2.4.9">
-        <h2 class="vh"><span class="vn">v2.4.9</span> <span class="vd">Oct 6, 2026</span> <span class="cur">Current</span></h2>
+        <h2 class="vh"><span class="vn">v2.4.9</span> <span class="vd">Oct 6, 2026</span></h2>
         <h3 class="grp">Added</h3>
         <ul>
           <li>Waiting status for activities, for when you&#x27;re waiting on another party. Waiting activities have a purple tag.</li>
@@ -354,7 +266,7 @@
         </ul>
       </section>
   </main>
-  <div class="version-footer">v2.4.9</div>
+  <div class="version-footer">v2.5.0</div>
 </div>
 <script>
 // Return to whichever tracker page opened this one; otherwise go to the view-only page.

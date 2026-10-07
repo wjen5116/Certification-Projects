@@ -1,0 +1,66 @@
+{
+  "documents": [
+    {
+      "id": "faa-14-cfr-part-60",
+      "authority": "FAA",
+      "title": "14 CFR Part 60",
+      "fullTitle": "Flight Simulation Training Device Initial and Continuing Qualification and Use",
+      "revision": "eCFR",
+      "asOf": "2026-10-05",
+      "file": "FAA-14-CFR-Part-60.pdf",
+      "officialUrl": "https://www.ecfr.gov/current/title-14/chapter-I/subchapter-D/part-60",
+      "pages": 603,
+      "indexed": true
+    },
+    {
+      "id": "faa-ac-61-136b",
+      "authority": "FAA",
+      "title": "AC 61-136B",
+      "fullTitle": "FAA Approval of Aviation Training Devices and Their Use for Training and Experience",
+      "revision": "Dated Sep 12, 2018",
+      "asOf": "",
+      "file": "FAA-AC-61-136B.pdf",
+      "officialUrl": "https://www.faa.gov/regulations_policies/advisory_circulars",
+      "pages": 39,
+      "indexed": true
+    },
+    {
+      "id": "easa-cs-fstd-a-issue-2",
+      "authority": "EASA",
+      "title": "CS-FSTD(A)",
+      "fullTitle": "Certification Specifications for Aeroplane Flight Simulation Training Devices",
+      "revision": "Issue 2",
+      "asOf": "",
+      "file": "EASA-CS-FSTD-A-Issue-2.pdf",
+      "officialUrl": "",
+      "pages": 184,
+      "indexed": true
+    },
+    {
+      "id": "uk-caa-cs-fstd-a-issue-2",
+      "authority": "UK CAA",
+      "title": "CS-FSTD(A)",
+      "fullTitle": "Aeroplane Flight Simulation Training Devices (UK Regulation (EU) No 1178/2011)",
+      "revision": "Issue 2",
+      "asOf": "",
+      "file": "UK-CAA-CS-FSTD-A-Issue-2.pdf",
+      "officialUrl": "",
+      "pages": 175,
+      "indexed": true
+    },
+    {
+      "id": "tc-tp-9685-ch-6",
+      "authority": "Transport Canada",
+      "title": "TP 9685 Chapter 6",
+      "fullTitle": "Non-Type Specific Flight Training Devices (FTD Level 1 and 2)",
+      "revision": "",
+      "asOf": "",
+      "file": "TC-TP-9685-Chapter-6.pdf",
+      "officialUrl": "",
+      "pages": 80,
+      "indexed": true
+    }
+  ],
+  "searchResetAt": "",
+  "searchTally": {}
+}

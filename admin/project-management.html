@@ -3,607 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Certification Project Tracker</title>
-<style>
-  :root{
-    color-scheme: light dark;
-    --bg:#A70E13;
-    --on-bg:#FFFFFF;
-    --on-bg-soft:#F6D2D4;
-    --on-bg-line:rgba(255,255,255,0.35);
-    --card:#FFFFFF;
-    --card-line:#4A545B;
-    --line:#D8DCDF;
-    --line-strong:#B4BBC0;
-    --hover:#E1E5E8;
-    --neutral-bg:#E6E9EB;
-    --thread-bg:#F4F6F7;
-    --backdrop:rgba(20,24,27,0.45);
-    --ink:#23292E;
-    --ink-soft:#4A545B;
-    --ink-faint:#6A747B;
-    --accent:#A70E13;
-    --accent-hover:#8C0B10;
-    --accent-ink:#A70E13;
-    --hover-ink:#A70E13;
-    --accent-bg:#FBE8E9;
-    --on-accent:#FFFFFF;
-    --rust:#C2410C;
-    --rust-bg:#FFEDD5;
-    --rust-strong:#9A3409;
-    --rust-bg-strong:#FFE0C2;
-    --gold:#875A00;
-    --gold-bg:#FCEFD3;
-    --sage:#2E6A2A;
-    --sage-bg:#E2F0DE;
-    --sage-strong:#1F4D1C;
-    --sage-bg-strong:#CFE6C8;
-    --slate:#2E5A88;
-    --slate-bg:#E2EBF5;
-    --plum:#6B3FA0;
-    --plum-bg:#EFE6F8;
-    --edit-hover-line:#1D5FA8;
-    --field-bg:#FFFFFF;
-    --action:#1D5FA8;
-    --action-hover:#174C87;
-    --action-ink:#1D5FA8;
-    --del:#A70E13;
-    --del-line:#A70E13;
-    --del-bg:#FBE8E9;
-    --del-strong:#7A0A0E;
-    --del-bg-strong:#F6D2D4;
-    --radius:10px;
-    --serif: Calibri, "Segoe UI", Georgia, serif;
-    --sans: Calibri, "Segoe UI", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#000000;
-      --on-bg:#FFFFFF;
-      --on-bg-soft:#B8C1C7;
-      --on-bg-line:#333333;
-      --card:#353D43;
-      --card-line:#A70E13;
-      --line:#4A545B;
-      --line-strong:#7C8790;
-      --hover:#434C53;
-      --neutral-bg:#454E55;
-      --thread-bg:#2C3338;
-      --backdrop:rgba(0,0,0,0.6);
-      --ink:#FFFFFF;
-      --ink-soft:#E4E8EB;
-      --ink-faint:#B8C1C7;
-      --accent:#A70E13;
-      --accent-hover:#C0151B;
-      --accent-ink:#FF6B6F;
-      --hover-ink:#FF6B6F;
-      --accent-bg:#4A2A2E;
-      --on-accent:#FFFFFF;
-      --rust:#FF9D66;
-      --rust-bg:#4E3325;
-      --rust-strong:#FFB085;
-      --rust-bg-strong:#4E3325;
-      --gold:#E7C07E;
-      --gold-bg:#4A3D22;
-      --sage:#C6E0BE;
-      --sage-bg:#2E4630;
-      --sage-strong:#D6EBCF;
-      --sage-bg-strong:#3A5A3C;
-      --slate:#C9D6E6;
-      --slate-bg:#2E3C4B;
-      --plum:#D7C3F0;
-      --plum-bg:#3D2F4E;
-      --edit-hover-line:#6FA8E8;
-      --field-bg:#000000;
-      --action:#2F6DB5;
-      --action-hover:#3B7BC4;
-      --action-ink:#6FA8E8;
-      --del:#FF8E91;
-      --del-line:#FF6B6F;
-      --del-bg:#4A2A2E;
-      --del-strong:#FFA3A6;
-      --del-bg-strong:#5C3238;
-    }
-  }
-  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-  a{color:var(--action-ink);}
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--sans);
-    font-size:17px;
-    padding:clamp(16px, 4vw, 40px) clamp(12px, 3vw, 32px) 60px;
-  }
-  .wrap{max-width:min(1200px, 96vw);margin:0 auto;}
-  header{margin-bottom:28px;}
-  h1{
-    color:var(--on-bg);
-    font-family:var(--serif);
-    font-weight:700;
-    font-size:31px;
-    margin:0 0 4px;
-    letter-spacing:0.2px;
-  }
-
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
-    gap:10px;
-    margin:22px 0 26px;
-  }
-  .stat{
-    background:var(--card);
-    border:1px solid var(--card-line);
-    border-radius:var(--radius);
-    padding:12px 14px;
-  }
-  .stat .n{font-family:var(--serif);font-size:24px;font-weight:500;line-height:1;}
-  .stat .l{font-size:13px;color:var(--ink-soft);margin-top:6px;}
-
-  button{
-    font-family:var(--sans);
-    font-size:14px;
-    cursor:pointer;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:var(--card);
-    padding:8px 14px;
-    color:var(--ink);
-  }
-  button:hover{border-color:var(--ink-faint);}
-
-  .btn-primary{
-    background:var(--action);
-    border-color:var(--action);
-    color:#FFFFFF;
-  }
-  .btn-primary:hover{background:var(--action-hover);border-color:var(--action-hover);}
-  .btn-text{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    height:28px;
-    padding:0 10px;
-    font-size:13px;
-    line-height:1;
-    border-radius:6px;
-    border:1px solid var(--line-strong);
-    background:transparent;
-    color:var(--ink-soft);
-    white-space:nowrap;
-  }
-  
-  .btn-text svg{width:15px;height:15px;flex-shrink:0;}
-  .btn-text.danger{color:var(--del);border-color:var(--del-line);background:var(--del-bg);}
-  
-  .btn-text.ok{color:var(--sage);border-color:var(--sage);background:var(--sage-bg);}
-  
-  .cert-actions{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
-  .detail-actions{gap:6px;}
-  @media (max-width: 640px){
-    .btn-text.compact .btn-label{display:none;}
-    .btn-text{height:34px;}
-    .btn-text.compact{padding:0;width:34px;justify-content:center;}
-  }
-
-  .empty{
-    background:var(--card);
-    border:1px dashed var(--card-line);
-    border-radius:var(--radius);
-    padding:36px 20px;
-    text-align:center;
-    color:var(--ink-soft);
-  }
-  .empty p{margin:0 0 14px;font-size:16px;}
-
-  .pill{
-    font-size:12px;
-    padding:3px 9px;
-    border-radius:99px;
-    white-space:nowrap;
-    font-weight:600;
-    display:inline-block;
-  }
-
-  .pill-overdue{background:var(--rust-bg);color:var(--rust);}
-  .pill-slate{background:var(--slate-bg);color:var(--slate);margin-right:6px;}
-  .pill-gold{background:var(--gold-bg);color:var(--gold);margin-right:6px;}
-  .pill-sage{background:var(--sage-bg);color:var(--sage);margin-right:6px;}
-  .pill-plum{background:var(--plum-bg);color:var(--plum);margin-right:6px;}
-  .due-cell.overdue{color:var(--rust);font-weight:600;}
-
-  .doc-loc{
-    font-family:ui-monospace,"SF Mono",Consolas,monospace;
-    font-size:12px;
-    color:var(--ink-faint);
-    margin-top:4px;
-    word-break:break-all;
-    user-select:all;
-  }
-  .doc-loc a{color:var(--action-ink);text-decoration:underline;}
-  .field-grid .fv a{color:var(--action-ink);text-decoration:underline;}
-
-  .tab-count{
-    font-size:12px;
-    background:var(--slate-bg);
-    color:var(--slate);
-    padding:1px 7px;
-    border-radius:99px;
-    font-weight:600;
-  }
-  .tab-overdue-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--rust);
-    display:inline-block;
-  }
-
-  .field-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-    gap:10px 20px;
-    margin-top:10px;
-    font-size:14px;
-  }
-  .field-grid .fk{
-    font-size:12px;
-    color:var(--ink-faint);
-    margin-bottom:2px;
-  }
-  .field-grid .fv{color:var(--ink);}
-
-  .changelog{
-    margin-top:12px;
-    padding-top:10px;
-    border-top:1px solid var(--line);
-  }
-  .changelog-entry{
-    display:flex;
-    gap:10px;
-    font-size:15px;
-    padding:3px 0;
-  }
-  .changelog-date{
-    font-size:13px;
-    padding-top:1px;
-    color:var(--ink-faint);
-    min-width:80px;
-    flex-shrink:0;
-  }
-  .changelog-text{color:var(--ink-soft);}
-  .activity-entry{
-    font-size:15px;
-    padding:8px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .activity-entry:last-child{border-bottom:none;}
-  .activity-entry-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-  }
-  .changelog-editable{justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding:5px 0;}
-  .changelog-editable:last-child{border-bottom:none;}
-  .changelog-main{display:flex;gap:10px;min-width:0;overflow-wrap:anywhere;}
-  .changelog-editable .cert-actions{flex-shrink:0;}
-  .late-note{color:var(--ink-faint);font-style:italic;}
-  /* Activity status groups */
-  .act-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
-  .act-head-tools{display:flex;gap:6px;align-items:center;}
-  .act-toggle-all{
-    display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 10px;
-    font-family:var(--sans);font-size:13px;line-height:1;white-space:nowrap;
-    border-radius:6px;border:1px solid var(--line-strong);background:transparent;color:var(--ink-soft);
-  }
-  .act-toggle-all svg{width:15px;height:15px;flex-shrink:0;}
-  .act-toggle-all:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
-  @media (max-width: 640px){ .act-toggle-all{height:34px;} }
-  .act-group{
-    display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;
-    padding:10px 0;margin:0;border:none;border-bottom:1px solid var(--line);border-radius:0;
-    background:none;font-family:var(--sans);font-size:15px;color:var(--ink-soft);text-align:left;cursor:pointer;
-  }
-  .act-group:hover{border-color:var(--line);}
-  .act-group:hover .act-group-count{color:var(--action-ink);text-decoration:underline;}
-  .act-group > svg{width:14px;height:14px;flex-shrink:0;color:var(--ink-faint);transition:transform 0.15s;}
-  .act-group[aria-expanded="true"] > svg{transform:rotate(90deg);}
-  .act-group .pill{margin-right:0;}
-  .act-group-date{margin-left:auto;font-size:13px;color:var(--ink-faint);}
-  .act-group-body{padding-left:20px;border-bottom:1px solid var(--line);}
-  .act-group-body .activity-entry:last-child{border-bottom:none;}
-  .act-groups > :last-child{border-bottom:none;}
-  @media (prefers-reduced-motion: reduce){ .act-group > svg{transition:none;} }
-  /* Sidebar Expand all / Collapse all */
-  .side-tools{display:flex;justify-content:flex-end;padding:2px 6px 6px;margin-bottom:4px;border-bottom:1px solid var(--line);}
-  .side-toggle-all{
-    background:none;border:none;padding:2px 4px;border-radius:4px;
-    font-family:var(--sans);font-size:13px;color:var(--action-ink);cursor:pointer;
-  }
-  .side-toggle-all:hover{text-decoration:underline;border:none;}
-  /* Activity comments */
-  .comments-toggle{
-    display:inline-flex;align-items:center;gap:4px;
-    margin-top:6px;padding:2px 0;border:none;background:none;
-    font-family:var(--sans);font-size:13px;color:var(--action-ink);cursor:pointer;
-  }
-  .comments-toggle:hover{text-decoration:underline;border:none;}
-  .comments-toggle svg{width:14px;height:14px;transition:transform 0.15s;}
-  .comments-toggle[aria-expanded="true"] svg{transform:rotate(90deg);}
-  .comments-toggle .cc-zero{color:var(--ink-faint);}
-  .comment-thread{
-    margin:8px 0 2px;padding:6px 12px 8px;
-    background:var(--thread-bg);border-left:3px solid var(--line-strong);
-  }
-  .comment{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;}
-  .comment-list .comment:last-child{border-bottom:none;}
-  .comment-text{color:var(--ink-soft);overflow-wrap:anywhere;min-width:0;}
-  .comment-stamp{font-size:12px;color:var(--ink-faint);margin-top:2px;}
-  .comment-empty{font-size:14px;color:var(--ink-faint);padding:4px 0;}
-  .comment-del{
-    flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
-    width:26px;height:26px;padding:0;border:1px solid transparent;border-radius:6px;
-    background:none;color:var(--ink-faint);cursor:pointer;
-  }
-  .comment-del svg{width:14px;height:14px;}
-  .comment-del:hover{color:var(--del);border-color:var(--del-line);background:var(--del-bg);}
-  .comment-add{display:flex;gap:8px;align-items:flex-start;margin-top:8px;}
-  .comment-add textarea{
-    flex:1;min-width:0;min-height:38px;height:38px;resize:vertical;
-    font-family:var(--sans);font-size:16px;padding:7px 10px;
-    border:1px solid var(--line);border-radius:8px;background:var(--field-bg);color:var(--ink);
-  }
-  .comment-add textarea:focus-visible{outline:2px solid var(--action-ink);outline-offset:1px;}
-  .comment-add .btn-primary{height:38px;padding:0 14px;flex-shrink:0;}
-  .comment-err{font-size:13px;color:var(--del);margin-top:4px;}
-  @media (prefers-reduced-motion: reduce){ .comments-toggle svg{transition:none;} }
-  .rich-text{white-space:normal;overflow-wrap:anywhere;}
-  .rich-text .text-list{margin:2px 0;padding-left:20px;}
-  .rich-text .text-list li{margin:1px 0;}
-  .activity-meta{
-    font-size:13px;
-    color:var(--ink-faint);
-    margin-top:3px;
-  }
-
-  .modal-bg{
-    position:fixed;inset:0;
-    background:var(--backdrop);
-    display:none;
-    align-items:flex-start;
-    justify-content:center;
-    padding:40px 16px;
-    z-index:10;
-    overflow-y:auto;
-  }
-  .modal-bg.open{display:flex;}
-  .modal{
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:22px;
-    max-width:min(520px, 92vw);
-    width:100%;
-  }
-  .modal h3{
-    font-family:var(--serif);
-    font-weight:500;
-    font-size:20px;
-    margin:0 0 16px;
-  }
-  .field{margin-bottom:12px;}
-  .field label{
-    display:block;
-    font-size:13px;
-    color:var(--ink-soft);
-    margin-bottom:4px;
-  }
-  .field input, .field select, .field textarea{
-    width:100%;
-    font-family:var(--sans);
-    font-size:16px;
-    padding:8px 10px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:var(--field-bg);
-    color:var(--ink);
-  }
-  .field textarea{resize:vertical;min-height:56px;}
-  .field-row{display:flex;gap:10px;}
-  .field-row .field{flex:1;}
-  .modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:18px;
-  }
-  .mode-tag{font-size:11px;font-weight:400;padding:1px 7px;border-radius:99px;background:var(--slate-bg);color:var(--slate);margin-left:6px;}
-  .field-hint{font-size:12px;color:var(--ink-faint);margin-top:3px;}
-  .err{color:var(--rust);font-size:13px;margin-top:4px;display:none;}
-  .loading{color:var(--on-bg-soft);font-size:14px;padding:20px 0;}
-
-  @media (max-width: 640px){
-    .field-grid{grid-template-columns:1fr;}
-
-  }
-  .sync-banner{
-    font-size:13px;
-    padding:10px 14px;
-    border-radius:8px;
-    margin-bottom:16px;
-    border:1px solid var(--line);
-  }
-  .sync-banner.info{background:var(--slate-bg);color:var(--slate);border-color:var(--slate);}
-  .sync-banner.error{background:var(--rust-bg);color:var(--rust);border-color:var(--rust);}
-  .sync-banner.success{background:var(--sage-bg);color:var(--sage);border-color:var(--sage);}
-  .sync-banner a{color:inherit;text-decoration:underline;}
-  .btn-danger{display:inline-flex;align-items:center;gap:6px;background:var(--del-bg);border-color:var(--del-line);color:var(--del);}
-  .btn-danger:hover{background:var(--del-bg-strong);border-color:var(--del-strong);color:var(--del);}
-  .btn-danger svg{width:16px;height:16px;}
-  #confirm-body p{margin:0 0 8px;line-height:1.45;}
-  .confirm-context{font-size:13px;color:var(--ink-faint);}
-  /* v2.4.6 sidebar: open-only counts, Completed tag */
-  .tab-count.zero{background:var(--neutral-bg);color:var(--ink-faint);font-weight:400;}
-  .status-spacer{visibility:hidden;}
-  .side-done-tag{display:inline-block;font-size:11px;font-weight:600;line-height:1.4;padding:0 7px;border-radius:99px;background:var(--sage-bg);color:var(--sage);margin-left:4px;vertical-align:1px;}
-  .detail-completed{font-size:14px;color:var(--sage);margin-top:3px;}
-  .stat-done .n{color:var(--sage);}
-  .version-footer a{color:var(--on-bg);text-decoration:underline;text-underline-offset:2px;}
-  .version-footer a:hover{text-decoration-thickness:2px;}
-  .version-footer{
-    margin-top:24px;
-    padding-top:12px;
-    border-top:1px solid var(--on-bg-line);
-    font-size:11px;
-    color:var(--on-bg-soft);
-    text-align:center;
-  }
-  /* v2.2.0 sidebar layout */
-  .layout{
-    display:grid;
-    grid-template-columns:minmax(220px, 290px) minmax(0, 1fr);
-    gap:16px;
-    align-items:start;
-  }
-  .sidebar{
-    background:var(--card);
-    border:1px solid var(--card-line);
-    border-radius:var(--radius);
-    padding:6px;
-    position:sticky;
-    top:16px;
-    max-height:calc(100vh - 32px);
-    overflow-y:auto;
-  }
-  .side-customer-btn{
-    width:100%;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    background:none;
-    border:none;
-    border-radius:8px;
-    padding:10px;
-    font-family:var(--serif);
-    font-size:15px;
-    color:var(--ink-soft);
-    text-align:left;
-  }
-  
-  .side-customer.has-active .side-customer-btn{color:var(--ink);font-weight:700;}
-  .side-customer.has-active .side-customer-name{color:var(--hover-ink);font-weight:700;}
-  .side-customer-name{flex:1;min-width:0;overflow-wrap:break-word;}
-  .sidebar .chevron{
-    display:inline-block;
-    font-size:12px;
-    color:var(--ink-faint);
-    transition:transform 0.15s ease;
-  }
-  .sidebar .chevron.open{transform:rotate(90deg);}
-  .side-certs{padding:0 0 8px 18px;}
-
-  .side-cert{
-    width:100%;
-    display:flex;
-    align-items:flex-start;
-    gap:8px;
-    background:none;
-    border:none;
-    border-radius:6px;
-    padding:7px 10px;
-    font-size:14px;
-    color:var(--ink-soft);
-    text-align:left;
-  }
-  
-  .side-cert.active{background:var(--hover);}
-  .side-cert-name{flex:1;min-width:0;overflow-wrap:break-word;}
-  .side-cert-auth{display:block;font-size:13px;color:var(--ink-faint);}
-  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px;}
-  .dot-overdue{background:var(--rust);}
-  .dot-gold{background:var(--gold);}
-  .dot-slate{background:var(--slate);}
-  .dot-sage{background:var(--sage);}
-  .side-add{margin:6px 0 2px 10px;}
-  /* v2.4.6: sidebar column with the "Add customer" button below the panel */
-  .side-col{position:sticky;top:16px;display:flex;flex-direction:column;gap:8px;min-width:0;}
-  .side-col .sidebar{position:static;max-height:calc(100vh - 80px);}
-  .btn-text.side-add-customer{width:100%;height:36px;justify-content:center;background:var(--card);border-color:var(--card-line);color:var(--ink);font-size:14px;}
-  .btn-text.side-add-customer:hover{background:var(--hover);border-color:var(--edit-hover-line);}
-  .tab-note{margin-bottom:16px;}
-  .detail{
-    background:var(--card);
-    border:1px solid var(--card-line);
-    border-radius:var(--radius);
-    padding:16px 20px 18px;
-    min-width:0;
-    scroll-margin-top:12px;
-  }
-  .detail-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:12px;
-  }
-  .detail-context{font-size:13px;color:var(--ink-faint);margin-bottom:2px;}
-  .detail-title{
-    font-family:var(--serif);
-    font-size:22px;
-    font-weight:600;
-    margin:0;
-    line-height:1.2;
-  }
-  .activity-entry-top > :first-child{min-width:0;overflow-wrap:anywhere;}
-  .activity-entry-top .cert-actions{flex-shrink:0;}
-  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
-
-  .detail-actions{display:flex;justify-content:flex-end;margin-top:4px;}
-  button:focus-visible{outline:2px solid var(--action-ink);outline-offset:2px;}
-  @media (max-width: 760px){
-    .layout{grid-template-columns:1fr;}
-    .sidebar{position:static;max-height:none;}
-    .side-col{position:static;}
-    .side-col .sidebar{max-height:none;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    .sidebar .chevron{transition:none;}
-  }
-  /* Hover: grey shading; customer names turn bold Redbird red; button borders take their color */
-  .side-customer-btn:hover{background:var(--hover);}
-  .side-customer-btn:hover .side-customer-name{color:var(--hover-ink);font-weight:700;}
-  .side-cert:hover{background:var(--hover);}
-  .btn-text:hover{background:var(--hover);color:var(--ink);border-color:var(--edit-hover-line);}
-  .btn-text.danger:hover{background:var(--del-bg-strong);color:var(--del);border-color:var(--del-strong);}
-  a.btn-text{text-decoration:none;}
-  .btn-text.ok:hover{background:var(--sage-bg-strong);color:var(--sage);border-color:var(--sage-strong);}
-
-  /* Dark mode sidebar: selected customer gets a Redbird red highlight; text stays white */
-  @media (prefers-color-scheme: dark){
-    .side-customer.has-active .side-customer-btn,
-    .side-customer.has-active .side-customer-btn:hover{background:var(--accent);color:#FFFFFF;}
-    .side-customer.has-active .side-customer-name,
-    .side-customer.has-active .side-customer-btn:hover .side-customer-name{color:#FFFFFF;font-weight:700;}
-    .side-customer.has-active .chevron{color:#FFFFFF;}
-    .side-customer-btn:hover .side-customer-name{color:var(--ink);font-weight:700;}
-  }
-</style>
+<title>Certification Project Tracker — Editor</title>
+<link rel="stylesheet" href="../assets/tracker.css?v=2.5.0">
 </head>
 <body>
 <div class="wrap">
   <header class="page-head">
-    <h1>Certification Project Tracker</h1>
+    <div class="brand">
+      <h1><a class="brand-link" href="#" onclick="goHome(); return false;">Certification Project Tracker</a></h1>
+    </div>
+    <div class="head-tools">
+      <div class="search-wrap" role="search">
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="search-input" type="search" placeholder="Search customers, SNs, activities, regulations" aria-label="Search the tracker" autocomplete="off" aria-controls="search-suggest" aria-expanded="false">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+        <div class="search-suggest" id="search-suggest" role="listbox" aria-label="Your frequent searches" hidden></div>
+      </div>
+      <span id="summary-tools"></span>
+      <button class="icon-btn" id="admin-btn" type="button" title="Admin" aria-label="Admin"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
   </header>
 
   <div id="tab-note" class="sync-banner info tab-note" role="status" style="display:none;">The editor is also open in another tab. Changes saved in one tab show up in the other straight away.</div>
 
-  <div class="stats" id="stats"></div>
+  <div class="summary-area">
+    <div class="summary" id="summary" aria-label="Summary"></div>
+    <div class="summary-note" id="summary-note"></div>
+  </div>
 
   <div id="sync-banner" class="sync-banner" style="display:none;"></div>
 
   <div id="list"><div class="loading">Loading&hellip;</div></div>
-  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.4.9</a></div>
+  <div class="version-footer"><a href="../changelog.html" title="Change log">v2.5.0</a></div>
 </div>
 
 <div class="modal-bg" id="modal-bg">
@@ -768,205 +201,82 @@
   </div>
 </div>
 
+<div class="modal-bg" id="lib-modal-bg">
+  <div class="modal">
+    <h3 id="lib-modal-title">Add document</h3>
+    <input type="hidden" id="lib-edit-id">
+    <div class="field-row">
+      <div class="field">
+        <label for="l-authority">Authority</label>
+        <input id="l-authority" list="l-authorities" placeholder="e.g. FAA, EASA, UK CAA">
+        <datalist id="l-authorities"></datalist>
+      </div>
+      <div class="field">
+        <label for="l-title">Title</label>
+        <input id="l-title" placeholder="e.g. CS-FSTD(A)">
+      </div>
+    </div>
+    <div class="field">
+      <label for="l-full">Full title</label>
+      <input id="l-full" placeholder="e.g. Certification Specifications for Aeroplane Flight Simulation Training Devices">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="l-revision">Issue or revision</label>
+        <input id="l-revision" placeholder="e.g. Issue 2">
+      </div>
+      <div class="field">
+        <label for="l-asof">Copy as of</label>
+        <input id="l-asof" type="date">
+      </div>
+    </div>
+    <div class="field">
+      <label for="l-file">PDF file name</label>
+      <input id="l-file" placeholder="e.g. EASA-CS-FSTD-A-Issue-2.pdf">
+      <div class="field-hint">Upload the PDF to the repo's regs/ folder, then enter its file name here. Saving builds its search index.</div>
+    </div>
+    <div class="field">
+      <label for="l-url">Official source link</label>
+      <input id="l-url" type="url" placeholder="https://">
+    </div>
+    <div class="err" id="lib-err">Authority, title and PDF file name are required.</div>
+    <div class="modal-actions">
+      <button id="lib-cancel-btn" type="button">Cancel</button>
+      <button class="btn-primary" id="lib-save-btn" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="admin-modal-bg">
+  <div class="modal">
+    <h3>Admin</h3>
+    <div class="admin-section">
+      <h4>Search history</h4>
+      <p>Each person's suggested searches come from their own search history, kept in their browser. Clearing it here starts everyone fresh the next time they open the tracker.</p>
+      <button class="btn-danger" id="admin-clear-btn" type="button">Clear everyone's search history</button>
+      <p class="muted" id="admin-reset-date" style="margin-top:8px;"></p>
+    </div>
+    <div class="admin-section">
+      <h4>Most searched (your searches in the editor)</h4>
+      <p>Collected to build a shared suggested-searches list in a future update.</p>
+      <div id="admin-tally"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" id="admin-close-btn" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>window.TRACKER_EDITOR = true;</script>
+<script src="../assets/tracker.js?v=2.5.0"></script>
 <script>
-let certs = [];
-let activeCustomer = null;
-let activeCertId = null;
-let expandedCustomers = new Set();
-// Activities whose comment thread is open, and unsent comment text (both kept only while the page is open).
-const openThreads = new Set();
-const commentDrafts = {};
+// Editor: everything specific to editing. Shared code is in ../assets/tracker.js.
+
 let addingComment = false;
 
-// ---- Keep your place on refresh ----
-// The selected certification is kept in the page address (#id), so a refresh reopens it and
-// the address can be bookmarked or shared. Expanded customers are remembered for this tab.
-const EXPANDED_KEY = 'cert-tracker-expanded';
-function hashCertId(){
-  try{ return decodeURIComponent(location.hash.slice(1)); }catch(e){ return ''; }
-}
-activeCertId = hashCertId() || null;
-try{
-  const savedExpanded = JSON.parse(sessionStorage.getItem(EXPANDED_KEY) || 'null');
-  if(Array.isArray(savedExpanded)) savedExpanded.forEach(n => expandedCustomers.add(n));
-}catch(e){}
-
-function rememberPlace(){
-  if(activeCertId && hashCertId() !== activeCertId){
-    // replaceState: update the address without adding a Back-button step per click.
-    try{ history.replaceState(null, '', location.pathname + location.search + '#' + encodeURIComponent(activeCertId)); }catch(e){}
-  }
-  try{ sessionStorage.setItem(EXPANDED_KEY, JSON.stringify([...expandedCustomers])); }catch(e){}
-}
-
-// A link to another certification pasted into this tab's address bar.
-window.addEventListener('hashchange', () => {
-  const id = hashCertId();
-  const cert = certs.find(c => c.id === id);
-  if(!cert){ rememberPlace(); return; }  // unknown link: keep the current certification
-  if(id === activeCertId) return;
-  activeCertId = id;
-  expandedCustomers.add(customerKey(cert));
-  render();
-});
-let sidebarInitialised = false;
-let currentSha = null;
-let lastFetchAt = 0;
 let saving = false;
 let localVersion = 0;
 let ghConfig = null;
-
-const SETTINGS_KEY = 'gh_cert_tracker_settings';
-const FILE_PATH_DEFAULT = 'data/certifications.json';
-
-const SEED_DATA = [
-  {
-    "id": "c-skyborne",
-    "name": "FNPT II qualification — Redbird MCX-E (PA-28 Archer)",
-    "customer": "Skyborne Airline Academy",
-    "authority": "UKCAA",
-    "country": "UK",
-    "simLocation": "2825 Airport Drive, Vero Beach, FL 32960, USA",
-    "serial": "R-MCX-100251",
-    "aircraft": "Piper PA-28-181 Archer",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Clay and I on-site at Skyborne Sep 14 for the certification.",
-    "docs": ["R-MCX-100251__PA28_Archer__UK_FNPTII_MQTG_v1_1.docx", "Validation_Data_Roadmap__PA28_Archer_.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\UK\\Skyborne\\2026\\QTG V3\\Skyborne Doc",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: Uploaded most recent MQTG v1.1 to R-MCX-100251."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "c-usaviation",
-    "name": "FAA FTD Level 5 qualification — Redbird FMX/SD (Cessna C172S)",
-    "customer": "US Aviation Academy",
-    "authority": "FAA",
-    "country": "US",
-    "simLocation": "4850 Spartan Drive, Denton, TX 76207, USA",
-    "serial": "R-FMX-100843",
-    "aircraft": "Cessna C172S",
-    "level": "FTD Level 5",
-    "date": "",
-    "change": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
-    "docs": ["US_Aviation_R-FMX-100843__C172__FAA_FTD5_MQTG.docx", "Validation_Data_Roadmap__Cessna_C172S_.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\FAA\\FTD 5\\Customers\\US Aviation\\MQTG Docs",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: Drafted MQTG v1.0 and Validation Data Roadmap for R-FMX-100843; FAA FSTD ID still TBD."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "aeroguard-954-da42",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Diamond DA42, multi-engine)",
-    "customer": "Aeroguard",
-    "authority": "EASA",
-    "country": "Qatar",
-    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
-    "serial": "R-FMX-100954",
-    "aircraft": "Diamond DA42 (FADEC)",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
-    "docs": ["R-FMX-100954__DA42__EASA_FNPTII_-MEP.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "aeroguard-954-pa28",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Piper PA28-181, single-engine)",
-    "customer": "Aeroguard",
-    "authority": "EASA",
-    "country": "Qatar",
-    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
-    "serial": "R-FMX-100954",
-    "aircraft": "Piper PA28-181",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
-    "docs": ["R-FMX-100954__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\954\\QTG Doc",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "aeroguard-953-da42",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Diamond DA42, multi-engine)",
-    "customer": "Aeroguard",
-    "authority": "EASA",
-    "country": "Qatar",
-    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
-    "serial": "R-FMX-100953",
-    "aircraft": "Diamond DA42 (FADEC)",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
-    "docs": ["R-FMX-100953__DA42__EASA_FNPTII_-MEP.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\MEP",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "aeroguard-953-pa28",
-    "name": "EASA FNPT II qualification — Redbird FMX/SD-E (Piper PA28-181, single-engine)",
-    "customer": "Aeroguard",
-    "authority": "EASA",
-    "country": "Qatar",
-    "simLocation": "530 W Deer Valley Rd, Ste. 100, Phoenix, AZ 85027, USA",
-    "serial": "R-FMX-100953",
-    "aircraft": "Piper PA28-181",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Waiting for Qatar to inspect devices for certification.",
-    "docs": ["R-FMX-100953__PA28-181__EASA_FNPTII_-SEP__FINAL_.docx"],
-    "docLocation": "G:\\Shared drives\\Certification\\Non-EASA\\Qatar\\Aeroguard\\953\\QTG Doc\\SEP",
-    "activityLog": [{"date": "2026-09-11", "text": "To-do: MQTG v1.0 issued 8 Jun 2026; sponsor and EASA sign-off both still blank."}],
-    "docChangeLog": []
-  },
-  {
-    "id": "superior-c172",
-    "name": "FNPT II qualification — Cessna C172",
-    "customer": "Superior Air",
-    "authority": "EASA",
-    "country": "Greece",
-    "simLocation": "Greece",
-    "serial": "FMX-0297",
-    "aircraft": "Cessna C172",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Provide an estimate of total time to complete certification, start to finish.",
-    "docs": [],
-    "docLocation": "",
-    "activityLog": [],
-    "docChangeLog": []
-  },
-  {
-    "id": "superior-p2006",
-    "name": "FNPT II qualification — Tecnam P2006T",
-    "customer": "Superior Air",
-    "authority": "EASA",
-    "country": "Greece",
-    "simLocation": "Greece",
-    "serial": "FMX-0297",
-    "aircraft": "Tecnam P2006T",
-    "level": "FNPT II",
-    "date": "",
-    "change": "Provide an estimate of total time to complete certification, start to finish.",
-    "docs": [],
-    "docLocation": "",
-    "activityLog": [],
-    "docChangeLog": []
-  }
-]
-;
-
-function loadSettings(){
-  try{
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch(e){
-    return null;
-  }
-}
 
 // Sign-in lives on the view-only page (../index.html, one folder up); send the user there when
 // there are no saved credentials or GitHub rejects them.
@@ -974,67 +284,19 @@ function redirectToSignIn(reason){
   location.replace('../index.html?settings=1' + (reason ? '&reason=' + encodeURIComponent(reason) : '') + location.hash);
 }
 
-function showBanner(kind, html){
-  const el = document.getElementById('sync-banner');
-  el.className = 'sync-banner ' + kind;
-  el.innerHTML = html;
-  el.style.display = 'block';
-}
-
-function hideBanner(){
-  document.getElementById('sync-banner').style.display = 'none';
-}
-
 // UTF-8 safe base64 encode/decode
 function b64EncodeUtf8(str){
   return btoa(unescape(encodeURIComponent(str)));
 }
-function b64DecodeUtf8(b64){
-  return decodeURIComponent(escape(atob(b64)));
-}
 
-function ghHeaders(){
-  return {
-    'Authorization': 'Bearer ' + ghConfig.token,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-}
-
-function ghUrl(){
-  return `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${encodeURIComponent(ghConfig.path).replace(/%2F/g,'/')}`;
-}
-
-async function fetchFromGitHub(){
-  lastFetchAt = Date.now();
-  // no-cache: always check GitHub for a newer copy (unchanged files come back as a quick 304).
-  const res = await fetch(ghUrl() + `?ref=${encodeURIComponent(ghConfig.branch)}`, {
-    headers: ghHeaders(),
-    cache: 'no-cache'
-  });
-  if(res.status === 404){
-    return null; // file doesn't exist yet
-  }
-  if(!res.ok){
-    const body = await res.text();
-    const err = new Error(`GitHub read failed (${res.status}): ${body.slice(0,200)}`);
-    err.status = res.status;
-    throw err;
-  }
-  const json = await res.json();
-  currentSha = json.sha;
-  const content = b64DecodeUtf8(json.content.replace(/\n/g,''));
-  return JSON.parse(content);
-}
-
-async function writeToGitHub(data, message){
-  const body = {
-    message: message || 'Update certification tracker data',
-    content: b64EncodeUtf8(JSON.stringify(data, null, 2)),
-    branch: ghConfig.branch
-  };
-  if(currentSha) body.sha = currentSha;
-  const res = await fetch(ghUrl(), {
+// =====================================================================
+// GitHub writes (editor only)
+// =====================================================================
+// Writes a file to the repo and returns its new SHA. sha = the version being replaced (null for a new file).
+async function ghWriteFile(path, text, sha, message){
+  const body = {message, content: b64EncodeUtf8(text), branch: ghConfig.branch};
+  if(sha) body.sha = sha;
+  const res = await fetch(ghApiUrl(path), {
     method: 'PUT',
     headers: {...ghHeaders(), 'Content-Type': 'application/json'},
     body: JSON.stringify(body)
@@ -1047,10 +309,243 @@ async function writeToGitHub(data, message){
     if(res.status === 409){
       throw new Error('Conflict: the file changed on GitHub since last load. Refresh the page to get the latest version before saving again.');
     }
-    throw new Error(`GitHub write failed (${res.status}): ${errBody.slice(0,300)}`);
+    throw new Error(`GitHub write failed (${res.status}): ${errBody.slice(0, 300)}`);
   }
-  const json = await res.json();
-  currentSha = json.content.sha;
+  return (await res.json()).content.sha;
+}
+
+// SHA of a file in the repo, or null if it doesn't exist (works for large files too).
+async function ghFileSha(path){
+  const res = await fetch(ghApiUrl(path) + `?ref=${encodeURIComponent(ghConfig.branch)}`, {
+    headers: {...ghHeaders(), 'Accept': 'application/vnd.github.object+json'}, cache: 'no-cache'
+  });
+  if(res.status === 404) return null;
+  if(!res.ok) throw new Error(`GitHub read failed (${res.status})`);
+  return (await res.json()).sha;
+}
+
+async function writeToGitHub(data, message){
+  currentSha = await ghWriteFile(ghConfig.path, JSON.stringify(data, null, 2), currentSha, message || 'Update certification tracker data');
+}
+
+async function writeLibrary(message){
+  library.searchTally = mergedTally();
+  librarySha = await ghWriteFile(libraryPath(), JSON.stringify(library, null, 2), librarySha, message);
+  clearPendingTally();
+}
+
+async function persistLibrary(message, successText){
+  saving = true;
+  try{
+    showBanner('info', 'Saving to GitHub&hellip;');
+    await writeLibrary(message);
+    broadcastSaved();
+    showBanner('success', successText || 'Saved to GitHub.');
+    setTimeout(hideBanner, 2000);
+    return true;
+  }catch(e){
+    const msg = e.message.startsWith('GitHub rejected the saved token.') ? e.message : escapeHtml(e.message);
+    showBanner('error', 'Save failed: ' + msg);
+    return false;
+  }finally{
+    saving = false;
+  }
+}
+
+// =====================================================================
+// Regulatory library: add, edit, delete, and build each document's search index
+// =====================================================================
+function slugify(s){
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'doc';
+}
+
+function openLibraryModal(docId){
+  const d = docId ? libraryDoc(docId) : null;
+  document.getElementById('lib-modal-title').textContent = d ? 'Edit document' : 'Add document';
+  document.getElementById('lib-edit-id').value = d ? d.id : '';
+  const set = (id, v) => { document.getElementById(id).value = v || ''; };
+  set('l-authority', d && d.authority);
+  set('l-title', d && d.title);
+  set('l-full', d && d.fullTitle);
+  set('l-revision', d && d.revision);
+  set('l-asof', d && d.asOf);
+  set('l-file', d && d.file);
+  set('l-url', d && d.officialUrl);
+  document.getElementById('l-authorities').innerHTML = libraryAuthorities().map(a => `<option value="${escapeHtml(a)}">`).join('');
+  document.getElementById('lib-err').style.display = 'none';
+  document.getElementById('lib-modal-bg').classList.add('open');
+  document.getElementById(d ? 'l-title' : 'l-authority').focus();
+}
+
+function closeLibraryModal(){
+  document.getElementById('lib-modal-bg').classList.remove('open');
+}
+
+async function saveLibraryDoc(){
+  const val = id => document.getElementById(id).value.trim();
+  const entry = {
+    authority: val('l-authority'), title: val('l-title'), fullTitle: val('l-full'), revision: val('l-revision'),
+    asOf: /^\d{4}-\d{2}-\d{2}$/.test(val('l-asof')) ? val('l-asof') : '',
+    file: val('l-file').replace(/^.*\//, ''), officialUrl: val('l-url')
+  };
+  if(!entry.authority || !entry.title || !entry.file){
+    document.getElementById('lib-err').style.display = 'block';
+    return;
+  }
+  if(entry.officialUrl && !/^https?:\/\//i.test(entry.officialUrl)) entry.officialUrl = 'https://' + entry.officialUrl;
+  const editId = document.getElementById('lib-edit-id').value;
+  let doc;
+  if(editId){
+    doc = libraryDoc(editId);
+    const fileChanged = doc.file !== entry.file;
+    Object.assign(doc, entry);
+    if(fileChanged){ doc.indexed = false; doc.pages = 0; }
+  }else{
+    let id = slugify(entry.authority + ' ' + entry.title + ' ' + entry.revision), n = 2;
+    while(libraryDoc(id)) id = slugify(entry.authority + ' ' + entry.title + ' ' + entry.revision) + '-' + (n++);
+    doc = {id, ...entry, indexed: false, pages: 0};
+    library.documents.push(doc);
+  }
+  closeLibraryModal();
+  expandedAuthorities.add(doc.authority);
+  if(!await persistLibrary(`Library: ${editId ? 'update' : 'add'} ${docTitle(doc)}`)) return;
+  navigate({type: 'reg', id: doc.id, page: 1});
+  if(!doc.indexed) rebuildIndex(doc.id);
+}
+
+async function deleteLibraryDoc(id){
+  const d = libraryDoc(id);
+  if(!d || !confirm(`Remove ${docTitle(d)} from the library?\n\nThe PDF itself stays in the repo's regs/ folder; delete it there if you no longer need it.`)) return;
+  library.documents = library.documents.filter(x => x.id !== id);
+  delete regIndex[id];
+  delete regIndexRaw[id];
+  if(!await persistLibrary(`Library: remove ${docTitle(d)}`, 'Removed from the library.')) return;
+  // Tidy up its search index (best effort).
+  try{
+    const path = 'regs/index/' + id + '.json';
+    const sha = await ghFileSha(path);
+    if(sha){
+      await fetch(ghApiUrl(path), {method: 'DELETE', headers: {...ghHeaders(), 'Content-Type': 'application/json'},
+        body: JSON.stringify({message: `Library: remove search index for ${docTitle(d)}`, sha, branch: ghConfig.branch})});
+    }
+  }catch(e){}
+  goHome();
+}
+
+// Reads the PDF's text page by page with PDF.js (Mozilla's PDF reader) and saves it as
+// regs/index/<id>.json, which the search uses.
+const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+let pdfjsReady = null;
+
+function loadPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(!pdfjsReady){
+    pdfjsReady = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = PDFJS_URL;
+      s.onload = () => {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_URL.replace('pdf.min.js', 'pdf.worker.min.js');
+        resolve(window.pdfjsLib);
+      };
+      s.onerror = () => { pdfjsReady = null; reject(new Error('Could not load the PDF reader. Check your connection and try again.')); };
+      document.head.appendChild(s);
+    });
+  }
+  return pdfjsReady;
+}
+
+async function rebuildIndex(id){
+  const d = libraryDoc(id);
+  if(!d) return;
+  saving = true;
+  try{
+    showBanner('info', `Building the search index for ${escapeHtml(docTitle(d))}&hellip;`);
+    const pdfjs = await loadPdfJs();
+    const res = await fetch(SITE_ROOT + 'regs/' + encodeURIComponent(d.file), {cache: 'no-cache'});
+    if(!res.ok) throw new Error(`regs/${d.file} wasn't found on the site yet. Upload the PDF to the repo's regs/ folder, wait a minute for GitHub Pages to update, then click Rebuild search index.`);
+    const pdf = await pdfjs.getDocument({data: new Uint8Array(await res.arrayBuffer())}).promise;
+    const pages = [];
+    for(let p = 1; p <= pdf.numPages; p++){
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      pages.push(content.items.map(it => it.str).join(' ').replace(/\s+/g, ' ').trim());
+      if(p % 10 === 0) showBanner('info', `Building the search index for ${escapeHtml(docTitle(d))}: page ${p} of ${pdf.numPages}&hellip;`);
+    }
+    const path = 'regs/index/' + d.id + '.json';
+    await ghWriteFile(path, JSON.stringify({id: d.id, pages}), await ghFileSha(path), `Library: search index for ${docTitle(d)}`);
+    d.pages = pdf.numPages;
+    d.indexed = true;
+    delete regIndex[d.id];
+    delete regIndexRaw[d.id];
+    await writeLibrary(`Library: ${docTitle(d)} indexed`);
+    broadcastSaved();
+    showBanner('success', `Search index built: ${countLabel(pdf.numPages, 'page', 'pages')}. It can take a minute for GitHub Pages to publish it.`);
+    setTimeout(hideBanner, 5000);
+  }catch(e){
+    showBanner('error', 'Search index not built: ' + (e.message.startsWith('GitHub rejected') ? e.message : escapeHtml(e.message)));
+  }finally{
+    saving = false;
+    lastDetailHtml = null;
+    render();
+  }
+}
+
+// =====================================================================
+// Search tally (editor only): your searches are counted in data/library.json, to build a shared
+// suggested-searches list in a future update. Saved with your next save, or at most once an hour.
+// =====================================================================
+const TALLY_KEY = 'cert-tracker-search-tally-pending';
+const TALLY_FLUSH_MS = 60 * 60 * 1000;
+
+function pendingTally(){
+  try{ return JSON.parse(localStorage.getItem(TALLY_KEY) || 'null') || {terms: {}, since: Date.now()}; }catch(e){ return {terms: {}, since: Date.now()}; }
+}
+
+function tallySearch(term){
+  const p = pendingTally();
+  if(!Object.keys(p.terms).length) p.since = Date.now();
+  p.terms[term] = (p.terms[term] || 0) + 1;
+  try{ localStorage.setItem(TALLY_KEY, JSON.stringify(p)); }catch(e){}
+}
+
+function mergedTally(){
+  const merged = {...(library.searchTally || {})};
+  Object.entries(pendingTally().terms).forEach(([k, n]) => { merged[k] = (merged[k] || 0) + n; });
+  return merged;
+}
+
+function clearPendingTally(){
+  try{ localStorage.removeItem(TALLY_KEY); }catch(e){}
+}
+
+async function flushTallyIfDue(){
+  const p = pendingTally();
+  if(!Object.keys(p.terms).length || saving || !libraryLoaded) return;
+  if(Date.now() - (p.since || 0) < TALLY_FLUSH_MS) return;
+  try{ await writeLibrary('Library: search tally'); }catch(e){ /* try again later */ }
+}
+setInterval(flushTallyIfDue, 5 * 60 * 1000);
+
+// ---- Admin panel (gear in the header) ----
+function openAdmin(){
+  const top = Object.entries(mergedTally()).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  document.getElementById('admin-tally').innerHTML = top.length
+    ? `<ol class="tally-list">${top.map(([t, n]) => `<li>${escapeHtml(t)} <span class="muted">(${n})</span></li>`).join('')}</ol>`
+    : '<p class="muted">No searches counted yet.</p>';
+  document.getElementById('admin-reset-date').textContent = library.searchResetAt ? 'Last cleared ' + new Date(library.searchResetAt).toLocaleString() : '';
+  document.getElementById('admin-modal-bg').classList.add('open');
+}
+
+function closeAdmin(){
+  document.getElementById('admin-modal-bg').classList.remove('open');
+}
+
+async function clearAllSearchHistory(){
+  if(!confirm("Clear everyone's search history?\n\nEach person's suggested searches start fresh the next time they open the tracker. The search tally used for future shared suggestions is kept.")) return;
+  library.searchResetAt = new Date().toISOString();
+  try{ localStorage.removeItem(SEARCH_HISTORY_KEY); }catch(e){}
+  closeAdmin();
+  await persistLibrary('Library: clear search history', "Everyone's search history has been cleared.");
 }
 
 async function persist(){
@@ -1063,6 +558,8 @@ async function persist(){
   try{
     showBanner('info', 'Saving to GitHub&hellip;');
     await writeToGitHub(certs);
+    // Search tally waiting to be saved goes along with this save.
+    if(libraryLoaded && Object.keys(pendingTally().terms).length){ try{ await writeLibrary('Library: search tally'); }catch(e){} }
     broadcastSaved();
     showBanner('success', 'Saved to GitHub.');
     setTimeout(hideBanner, 2000);
@@ -1085,8 +582,8 @@ async function load(){
     const remote = await fetchFromGitHub();
     let needsResave = false;
     if(remote === null){
-      // First time: seed the file with starting data
-      certs = SEED_DATA;
+      // First time: start an empty data file.
+      certs = [];
       currentSha = null;
       needsResave = true;
     }else{
@@ -1155,7 +652,7 @@ async function load(){
       }
     });
     if(needsResave){
-      showBanner('info', remote === null ? 'No data file found yet \u2014 creating one with starting data&hellip;' : 'Updating data format&hellip;');
+      showBanner('info', remote === null ? 'No data file found yet \u2014 creating one&hellip;' : 'Updating data format&hellip;');
       await writeToGitHub(certs, remote === null ? 'Initialize certification tracker data' : 'Update tracker data format');
       showBanner('success', remote === null ? 'Created data file in your repo.' : 'Data updated.');
       setTimeout(hideBanner, 2500);
@@ -1171,19 +668,7 @@ async function load(){
     certs = [];
   }
   render();
-}
-
-function isOverdue(c){
-  if(c.completed || !c.date) return false;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const d = new Date(c.date + 'T00:00:00');
-  return d < today;
-}
-
-function fmtDate(d){
-  if(!d) return '\u2014';
-  const dt = new Date(d + 'T00:00:00');
-  return dt.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+  loadLibrary();
 }
 
 let logIdCounter = 0;
@@ -1193,631 +678,6 @@ function newLogId(){
 
 function nowTime(){
   return new Date().toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
-}
-
-function render(){
-  const stats = document.getElementById('stats');
-  const total = certs.length;
-  const overdue = certs.filter(isOverdue).length;
-  const dueSoon = certs.filter(c => {
-    if(c.completed || !c.date || isOverdue(c)) return false;
-    const d = new Date(c.date + 'T00:00:00');
-    const today = new Date(); today.setHours(0,0,0,0);
-    const diff = (d - today) / 86400000;
-    return diff >= 0 && diff <= 30;
-  }).length;
-  const noDate = certs.filter(c => !c.completed && !c.date).length;
-  const completedCount = certs.filter(c => c.completed).length;
-
-  stats.innerHTML = `
-    <div class="stat"><div class="n">${total}</div><div class="l">Total</div></div>
-    <div class="stat"><div class="n">${overdue}</div><div class="l">Overdue</div></div>
-    <div class="stat"><div class="n">${dueSoon}</div><div class="l">Due in 30 days</div></div>
-    <div class="stat"><div class="n">${noDate}</div><div class="l">No due date</div></div>
-    <div class="stat stat-done"><div class="n">${completedCount}</div><div class="l">Completed</div></div>
-  `;
-
-  const list = document.getElementById('list');
-  if(!ghConfig) return;
-  if(certs.length === 0){
-    list.innerHTML = `<div class="empty"><p>No certifications yet. Add the first one you're tracking.</p><button class="btn-primary" onclick="openModal(null, '', 'customer')">Add customer</button></div>`;
-    return;
-  }
-
-  const groups = {};
-  const order = [];
-  certs.forEach(c => {
-    const key = (c.customer || 'Unassigned').trim() || 'Unassigned';
-    if(!groups[key]){ groups[key] = []; order.push(key); }
-    groups[key].push(c);
-  });
-
-  // Customers A\u2013Z (case-insensitive).
-  order.sort((a,b) => a.localeCompare(b, undefined, {sensitivity: 'base', numeric: true}));
-
-  // Resolve the selected certification; fall back to the first one for the current customer
-  let activeCert = certs.find(x => x.id === activeCertId);
-  if(!activeCert){
-    const fallbackCustomer = (activeCustomer && order.includes(activeCustomer)) ? activeCustomer : order[0];
-    activeCert = sortCerts(groups[fallbackCustomer])[0];
-    activeCertId = activeCert.id;
-  }
-  activeCustomer = customerKey(activeCert);
-  if(!sidebarInitialised){
-    expandedCustomers.add(activeCustomer);
-    sidebarInitialised = true;
-  }
-  rememberPlace();
-
-  const sidebar = order.map(customer => {
-    const items = sortCerts(groups[customer]);
-    const anyOverdue = items.some(isCertOverdue);
-    const open = expandedCustomers.has(customer);
-    // Count open certifications only; completed ones don't count.
-    const openCount = items.filter(x => !x.completed).length;
-    // Active certifications first (grouped by serial), completed ones last.
-    const bySerial = arr => { const g = groupBySerial(arr); return g.order.flatMap(k => g.groups[k]); };
-    const ordered = [...bySerial(items.filter(x => !x.completed)), ...bySerial(items.filter(x => x.completed))];
-    return `
-      <div class="side-customer ${customer === activeCustomer ? 'has-active' : ''}">
-        <button class="side-customer-btn" aria-expanded="${open}" onclick="toggleCustomer('${escapeAttr(customer)}')">
-          <span class="chevron ${open ? 'open' : ''}" aria-hidden="true">&#9656;</span>
-          <span class="side-customer-name">${escapeHtml(customer)}</span>
-          ${anyOverdue ? '<span class="tab-overdue-dot" title="Has overdue items"></span>' : ''}
-          <span class="tab-count${openCount ? '' : ' zero'}" title="${openCount} open">${openCount}</span>
-        </button>
-        ${open ? `
-        <div class="side-certs">
-          ${ordered.map(x => {
-              const st = computeCertStatus(x);
-              const isActive = x.id === activeCertId;
-              return `
-              <button class="side-cert ${isActive ? 'active' : ''}" ${isActive ? 'aria-current="true"' : ''} title="${escapeHtml(certName(x))}" onclick="selectCert('${x.id}')">
-                ${x.completed ? '<span class="status-dot status-spacer" aria-hidden="true"></span>' : `<span class="status-dot dot-${st.cls}" title="${st.label}"></span>`}
-                <span class="side-cert-name">SN: ${escapeHtml(x.serial || '\u2014')}${x.completed ? ' <span class="side-done-tag">Completed</span>' : ''}${(x.authority || x.level) ? `<span class="side-cert-auth">${escapeHtml([x.authority, x.level].filter(Boolean).join(' - '))}</span>` : ''}${x.aircraft ? `<span class="side-cert-auth">${escapeHtml(x.aircraft)}</span>` : ''}</span>
-              </button>`;
-            }).join('')}
-          ${actionBtn('plus', 'Add project', `openModal(null, '${escapeAttr(customer)}')`, {cls: 'side-add', compact: false})}
-        </div>` : ''}
-      </div>
-    `;
-  }).join('');
-
-  const c = activeCert;
-  const over = isOverdue(c);
-  const status = computeCertStatus(c);
-
-  list.innerHTML = `
-    <div class="layout">
-      <div class="side-col">
-        <nav class="sidebar" aria-label="Customers and certifications">${sideToolsHtml()}${sidebar}</nav>
-        <button class="btn-text side-add-customer" onclick="openModal(null, '', 'customer')">${ICON.plus}<span>Add customer</span></button>
-      </div>
-      <section class="detail" id="detail" aria-live="polite">
-        <div class="detail-head">
-          <div>
-            <div class="detail-context">${escapeHtml(activeCustomer)}${c.serial ? ' / ' + escapeHtml(c.serial) : ''}</div>
-            <h2 class="detail-title">${escapeHtml(certName(c))}</h2>
-            ${c.completed ? `<div class="detail-completed">Completed ${fmtDate(c.dateCompleted)}</div>` : ''}
-          </div>
-          <span class="pill pill-${status.cls}">${status.label}</span>
-        </div>
-      <div class="detail-actions">
-        ${c.completed
-          ? actionBtn('reopen', 'Reopen', `reopenCert('${c.id}')`)
-          : actionBtn('check', 'Mark complete', `completeCert('${c.id}')`, {cls: 'ok'})}
-        ${actionBtn('edit', 'Edit', `openModal('${c.id}')`)}
-        ${actionBtn('trash', 'Delete', `removeCert('${c.id}')`, {cls: 'danger'})}
-      </div>
-        <div class="field-grid">
-          <div>
-            <div class="fk">SIM location</div>
-            <div class="fv">${escapeHtml(c.simLocation || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Certifying country</div>
-            <div class="fv">${escapeHtml(c.country || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Regulatory authority</div>
-            <div class="fv">${escapeHtml(c.authority || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">SIM serial number</div>
-            <div class="fv">${escapeHtml(c.serial || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">SIM model</div>
-            <div class="fv">${escapeHtml(certModel(c) || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Aircraft type</div>
-            <div class="fv">${escapeHtml(c.aircraft || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Certification level</div>
-            <div class="fv">${escapeHtml(c.level || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Due date</div>
-            <div class="fv ${over ? 'due-cell overdue' : ''}">${fmtDate(c.date)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}</div>
-          </div>
-          <div>
-            <div class="fk">Contact name</div>
-            <div class="fv">${escapeHtml(contactName(c) || '\u2014')}</div>
-          </div>
-          <div>
-            <div class="fk">Contact email</div>
-            <div class="fv">${contactEmail(c) ? `<a href="mailto:${escapeHtml(contactEmail(c))}">${escapeHtml(contactEmail(c))}</a>` : '\u2014'}</div>
-          </div>
-        </div>
-        ${renderDocumentsSection(c)}
-        ${renderDocChangeLog(c)}
-        ${renderActivityLog(c)}
-      </section>
-    </div>
-  `;
-}
-
-function isCertOverdue(c){
-  if(c.completed) return false;
-  if(isOverdue(c)) return true;
-  const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
-  return acts.some(isActivityOverdue);
-}
-
-function computeCertStatus(c){
-  if(c.completed) return {label: 'Completed', cls: 'sage'};
-  if(isCertOverdue(c)) return {label: 'Overdue', cls: 'overdue'};
-  const acts = Array.isArray(c.activityLog) ? c.activityLog : [];
-  if(acts.length === 0) return {label: 'No Activity', cls: 'slate'};
-  const anyOpen = acts.some(a => a.status !== 'Complete');
-  if(anyOpen) return {label: 'In Progress', cls: 'gold'};
-  return {label: 'On Track', cls: 'sage'};
-}
-
-function sortCerts(items){
-  return [...items].sort((a,b) => {
-    const aDone = a.completed ? 1 : 0;
-    const bDone = b.completed ? 1 : 0;
-    if(aDone !== bDone) return aDone - bDone;
-    const aOver = isCertOverdue(a) ? 0 : 1;
-    const bOver = isCertOverdue(b) ? 0 : 1;
-    if(aOver !== bOver) return aOver - bOver;
-    const ad = a.date || '9999-99-99';
-    const bd = b.date || '9999-99-99';
-    return ad.localeCompare(bd);
-  });
-}
-
-function groupBySerial(items){
-  const groups = {};
-  const order = [];
-  items.forEach(c => {
-    const key = c.serial || 'No serial number';
-    if(!groups[key]){ groups[key] = []; order.push(key); }
-    groups[key].push(c);
-  });
-  return { groups, order };
-}
-
-const ICON = {
-  expandAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9l5-5 5 5"/><path d="M7 15l5 5 5-5"/></svg>',
-  collapseAll: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l5 5 5-5"/><path d="M7 20l5-5 5 5"/></svg>',
-  chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
-  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>',
-  reopen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>',
-  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
-  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
-  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>',
-  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
-  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>'
-};
-
-// Small outlined action button. compact = icon-only on phones (label kept as tooltip).
-function actionBtn(kind, label, onclick, opts){
-  const o = opts || {};
-  const cls = ['btn-text', o.cls || '', o.compact === false ? '' : 'compact'].join(' ').trim();
-  return `<button class="${cls}" onclick="${onclick}" title="${label}" aria-label="${label}">${ICON[kind]}<span class="btn-label" data-label="${label}">${label}</span></button>`;
-}
-
-// "View" button: opens a document's link in a new tab (only for documents that have a link).
-function viewBtn(doc){
-  const url = typeof doc === 'string' ? '' : (doc.url || '');
-  if(!url) return '';
-  return `<a class="btn-text compact" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" title="View" aria-label="View">${ICON.eye}<span class="btn-label">View</span></a>`;
-}
-
-// ---- Automatic certification name and SIM model ----
-// SIM model is read from the serial: skip a leading "R-" prefix, take the letters before the digits
-// (R-MCX-100251 -> MCX, FMX-0297 -> FMX). A typed model overrides it.
-function detectModel(serial){
-  const m = String(serial || '').trim().toUpperCase().match(/^(?:R-)?([A-Z]+)(?=[-\s]?\d)/);
-  return m ? m[1] : '';
-}
-
-function certModel(c){
-  return (c.simModel || '').trim() || detectModel(c.serial);
-}
-
-// "Authority Level - Aircraft (Model)", e.g. "UKCAA FNPT II - Piper PA-28-181 Archer (MCX)"
-function autoName(c){
-  let n = [c.authority, c.level].map(x => (x || '').trim()).filter(Boolean).join(' ');
-  const aircraft = (c.aircraft || '').trim();
-  if(aircraft) n = n ? `${n} - ${aircraft}` : aircraft;
-  const model = certModel(c);
-  if(model) n = n ? `${n} (${model})` : model;
-  return n;
-}
-
-// Existing certifications (no nameAuto flag) keep their typed names as overrides.
-function certName(c){
-  if(c.nameAuto) return autoName(c) || c.name || 'Untitled certification';
-  return c.name || autoName(c) || 'Untitled certification';
-}
-
-// ---- Completed certifications ----
-function localToday(){
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-// ---- Contact details ----
-// Older data keeps name and email together in primaryContact ("Name - name@example.com").
-const EMAIL_RE = /[^\s<>(),;:]+@[^\s<>(),;:]+\.[A-Za-z]{2,}/;
-function splitContact(text){
-  const t = String(text || '').trim();
-  const m = t.match(EMAIL_RE);
-  if(!m) return {name: t, email: ''};
-  const name = t.replace(m[0], ' ')
-    .replace(/[<>()]/g, ' ')
-    .replace(/\s*[-\u2013\u2014,;:|]\s*$/, '')
-    .replace(/^\s*[-\u2013\u2014,;:|]\s*/, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-  return {name, email: m[0]};
-}
-function contactName(c){
-  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactName || '';
-  return splitContact(c.primaryContact).name;
-}
-function contactEmail(c){
-  if(c.contactName !== undefined || c.contactEmail !== undefined) return c.contactEmail || '';
-  return splitContact(c.primaryContact).email;
-}
-
-function customerKey(c){
-  return (c.customer || 'Unassigned').trim() || 'Unassigned';
-}
-
-function toggleCustomer(name){
-  if(expandedCustomers.has(name)) expandedCustomers.delete(name);
-  else expandedCustomers.add(name);
-  render();
-}
-
-function selectCert(id){
-  activeCertId = id;
-  render();
-  if(window.matchMedia('(max-width: 760px)').matches){
-    const d = document.getElementById('detail');
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(d) d.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
-  }
-}
-
-function escapeAttr(s){
-  return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-}
-
-function renderDocumentsSection(c){
-  const docs = Array.isArray(c.docs) ? c.docs : [];
-  return `
-    <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Documents</span>
-        ${actionBtn('plus', 'Add', `openDocumentModal('${c.id}')`, {compact: false})}
-      </div>
-      ${docs.length ? docs.map(d => `
-        <div class="activity-entry">
-          <div class="activity-entry-top">
-            <span class="changelog-text">${renderDocItem(d)}</span>
-            <div class="cert-actions">
-              ${viewBtn(d)}
-              ${actionBtn('edit', 'Edit', `openDocumentModal('${c.id}', '${d.id}')`)}
-              ${actionBtn('trash', 'Delete', `deleteDocument('${c.id}', '${d.id}')`, {cls: 'danger'})}
-            </div>
-          </div>
-        </div>
-      `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No documents yet</span></div>'}
-      ${c.docLocation ? `<div style="margin-top:6px;">${renderDocLocation(c.docLocation)}</div>` : ''}
-    </div>
-  `;
-}
-
-function renderDocChangeLog(c){
-  const entries = Array.isArray(c.docChangeLog) ? c.docChangeLog : [];
-  const sorted = [...entries].sort((a,b) => (b.date||'').localeCompare(a.date||'') || (b.ts || 0) - (a.ts || 0));
-  return `
-    <div class="changelog">
-      <div class="fk" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Document Change Log</span>
-        ${actionBtn('plus', 'Add', `openChangeLogModal('${c.id}')`, {compact: false})}
-      </div>
-      ${sorted.length ? sorted.map(entry => `
-        <div class="changelog-entry changelog-editable">
-          <div class="changelog-main">
-            <span class="changelog-date">${fmtDate(entry.date)}${entry.time ? ', ' + entry.time : ''}</span>
-            <span class="changelog-text">${escapeHtml(entry.text)}</span>
-          </div>
-          <div class="cert-actions">
-            ${actionBtn('edit', 'Edit', `openChangeLogModal('${c.id}', '${entry.id}')`)}
-            ${actionBtn('trash', 'Delete', `deleteChangeLogEntry('${c.id}', '${entry.id}')`, {cls: 'danger'})}
-          </div>
-        </div>
-      `).join('') : '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No entries yet</span></div>'}
-    </div>
-  `;
-}
-
-// For completed activities: how many days after the due date they were completed ('' if on time or unknown).
-function lateNote(a){
-  if(a.status !== 'Complete' || !a.dateDue || !a.dateCompleted) return '';
-  const days = Math.round((new Date(a.dateCompleted + 'T00:00:00') - new Date(a.dateDue + 'T00:00:00')) / 86400000);
-  if(days <= 0) return '';
-  return ` <span class="late-note">(${days} day${days === 1 ? '' : 's'} late)</span>`;
-}
-
-function isActivityOverdue(a){
-  if(a.status === 'Complete') return false;
-  if(!a.dateDue) return false;
-  const today = new Date(); today.setHours(0,0,0,0);
-  return new Date(a.dateDue + 'T00:00:00') < today;
-}
-
-// Activity statuses: Not Started, In Progress, Waiting (on another party), Complete.
-// "Pending" is the old name for Not Started and is shown as Not Started.
-function activityStatusLabel(status){
-  if(!status || status === 'Pending') return 'Not Started';
-  return status;
-}
-
-function activityStatusClass(status){
-  if(status === 'Complete') return 'sage';
-  if(status === 'In Progress') return 'gold';
-  if(status === 'Waiting') return 'plum';
-  return 'slate';
-}
-
-function renderActivityLog(c){
-  const entry = a => {
-    const over = isActivityOverdue(a);
-    const status = activityStatusLabel(a.status);
-    const cls = activityStatusClass(status);
-    return `
-        <div class="activity-entry">
-          <div class="activity-entry-top">
-            <div>
-              <span class="pill pill-${cls}">${escapeHtml(status)}</span>
-              <span class="changelog-text rich-text">${formatText(a.description)}</span>
-            </div>
-            <div class="cert-actions">
-              ${status !== 'Complete'
-                ? actionBtn('check', 'Complete', `markActivityComplete('${c.id}', '${a.id}')`, {cls: 'ok'})
-                : actionBtn('reopen', 'Reopen', `reopenActivity('${c.id}', '${a.id}')`)}
-              ${actionBtn('edit', 'Edit', `openActivityModal('${c.id}', '${a.id}')`)}
-              ${actionBtn('trash', 'Delete', `deleteActivity('${c.id}', '${a.id}')`, {cls: 'danger'})}
-            </div>
-          </div>
-          <div class="activity-meta">
-            Entered ${fmtDate(a.dateCreated)}${a.timeCreated ? ', ' + a.timeCreated : ''}
-            ${a.dateDue ? ` \u00b7 Due ${fmtDate(a.dateDue)}${over ? ' <span class="pill pill-overdue">Overdue</span>' : ''}` : ''}
-            ${a.dateUpdated && a.dateUpdated !== a.dateCreated ? ` \u00b7 Updated ${fmtDate(a.dateUpdated)}${a.timeUpdated ? ', ' + a.timeUpdated : ''}` : ''}
-            ${a.dateCompleted ? ` \u00b7 Completed ${fmtDate(a.dateCompleted)}${a.timeCompleted ? ', ' + a.timeCompleted : ''}${lateNote(a)}` : ''}
-          </div>
-          ${renderComments(c, a, true)}
-        </div>`;
-  };
-  return `
-    <div class="changelog">
-      <div class="fk act-head">
-        <span>Activities</span>
-        <div class="act-head-tools">
-          ${activityToggleAllBtn(c)}
-          ${actionBtn('plus', 'Add', `openActivityModal('${c.id}')`, {compact: false})}
-        </div>
-      </div>
-      ${renderActivityGroups(c, entry)}
-    </div>
-  `;
-}
-
-// ---- Activity comments ----
-// Each activity keeps a running thread: comments: [{id, text, date, time}], oldest first.
-// ---- Text with line breaks and bullets ----
-// Shows typed text as written: line breaks are kept, and lines starting with "- ", "* " or "•"
-// become a bulleted list. Text is escaped first, so nothing typed or pasted can change the page.
-function formatText(s){
-  const lines = String(s == null ? '' : s).replace(/\r\n?/g, '\n').split('\n');
-  const out = [];
-  let list = null;
-  lines.forEach(line => {
-    const m = line.match(/^\s*(?:[-*]\s+|\u2022\s*)(.*)$/);
-    if(m){
-      if(!list){ list = []; }
-      list.push(escapeHtml(m[1]));
-      return;
-    }
-    if(list){ out.push({list}); list = null; }
-    out.push({line: escapeHtml(line)});
-  });
-  if(list) out.push({list});
-  let html = '';
-  out.forEach((part, i) => {
-    if(part.list){
-      html += '<ul class="text-list">' + part.list.map(li => `<li>${li}</li>`).join('') + '</ul>';
-    }else{
-      const prevIsLine = i > 0 && !out[i-1].list;
-      html += (prevIsLine ? '<br>' : '') + part.line;
-    }
-  });
-  return html;
-}
-
-// ---- Activity status groups ----
-// Activities are shown in one expandable group per status, in this order. Groups start collapsed;
-// which groups are open is remembered (per certification) while the page is open.
-const ACTIVITY_GROUPS = ['Not Started', 'In Progress', 'Waiting', 'Complete'];
-const openActivityGroups = new Set();
-
-function activityGroupKey(certId, status){ return certId + '|' + status; }
-
-function activityGroupOf(a){
-  const s = activityStatusLabel(a.status);
-  return ACTIVITY_GROUPS.includes(s) ? s : 'Not Started';
-}
-
-// Non-empty groups for a certification, each with its activities sorted:
-// open groups by due date (entered date when there's no due date), Completed newest first.
-function activityGroups(c){
-  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
-  return ACTIVITY_GROUPS.map(status => {
-    const items = entries.filter(a => activityGroupOf(a) === status);
-    if(status === 'Complete'){
-      items.sort((a,b) => {
-        const ad = (a.dateCompleted || a.dateDue || a.dateCreated || '') + (a.dateCompleted ? to24(a.timeCompleted) : '');
-        const bd = (b.dateCompleted || b.dateDue || b.dateCreated || '') + (b.dateCompleted ? to24(b.timeCompleted) : '');
-        return bd.localeCompare(ad);
-      });
-    }else{
-      items.sort((a,b) => (a.dateDue || a.dateCreated || '').localeCompare(b.dateDue || b.dateCreated || ''));
-    }
-    return {status, items};
-  }).filter(g => g.items.length);
-}
-
-// "9:05 AM" -> "09:05" so times sort correctly; unknown formats sort first.
-function to24(t){
-  const m = String(t || '').match(/^(\d{1,2}):(\d{2})\s*([AP]M)?$/i);
-  if(!m) return '';
-  let h = Number(m[1]) % 12;
-  if(m[3] && m[3].toUpperCase() === 'PM') h += 12;
-  if(!m[3]) h = Number(m[1]);
-  return String(h).padStart(2, '0') + ':' + m[2];
-}
-
-function activitiesAnyOpen(c){
-  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
-  return ACTIVITY_GROUPS.some(s => openActivityGroups.has(activityGroupKey(c.id, s)))
-    || entries.some(a => openThreads.has(a.id));
-}
-
-function toggleActivityGroup(certId, status){
-  const key = activityGroupKey(certId, status);
-  if(openActivityGroups.has(key)) openActivityGroups.delete(key);
-  else openActivityGroups.add(key);
-  render();
-}
-
-// Collapse all closes every group and comment thread for this certification;
-// Expand all opens every group and leaves comment threads closed.
-function toggleAllActivities(certId){
-  const c = certs.find(x => x.id === certId);
-  if(!c) return;
-  const entries = Array.isArray(c.activityLog) ? c.activityLog : [];
-  if(activitiesAnyOpen(c)){
-    ACTIVITY_GROUPS.forEach(s => openActivityGroups.delete(activityGroupKey(certId, s)));
-    entries.forEach(a => openThreads.delete(a.id));
-  }else{
-    activityGroups(c).forEach(g => openActivityGroups.add(activityGroupKey(certId, g.status)));
-  }
-  render();
-}
-
-function activityToggleAllBtn(c){
-  if(!(Array.isArray(c.activityLog) && c.activityLog.length)) return '';
-  const any = activitiesAnyOpen(c);
-  const label = any ? 'Collapse all' : 'Expand all';
-  return `<button class="act-toggle-all" type="button" onclick="toggleAllActivities('${c.id}')" title="${label} activities">${any ? ICON.collapseAll : ICON.expandAll}<span>${label}</span></button>`;
-}
-
-function renderActivityGroups(c, renderEntry){
-  const groups = activityGroups(c);
-  if(!groups.length) return '<div class="changelog-entry"><span class="changelog-text" style="color:var(--ink-faint)">No activities yet</span></div>';
-  return '<div class="act-groups">' + groups.map((g, gi) => {
-    const done = g.status === 'Complete';
-    const n = g.items.length;
-    const overdue = done ? 0 : g.items.filter(isActivityOverdue).length;
-    let dateNote;
-    if(done){
-      dateNote = g.items[0].dateCompleted ? `Latest ${fmtDate(g.items[0].dateCompleted)}` : '';
-    }else{
-      const nextDue = g.items.map(a => a.dateDue).filter(Boolean).sort()[0];
-      dateNote = nextDue ? `Next due ${fmtDate(nextDue)}` : 'No due dates';
-    }
-    const open = openActivityGroups.has(activityGroupKey(c.id, g.status));
-    const bodyId = `grp-${c.id}-${gi}`;
-    return `
-      <button class="act-group" type="button" aria-expanded="${open}" aria-controls="${bodyId}" onclick="toggleActivityGroup('${c.id}', '${g.status}')">${ICON.chevron}<span class="pill pill-${activityStatusClass(g.status)}">${done ? 'Completed' : escapeHtml(g.status)}</span><span class="act-group-count">${n} ${n === 1 ? 'activity' : 'activities'}</span>${overdue ? `<span class="pill pill-overdue">${overdue} overdue</span>` : ''}<span class="act-group-date">${dateNote}</span></button>
-      ${open ? `<div class="act-group-body" id="${bodyId}">${g.items.map(a => renderEntry(a)).join('')}</div>` : ''}`;
-  }).join('') + '</div>';
-}
-
-// ---- Sidebar Expand all / Collapse all ----
-function allCustomerKeys(){
-  return [...new Set(certs.map(customerKey))];
-}
-
-function toggleAllCustomers(){
-  const keys = allCustomerKeys();
-  if(keys.some(k => expandedCustomers.has(k))) expandedCustomers.clear();
-  else keys.forEach(k => expandedCustomers.add(k));
-  render();
-}
-
-function sideToolsHtml(){
-  const keys = allCustomerKeys();
-  if(!keys.length) return '';
-  const any = keys.some(k => expandedCustomers.has(k));
-  return `<div class="side-tools"><button class="side-toggle-all" type="button" onclick="toggleAllCustomers()">${any ? 'Collapse all' : 'Expand all'}</button></div>`;
-}
-
-function renderComments(c, a, editable){
-  const list = Array.isArray(a.comments) ? a.comments : [];
-  const n = list.length;
-  const open = openThreads.has(a.id);
-  const key = c.id + '|' + a.id;
-  let thread = '';
-  if(open){
-    const items = n ? list.map(cm => `
-        <div class="comment">
-          <div style="min-width:0;">
-            <div class="comment-text rich-text">${formatText(cm.text)}</div>
-            <div class="comment-stamp">${fmtDate(cm.date)}${cm.time ? ', ' + escapeHtml(cm.time) : ''}</div>
-          </div>
-          ${editable ? `<button class="comment-del" type="button" title="Delete comment" aria-label="Delete comment" onclick="deleteComment('${c.id}', '${a.id}', '${cm.id}')">${ICON.x}</button>` : ''}
-        </div>`).join('') : '<div class="comment-empty">No comments yet</div>';
-    const form = editable ? `
-        <div class="comment-add">
-          <textarea id="cmt-${a.id}" aria-label="Add a comment" placeholder="Add a comment" oninput="commentDrafts['${key}'] = this.value; document.getElementById('cmt-err-${a.id}').style.display = 'none';" onkeydown="if(event.key === 'Enter' && (event.ctrlKey || event.metaKey)){ event.preventDefault(); addComment('${c.id}', '${a.id}'); }">${escapeHtml(commentDrafts[key] || '')}</textarea>
-          <button class="btn-primary" type="button" onclick="addComment('${c.id}', '${a.id}')">Add</button>
-        </div>
-        <div class="comment-err" id="cmt-err-${a.id}" style="display:none;">Enter a comment first.</div>` : '';
-    thread = `<div class="comment-thread" id="thread-${a.id}"><div class="comment-list">${items}</div>${form}</div>`;
-  }
-  return `
-          <button class="comments-toggle" type="button" aria-expanded="${open}" aria-controls="thread-${a.id}" onclick="toggleComments('${a.id}')">${ICON.chevron}Comments <span class="${n ? '' : 'cc-zero'}">(${n})</span></button>
-          ${thread}`;
-}
-
-function toggleComments(activityId){
-  if(openThreads.has(activityId)) openThreads.delete(activityId);
-  else openThreads.add(activityId);
-  render();
-  if(openThreads.has(activityId)){
-    const box = document.getElementById('cmt-' + activityId);
-    if(box) box.focus({preventScroll: true});
-  }
 }
 
 async function addComment(certId, activityId){
@@ -1915,9 +775,11 @@ async function saveActivityEntry(){
         const note = reopenNote(prevEntry);
         if(note) comments.push(note);
       }
+      // Waiting since: the day an activity was set to Waiting (kept while it stays Waiting).
+      const waitingSince = status === 'Waiting' ? (prevEntry.status === 'Waiting' && prevEntry.waitingSince ? prevEntry.waitingSince : today) : '';
       c.activityLog[idx] = {
         ...prevEntry,
-        description, status, dateDue,
+        description, status, dateDue, waitingSince,
         dateUpdated: today,
         timeUpdated: nowT,
         dateCompleted,
@@ -1929,6 +791,7 @@ async function saveActivityEntry(){
     c.activityLog.push({
       id: 'a' + Date.now(),
       description, status, dateDue,
+      waitingSince: status === 'Waiting' ? today : '',
       dateCreated: today,
       timeCreated: nowT,
       dateUpdated: today,
@@ -1968,6 +831,7 @@ async function reopenActivity(certId, activityId){
   }
   const today = new Date().toISOString().slice(0,10);
   a.status = 'In Progress';
+  a.waitingSince = '';
   a.dateUpdated = today;
   a.timeUpdated = nowTime();
   a.dateCompleted = '';
@@ -1986,6 +850,7 @@ async function markActivityComplete(certId, activityId){
   const today = new Date().toISOString().slice(0,10);
   const nowT = nowTime();
   a.status = 'Complete';
+  a.waitingSince = '';
   a.dateUpdated = today;
   a.timeUpdated = nowT;
   a.dateCompleted = today;
@@ -2129,26 +994,6 @@ async function deleteDocument(certId, docId){
   render();
 }
 
-function escapeHtml(s){
-  const d = document.createElement('div');
-  d.textContent = s == null ? '' : s;
-  return d.innerHTML;
-}
-
-function renderDocLocation(loc){
-  if(!loc) return '';
-  const isUrl = /^https?:\/\//i.test(loc.trim());
-  if(isUrl){
-    return `<div class="doc-loc"><a href="${escapeHtml(loc.trim())}" target="_blank" rel="noopener noreferrer">${escapeHtml(loc.trim())}</a></div>`;
-  }
-  return `<div class="doc-loc">${escapeHtml(loc)}</div>`;
-}
-
-function renderDocItem(doc){
-  const name = typeof doc === 'string' ? doc : (doc.name || '');
-  return escapeHtml(name);
-}
-
 function readAutoFormFields(){
   const v = id => document.getElementById(id).value;
   return {
@@ -2261,7 +1106,8 @@ async function saveCert(){
     }
   }else{
     const newId = 'c' + Date.now();
-    activeCertId = newId;
+    view = {type: 'cert', id: newId};
+    navFrom = null;
     certs.push({id: newId, ...data, docs: [], docLocation: '', activityLog: [], docChangeLog: []});
   }
   expandedCustomers.add(customerKey(data));
@@ -2290,10 +1136,6 @@ async function reopenCert(id){
 
 // Deleting a certification asks first, since it also removes its documents, change log and activities.
 let pendingDeleteId = null;
-
-function countLabel(n, one, many){
-  return `${n} ${n === 1 ? one : many}`;
-}
 
 function removeCert(id){
   const c = certs.find(x => x.id === id);
@@ -2332,32 +1174,59 @@ async function confirmDeleteCert(){
 }
 
 document.getElementById('cancel-btn').addEventListener('click', closeModal);
+
 document.getElementById('save-btn').addEventListener('click', saveCert);
+
 document.getElementById('modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'modal-bg') closeModal();
 });
+
 document.getElementById('activity-cancel-btn').addEventListener('click', closeActivityModal);
+
 document.getElementById('activity-save-btn').addEventListener('click', saveActivityEntry);
+
 document.getElementById('activity-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'activity-modal-bg') closeActivityModal();
 });
+
 document.getElementById('confirm-cancel-btn').addEventListener('click', closeDeleteConfirm);
+
 document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteCert);
+
 document.getElementById('confirm-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'confirm-modal-bg') closeDeleteConfirm();
 });
+
 document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape' && document.getElementById('confirm-modal-bg').classList.contains('open')) closeDeleteConfirm();
 });
+
 document.getElementById('changelog-cancel-btn').addEventListener('click', closeChangeLogModal);
+
 document.getElementById('changelog-save-btn').addEventListener('click', saveChangeLogEntry);
+
 document.getElementById('changelog-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'changelog-modal-bg') closeChangeLogModal();
 });
+
 document.getElementById('document-cancel-btn').addEventListener('click', closeDocumentModal);
+
 document.getElementById('document-save-btn').addEventListener('click', saveDocumentEntry);
+
 document.getElementById('document-modal-bg').addEventListener('click', (e) => {
   if(e.target.id === 'document-modal-bg') closeDocumentModal();
+});
+
+document.getElementById('lib-cancel-btn').addEventListener('click', closeLibraryModal);
+document.getElementById('lib-save-btn').addEventListener('click', saveLibraryDoc);
+document.getElementById('lib-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'lib-modal-bg') closeLibraryModal();
+});
+document.getElementById('admin-btn').addEventListener('click', openAdmin);
+document.getElementById('admin-close-btn').addEventListener('click', closeAdmin);
+document.getElementById('admin-clear-btn').addEventListener('click', clearAllSearchHistory);
+document.getElementById('admin-modal-bg').addEventListener('click', (e) => {
+  if(e.target.id === 'admin-modal-bg') closeAdmin();
 });
 
 // ---- Keeping tabs up to date ----
@@ -2381,19 +1250,23 @@ async function refreshFromGitHub(){
     }
   }catch(e){ /* keep showing what's already loaded */ }
 }
+
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState === 'visible') refreshFromGitHub();
 });
+
 window.addEventListener('focus', refreshFromGitHub);
 
 // Tabs in the same browser: share saves straight away, and note when the editor is open twice.
 const TAB_ID = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
 const otherEditors = new Set();
+
 const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('cert-tracker-sync') : null;
 
 function broadcastSaved(){
   if(!syncChannel) return;
-  try{ syncChannel.postMessage({type: 'saved', from: TAB_ID, key: syncKey(), sha: currentSha, data: certs}); }catch(e){}
+  try{ syncChannel.postMessage({type: 'saved', from: TAB_ID, key: syncKey(), sha: currentSha, data: certs, library}); }catch(e){}
 }
 
 function updateTabNote(){
@@ -2407,6 +1280,7 @@ if(syncChannel){
     if(m.type === 'saved'){
       if(saving || m.key !== syncKey() || !Array.isArray(m.data)) return;
       certs = m.data;
+      if(m.library) library = normalizeLibrary(m.library);
       currentSha = m.sha || currentSha;
       localVersion++;
       render();
@@ -2435,6 +1309,7 @@ if(syncChannel){
   });
 }
 
+initHeader();
 load();
 </script>
 </body>
