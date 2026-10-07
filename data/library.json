@@ -32,7 +32,7 @@
       "revision": "Issue 2",
       "asOf": "",
       "file": "EASA-CS-FSTD-A-Issue-2.pdf",
-      "officialUrl": "",
+      "officialUrl": "https://www.easa.europa.eu/en/document-library/certification-specifications/cs-fstda-issue-2",
       "pages": 184,
       "indexed": true
     },
@@ -62,5 +62,7 @@
     }
   ],
   "searchResetAt": "",
-  "searchTally": {}
+  "searchTally": {
+    "transport delay": 1
+  }
 }
