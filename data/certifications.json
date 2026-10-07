@@ -961,15 +961,23 @@
       {
         "id": "a1791304505916",
         "description": "Follow up with AFS-200 on receipt of application",
-        "status": "Complete",
+        "status": "Waiting",
         "dateDue": "2026-10-12",
         "dateCreated": "2026-10-06",
         "timeCreated": "11:35 AM",
         "dateUpdated": "2026-10-07",
-        "timeUpdated": "3:10 PM",
-        "dateCompleted": "2026-10-07",
-        "timeCompleted": "3:10 PM",
-        "waitingSince": ""
+        "timeUpdated": "3:11 PM",
+        "dateCompleted": "",
+        "timeCompleted": "",
+        "waitingSince": "2026-10-07",
+        "comments": [
+          {
+            "id": "k1791403886178753",
+            "text": "Reopened (was completed Oct 7, 2026)",
+            "date": "2026-10-07",
+            "time": "3:11 PM"
+          }
+        ]
       },
       {
         "id": "a1791304560324",
