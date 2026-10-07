@@ -442,10 +442,14 @@
       {
         "id": "a17900358859531-migrated",
         "description": "Get MQTG and VDR signed off by the operator, then submit to FAA for initial evaluation.",
-        "status": "Not Started",
+        "status": "Waiting",
         "dateCreated": "2026-09-22",
         "dateDue": "",
-        "dateUpdated": "2026-09-22"
+        "dateUpdated": "2026-10-07",
+        "timeUpdated": "10:29 AM",
+        "dateCompleted": "",
+        "timeCompleted": "",
+        "comments": []
       },
       {
         "id": "a1790092970083",
